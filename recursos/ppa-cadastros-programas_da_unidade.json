@@ -1,0 +1,16 @@
+{    
+    "tabela": "programas",
+    "schema": "ppa",
+    "campos": [
+        {
+            "tipo": "texto",
+            "nome_campo": "id",
+            "codinome_campo": "id"
+        },
+        {
+            "tipo": "texto",
+            "nome_campo": "nome",
+            "codinome_campo": "Nome"
+        }
+    ]
+}
