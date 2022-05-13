@@ -6190,8 +6190,8 @@ var $author$project$Main$objetoPorTipo = function (tipo) {
 			return _Debug_todo(
 				'Main',
 				{
-					start: {line: 129, column: 13},
-					end: {line: 129, column: 23}
+					start: {line: 138, column: 13},
+					end: {line: 138, column: 23}
 				})('nenhum decoder');
 	}
 };
@@ -6273,8 +6273,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 173, column: 13},
-				end: {line: 173, column: 23}
+				start: {line: 182, column: 13},
+				end: {line: 182, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -6343,6 +6343,7 @@ var $author$project$Main$update = F2(
 					$author$project$Main$getSchema(subitem.link));
 		}
 	});
+var $elm$html$Html$aside = _VirtualDom_node('aside');
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -6355,11 +6356,1152 @@ var $author$project$Main$class = function (name) {
 	return A2($elm$html$Html$Attributes$attribute, 'class', name);
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$header = _VirtualDom_node('header');
+var $elm$html$Html$main_ = _VirtualDom_node('main');
+var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $elm$html$Html$i = _VirtualDom_node('i');
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$Main$menuLateral = A2(
+	$elm$html$Html$ul,
+	_List_fromArray(
+		[
+			$author$project$Main$class('list-reset flex flex-col')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$li,
+			_List_fromArray(
+				[
+					$author$project$Main$class(' w-full h-full py-3 px-2 border-b border-light-border bg-white')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href('index.html'),
+							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$i,
+							_List_fromArray(
+								[
+									$author$project$Main$class('fas fa-tachometer-alt float-left mx-2')
+								]),
+							_List_Nil),
+							$elm$html$Html$text('Dashboard'),
+							A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$i,
+									_List_fromArray(
+										[
+											$author$project$Main$class('fas fa-angle-right float-right')
+										]),
+									_List_Nil)
+								]))
+						]))
+				])),
+			A2(
+			$elm$html$Html$li,
+			_List_fromArray(
+				[
+					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href('forms.html'),
+							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$i,
+							_List_fromArray(
+								[
+									$author$project$Main$class('fab fa-wpforms float-left mx-2')
+								]),
+							_List_Nil),
+							$elm$html$Html$text('Forms'),
+							A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$i,
+									_List_fromArray(
+										[
+											$author$project$Main$class('fa fa-angle-right float-right')
+										]),
+									_List_Nil)
+								]))
+						]))
+				])),
+			A2(
+			$elm$html$Html$li,
+			_List_fromArray(
+				[
+					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href('buttons.html'),
+							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$i,
+							_List_fromArray(
+								[
+									$author$project$Main$class('fas fa-grip-horizontal float-left mx-2')
+								]),
+							_List_Nil),
+							$elm$html$Html$text('Buttons'),
+							A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$i,
+									_List_fromArray(
+										[
+											$author$project$Main$class('fa fa-angle-right float-right')
+										]),
+									_List_Nil)
+								]))
+						]))
+				])),
+			A2(
+			$elm$html$Html$li,
+			_List_fromArray(
+				[
+					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href('tables.html'),
+							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$i,
+							_List_fromArray(
+								[
+									$author$project$Main$class('fas fa-table float-left mx-2')
+								]),
+							_List_Nil),
+							$elm$html$Html$text('Tables'),
+							A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$i,
+									_List_fromArray(
+										[
+											$author$project$Main$class('fa fa-angle-right float-right')
+										]),
+									_List_Nil)
+								]))
+						]))
+				])),
+			A2(
+			$elm$html$Html$li,
+			_List_fromArray(
+				[
+					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href('ui.html'),
+							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$i,
+							_List_fromArray(
+								[
+									$author$project$Main$class('fab fa-uikit float-left mx-2')
+								]),
+							_List_Nil),
+							$elm$html$Html$text('Ui components'),
+							A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$i,
+									_List_fromArray(
+										[
+											$author$project$Main$class('fa fa-angle-right float-right')
+										]),
+									_List_Nil)
+								]))
+						]))
+				])),
+			A2(
+			$elm$html$Html$li,
+			_List_fromArray(
+				[
+					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-300-border')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href('modals.html'),
+							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$i,
+							_List_fromArray(
+								[
+									$author$project$Main$class('fas fa-square-full float-left mx-2')
+								]),
+							_List_Nil),
+							$elm$html$Html$text('Modals'),
+							A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$i,
+									_List_fromArray(
+										[
+											$author$project$Main$class('fa fa-angle-right float-right')
+										]),
+									_List_Nil)
+								]))
+						]))
+				])),
+			A2(
+			$elm$html$Html$li,
+			_List_fromArray(
+				[
+					$author$project$Main$class('w-full h-full py-3 px-2')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href('#'),
+							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$i,
+							_List_fromArray(
+								[
+									$author$project$Main$class('far fa-file float-left mx-2')
+								]),
+							_List_Nil),
+							$elm$html$Html$text('Pages'),
+							A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$i,
+									_List_fromArray(
+										[
+											$author$project$Main$class('fa fa-angle-down float-right')
+										]),
+									_List_Nil)
+								]))
+						])),
+					A2(
+					$elm$html$Html$ul,
+					_List_fromArray(
+						[
+							$author$project$Main$class('list-reset -mx-2 bg-white-medium-dark')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$li,
+							_List_fromArray(
+								[
+									$author$project$Main$class('border-t mt-2 border-light-border w-full h-full px-2 py-3')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$a,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$href('login.html'),
+											$author$project$Main$class('mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Login Page'),
+											A2(
+											$elm$html$Html$span,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$i,
+													_List_fromArray(
+														[
+															$author$project$Main$class('fa fa-angle-right float-right')
+														]),
+													_List_Nil)
+												]))
+										]))
+								])),
+							A2(
+							$elm$html$Html$li,
+							_List_fromArray(
+								[
+									$author$project$Main$class('border-t border-light-border w-full h-full px-2 py-3')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$a,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$href('register.html'),
+											$author$project$Main$class('mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Register Page'),
+											A2(
+											$elm$html$Html$span,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$i,
+													_List_fromArray(
+														[
+															$author$project$Main$class('fa fa-angle-right float-right')
+														]),
+													_List_Nil)
+												]))
+										]))
+								])),
+							A2(
+							$elm$html$Html$li,
+							_List_fromArray(
+								[
+									$author$project$Main$class('border-t border-light-border w-full h-full px-2 py-3')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$a,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$href('404.html'),
+											$author$project$Main$class('mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('404 Page'),
+											A2(
+											$elm$html$Html$span,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$i,
+													_List_fromArray(
+														[
+															$author$project$Main$class('fa fa-angle-right float-right')
+														]),
+													_List_Nil)
+												]))
+										]))
+								]))
+						]))
+				]))
+		]));
+var $elm$html$Html$table = _VirtualDom_node('table');
+var $elm$html$Html$tbody = _VirtualDom_node('tbody');
+var $elm$html$Html$td = _VirtualDom_node('td');
+var $elm$html$Html$th = _VirtualDom_node('th');
+var $elm$html$Html$thead = _VirtualDom_node('thead');
+var $elm$html$Html$tr = _VirtualDom_node('tr');
+var $author$project$Main$tabela = A2(
+	$elm$html$Html$div,
+	_List_fromArray(
+		[
+			$author$project$Main$class('flex flex-1  flex-col md:flex-row lg:flex-row mx-2')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$author$project$Main$class('mb-2 border-solid border-gray-300 rounded border shadow-sm w-full')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$author$project$Main$class('bg-gray-200 px-2 py-3 border-solid border-gray-200 border-b')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Full Table')
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$author$project$Main$class('p-3')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$table,
+							_List_fromArray(
+								[
+									$author$project$Main$class('table-responsive w-full rounded')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$thead,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$tr,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$th,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border w-1/4 px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Student Name')
+														])),
+													A2(
+													$elm$html$Html$th,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border w-1/6 px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('City')
+														])),
+													A2(
+													$elm$html$Html$th,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border w-1/6 px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Course')
+														])),
+													A2(
+													$elm$html$Html$th,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border w-1/6 px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Fee')
+														])),
+													A2(
+													$elm$html$Html$th,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border w-1/7 px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Status')
+														])),
+													A2(
+													$elm$html$Html$th,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border w-1/5 px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Actions')
+														]))
+												]))
+										])),
+									A2(
+									$elm$html$Html$tbody,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$tr,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Micheal Clarke')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Sydney')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('MS')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('900 $')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$i,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('fas fa-check text-green-500 mx-2')
+																]),
+															_List_Nil)
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-eye')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-edit')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-trash')
+																		]),
+																	_List_Nil)
+																]))
+														]))
+												])),
+											A2(
+											$elm$html$Html$tr,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Rickey Ponting')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Sydney')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('MS')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('300 $')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$i,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('fas fa-times text-red-500 mx-2')
+																]),
+															_List_Nil)
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-eye')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-edit')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-trash')
+																		]),
+																	_List_Nil)
+																]))
+														]))
+												])),
+											A2(
+											$elm$html$Html$tr,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Micheal Clarke')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Sydney')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('MS')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('900 $')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$i,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('fas fa-check text-green-500 mx-2')
+																]),
+															_List_Nil)
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-eye')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-edit')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-trash')
+																		]),
+																	_List_Nil)
+																]))
+														]))
+												])),
+											A2(
+											$elm$html$Html$tr,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Micheal Clarke')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Sydney')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('MS')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('900 $')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$i,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('fas fa-check text-green-500 mx-2')
+																]),
+															_List_Nil)
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-eye')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-edit')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-trash')
+																		]),
+																	_List_Nil)
+																]))
+														]))
+												])),
+											A2(
+											$elm$html$Html$tr,
+											_List_Nil,
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Micheal Clarke')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Sydney')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('MS')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('900 $')
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$i,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('fas fa-check text-green-500 mx-2')
+																]),
+															_List_Nil)
+														])),
+													A2(
+													$elm$html$Html$td,
+													_List_fromArray(
+														[
+															$author$project$Main$class('border px-4 py-2')
+														]),
+													_List_fromArray(
+														[
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-eye')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-edit')
+																		]),
+																	_List_Nil)
+																])),
+															A2(
+															$elm$html$Html$a,
+															_List_fromArray(
+																[
+																	$author$project$Main$class('bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500')
+																]),
+															_List_fromArray(
+																[
+																	A2(
+																	$elm$html$Html$i,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('fas fa-trash')
+																		]),
+																	_List_Nil)
+																]))
+														]))
+												]))
+										]))
+								]))
+						]))
+				]))
+		]));
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$header = _VirtualDom_node('header');
 var $author$project$Main$topo = A2(
 	$elm$html$Html$header,
 	_List_fromArray(
@@ -6420,7 +7562,43 @@ var $author$project$Main$view = function (model) {
 						$author$project$Main$class('min-h-screen flex flex-col')
 					]),
 				_List_fromArray(
-					[$author$project$Main$topo]))
+					[
+						$author$project$Main$topo,
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$author$project$Main$class('flex flex-1')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$aside,
+								_List_fromArray(
+									[
+										$author$project$Main$class('bg-side-nav w-1/2 md:w-1/6 lg:w-1/6 border-r border-side-nav hidden md:block lg:block')
+									]),
+								_List_fromArray(
+									[$author$project$Main$menuLateral])),
+								A2(
+								$elm$html$Html$main_,
+								_List_fromArray(
+									[
+										$author$project$Main$class('bg-white-500 flex-1 p-3 overflow-hidden')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$author$project$Main$class('flex flex-col')
+											]),
+										_List_fromArray(
+											[$author$project$Main$tabela]))
+									]))
+							]))
+					]))
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
