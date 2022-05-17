@@ -5334,15 +5334,15 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Listagem = {$: 'Listagem'};
-var $author$project$Main$Model = F3(
-	function (menu, conteudo, schema) {
-		return {conteudo: conteudo, menu: menu, schema: schema};
+var $author$project$Main$Model = F4(
+	function (menu, modoCrud, schema, showMenu) {
+		return {menu: menu, modoCrud: modoCrud, schema: schema, showMenu: showMenu};
 	});
 var $author$project$Main$Schema = F3(
 	function (tabela, schema, campos) {
 		return {campos: campos, schema: schema, tabela: tabela};
 	});
+var $author$project$Main$Todos = {$: 'Todos'};
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
 };
@@ -6133,26 +6133,15 @@ var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
 		{body: $elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
-var $elm$json$Json$Decode$list = _Json_decodeList;
-var $elm$json$Json$Decode$andThen = _Json_andThen;
-var $elm$json$Json$Decode$field = _Json_decodeField;
-var $author$project$Main$Label = function (a) {
-	return {$: 'Label', a: a};
-};
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Main$labelMenuObj = A2(
-	$elm$json$Json$Decode$map,
-	$author$project$Main$Label,
-	A2($elm$json$Json$Decode$field, 'label', $elm$json$Json$Decode$string));
-var $author$project$Main$Lista = function (a) {
-	return {$: 'Lista', a: a};
-};
 var $author$project$Main$Item = F3(
 	function (label, selecionado, subItens) {
 		return {label: label, selecionado: selecionado, subItens: subItens};
 	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Decode$map3 = _Json_map3;
+var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Main$SubItem = F3(
 	function (label, link, selecionado) {
 		return {label: label, link: link, selecionado: selecionado};
@@ -6172,47 +6161,23 @@ var $author$project$Main$itemDecoder = A4(
 		$elm$json$Json$Decode$field,
 		'sub-itens',
 		$elm$json$Json$Decode$list($author$project$Main$subItemDecoder)));
-var $author$project$Main$listMenuObj = A2(
-	$elm$json$Json$Decode$map,
-	$author$project$Main$Lista,
-	A2(
-		$elm$json$Json$Decode$field,
-		'lista',
-		$elm$json$Json$Decode$list($author$project$Main$itemDecoder)));
-var $elm$core$Debug$todo = _Debug_todo;
-var $author$project$Main$objetoPorTipo = function (tipo) {
-	switch (tipo) {
-		case 'menu-label':
-			return $author$project$Main$labelMenuObj;
-		case 'menu-list':
-			return $author$project$Main$listMenuObj;
-		default:
-			return _Debug_todo(
-				'Main',
-				{
-					start: {line: 148, column: 13},
-					end: {line: 148, column: 23}
-				})('nenhum decoder');
-	}
-};
-var $author$project$Main$objetoDecoder = A2(
-	$elm$json$Json$Decode$andThen,
-	$author$project$Main$objetoPorTipo,
-	A2($elm$json$Json$Decode$field, 'tipo', $elm$json$Json$Decode$string));
-var $author$project$Main$listObjDecoder = $elm$json$Json$Decode$list($author$project$Main$objetoDecoder);
-var $author$project$Main$getObjetos = $elm$http$Http$get(
+var $author$project$Main$getItens = $elm$http$Http$get(
 	{
-		expect: A2($elm$http$Http$expectJson, $author$project$Main$GotMenu, $author$project$Main$listObjDecoder),
+		expect: A2(
+			$elm$http$Http$expectJson,
+			$author$project$Main$GotMenu,
+			$elm$json$Json$Decode$list($author$project$Main$itemDecoder)),
 		url: 'http://localhost:8000/menu.json'
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A3(
+		A4(
 			$author$project$Main$Model,
 			_List_Nil,
-			$author$project$Main$Listagem,
-			A3($author$project$Main$Schema, '', '', _List_Nil)),
-		$author$project$Main$getObjetos);
+			$author$project$Main$Todos,
+			A3($author$project$Main$Schema, '', '', _List_Nil),
+			true),
+		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
@@ -6229,34 +6194,20 @@ var $author$project$Main$compararItem = F2(
 			{selecionado: item.selecionado * (-1)}) : itemMsg;
 	});
 var $author$project$Main$substituirItem = F2(
-	function (lista, item) {
-		return A2(
-			$elm$core$List$map,
-			$author$project$Main$compararItem(item),
-			lista);
-	});
-var $author$project$Main$substituirObjeto = F2(
-	function (objItem, item) {
-		if (objItem.$ === 'Label') {
-			return objItem;
-		} else {
-			var lista = objItem.a;
-			return $author$project$Main$Lista(
-				A2($author$project$Main$substituirItem, lista, item));
-		}
-	});
-var $author$project$Main$atualizarMenu = F2(
 	function (menu, item) {
 		return A2(
 			$elm$core$List$map,
-			function (n) {
-				return A2($author$project$Main$substituirObjeto, n, item);
-			},
+			$author$project$Main$compararItem(item),
 			menu);
+	});
+var $author$project$Main$atualizarMenu = F2(
+	function (menu, item) {
+		return A2($author$project$Main$substituirItem, menu, item);
 	});
 var $author$project$Main$GotSchema = function (a) {
 	return {$: 'GotSchema', a: a};
 };
+var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $author$project$Main$Texto = F2(
 	function (a, b) {
 		return {$: 'Texto', a: a, b: b};
@@ -6266,6 +6217,7 @@ var $author$project$Main$decoderCampoTexto = A3(
 	$author$project$Main$Texto,
 	A2($elm$json$Json$Decode$field, 'nome_campo', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'codinome_campo', $elm$json$Json$Decode$string));
+var $elm$core$Debug$todo = _Debug_todo;
 var $author$project$Main$tipoDoCampo = function (tipo) {
 	if (tipo === 'texto') {
 		return $author$project$Main$decoderCampoTexto;
@@ -6273,8 +6225,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 192, column: 13},
-				end: {line: 192, column: 23}
+				start: {line: 194, column: 13},
+				end: {line: 194, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -6300,17 +6252,18 @@ var $author$project$Main$getSchema = function (url) {
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$Basics$not = _Basics_not;
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'GotMenu':
 				var result = msg.a;
 				if (result.$ === 'Ok') {
-					var listMenu = result.a;
+					var listItens = result.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{menu: listMenu}),
+							{menu: listItens}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -6336,11 +6289,17 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			default:
+			case 'SubSelecionado':
 				var subitem = msg.a;
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$getSchema(subitem.link));
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{showMenu: !model.showMenu}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $elm$html$Html$aside = _VirtualDom_node('aside');
@@ -6356,8 +6315,15 @@ var $author$project$Main$class = function (name) {
 	return A2($elm$html$Html$Attributes$attribute, 'class', name);
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $author$project$Main$expandirMenu = function (cond) {
+	return cond ? A2($elm$html$Html$Attributes$style, 'display', 'block') : A2($elm$html$Html$Attributes$style, 'display', 'none');
+};
 var $elm$html$Html$main_ = _VirtualDom_node('main');
-var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var $elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -6366,420 +6332,9 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			$elm$json$Json$Encode$string(string));
 	});
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
-var $elm$html$Html$i = _VirtualDom_node('i');
-var $elm$html$Html$li = _VirtualDom_node('li');
-var $elm$html$Html$span = _VirtualDom_node('span');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$ul = _VirtualDom_node('ul');
-var $author$project$Main$menuLateral = A2(
-	$elm$html$Html$ul,
-	_List_fromArray(
-		[
-			$author$project$Main$class('list-reset flex flex-col')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$li,
-			_List_fromArray(
-				[
-					$author$project$Main$class(' w-full h-full py-3 px-2 border-b border-light-border bg-white')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$a,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$href('index.html'),
-							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$i,
-							_List_fromArray(
-								[
-									$author$project$Main$class('fas fa-tachometer-alt float-left mx-2')
-								]),
-							_List_Nil),
-							$elm$html$Html$text('Dashboard'),
-							A2(
-							$elm$html$Html$span,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$i,
-									_List_fromArray(
-										[
-											$author$project$Main$class('fas fa-angle-right float-right')
-										]),
-									_List_Nil)
-								]))
-						]))
-				])),
-			A2(
-			$elm$html$Html$li,
-			_List_fromArray(
-				[
-					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$a,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$href('forms.html'),
-							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$i,
-							_List_fromArray(
-								[
-									$author$project$Main$class('fab fa-wpforms float-left mx-2')
-								]),
-							_List_Nil),
-							$elm$html$Html$text('Forms'),
-							A2(
-							$elm$html$Html$span,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$i,
-									_List_fromArray(
-										[
-											$author$project$Main$class('fa fa-angle-right float-right')
-										]),
-									_List_Nil)
-								]))
-						]))
-				])),
-			A2(
-			$elm$html$Html$li,
-			_List_fromArray(
-				[
-					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$a,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$href('buttons.html'),
-							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$i,
-							_List_fromArray(
-								[
-									$author$project$Main$class('fas fa-grip-horizontal float-left mx-2')
-								]),
-							_List_Nil),
-							$elm$html$Html$text('Buttons'),
-							A2(
-							$elm$html$Html$span,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$i,
-									_List_fromArray(
-										[
-											$author$project$Main$class('fa fa-angle-right float-right')
-										]),
-									_List_Nil)
-								]))
-						]))
-				])),
-			A2(
-			$elm$html$Html$li,
-			_List_fromArray(
-				[
-					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$a,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$href('tables.html'),
-							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$i,
-							_List_fromArray(
-								[
-									$author$project$Main$class('fas fa-table float-left mx-2')
-								]),
-							_List_Nil),
-							$elm$html$Html$text('Tables'),
-							A2(
-							$elm$html$Html$span,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$i,
-									_List_fromArray(
-										[
-											$author$project$Main$class('fa fa-angle-right float-right')
-										]),
-									_List_Nil)
-								]))
-						]))
-				])),
-			A2(
-			$elm$html$Html$li,
-			_List_fromArray(
-				[
-					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$a,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$href('ui.html'),
-							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$i,
-							_List_fromArray(
-								[
-									$author$project$Main$class('fab fa-uikit float-left mx-2')
-								]),
-							_List_Nil),
-							$elm$html$Html$text('Ui components'),
-							A2(
-							$elm$html$Html$span,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$i,
-									_List_fromArray(
-										[
-											$author$project$Main$class('fa fa-angle-right float-right')
-										]),
-									_List_Nil)
-								]))
-						]))
-				])),
-			A2(
-			$elm$html$Html$li,
-			_List_fromArray(
-				[
-					$author$project$Main$class('w-full h-full py-3 px-2 border-b border-300-border')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$a,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$href('modals.html'),
-							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$i,
-							_List_fromArray(
-								[
-									$author$project$Main$class('fas fa-square-full float-left mx-2')
-								]),
-							_List_Nil),
-							$elm$html$Html$text('Modals'),
-							A2(
-							$elm$html$Html$span,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$i,
-									_List_fromArray(
-										[
-											$author$project$Main$class('fa fa-angle-right float-right')
-										]),
-									_List_Nil)
-								]))
-						]))
-				])),
-			A2(
-			$elm$html$Html$li,
-			_List_fromArray(
-				[
-					$author$project$Main$class('w-full h-full py-3 px-2')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$a,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$href('#'),
-							$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$i,
-							_List_fromArray(
-								[
-									$author$project$Main$class('far fa-file float-left mx-2')
-								]),
-							_List_Nil),
-							$elm$html$Html$text('Pages'),
-							A2(
-							$elm$html$Html$span,
-							_List_Nil,
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$i,
-									_List_fromArray(
-										[
-											$author$project$Main$class('fa fa-angle-down float-right')
-										]),
-									_List_Nil)
-								]))
-						])),
-					A2(
-					$elm$html$Html$ul,
-					_List_fromArray(
-						[
-							$author$project$Main$class('list-reset -mx-2 bg-white-medium-dark')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$li,
-							_List_fromArray(
-								[
-									$author$project$Main$class('border-t mt-2 border-light-border w-full h-full px-2 py-3')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$href('login.html'),
-											$author$project$Main$class('mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Login Page'),
-											A2(
-											$elm$html$Html$span,
-											_List_Nil,
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$i,
-													_List_fromArray(
-														[
-															$author$project$Main$class('fa fa-angle-right float-right')
-														]),
-													_List_Nil)
-												]))
-										]))
-								])),
-							A2(
-							$elm$html$Html$li,
-							_List_fromArray(
-								[
-									$author$project$Main$class('border-t border-light-border w-full h-full px-2 py-3')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$href('register.html'),
-											$author$project$Main$class('mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Register Page'),
-											A2(
-											$elm$html$Html$span,
-											_List_Nil,
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$i,
-													_List_fromArray(
-														[
-															$author$project$Main$class('fa fa-angle-right float-right')
-														]),
-													_List_Nil)
-												]))
-										]))
-								])),
-							A2(
-							$elm$html$Html$li,
-							_List_fromArray(
-								[
-									$author$project$Main$class('border-t border-light-border w-full h-full px-2 py-3')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$a,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$href('404.html'),
-											$author$project$Main$class('mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('404 Page'),
-											A2(
-											$elm$html$Html$span,
-											_List_Nil,
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$i,
-													_List_fromArray(
-														[
-															$author$project$Main$class('fa fa-angle-right float-right')
-														]),
-													_List_Nil)
-												]))
-										]))
-								]))
-						]))
-				]))
-		]));
-var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
-var $elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$form = _VirtualDom_node('form');
+var $elm$html$Html$i = _VirtualDom_node('i');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
@@ -6789,7 +6344,10 @@ var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$path = $elm$svg$Svg$trustedNode('path');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $elm$html$Html$select = _VirtualDom_node('select');
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $author$project$Main$modal = A2(
@@ -7184,6 +6742,7 @@ var $author$project$Main$modal = A2(
 						]))
 				]))
 		]));
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
 var $elm$html$Html$td = _VirtualDom_node('td');
@@ -7433,13 +6992,32 @@ var $author$project$Main$tabela = A2(
 						]))
 				]))
 		]));
+var $author$project$Main$MostrarMenu = {$: 'MostrarMenu'};
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$header = _VirtualDom_node('header');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $author$project$Main$topo = A2(
 	$elm$html$Html$header,
 	_List_fromArray(
 		[
-			$author$project$Main$class('bg-nav')
+			$author$project$Main$class('bg-nav'),
+			$elm$html$Html$Events$onClick($author$project$Main$MostrarMenu)
 		]),
 	_List_fromArray(
 		[
@@ -7479,6 +7057,156 @@ var $author$project$Main$topo = A2(
 						]))
 				]))
 		]));
+var $author$project$Main$Selecionar = function (a) {
+	return {$: 'Selecionar', a: a};
+};
+var $author$project$Main$SubSelecionado = function (a) {
+	return {$: 'SubSelecionado', a: a};
+};
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $author$project$Main$subItens = function (subitens) {
+	return A2(
+		$elm$core$List$map,
+		function (n) {
+			return A2(
+				$elm$html$Html$li,
+				_List_fromArray(
+					[
+						$author$project$Main$class('border-t mt-2 border-light-border w-full h-full px-2 py-3')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$a,
+						_List_fromArray(
+							[
+								$author$project$Main$class('mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline'),
+								$elm$html$Html$Events$onClick(
+								$author$project$Main$SubSelecionado(n))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(n.label),
+								A2(
+								$elm$html$Html$span,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$i,
+										_List_fromArray(
+											[
+												$author$project$Main$class('fa fa-angle-right float-right')
+											]),
+										_List_Nil)
+									]))
+							]))
+					]));
+		},
+		subitens);
+};
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$Main$gerarSubMenu = function (item) {
+	return A2(
+		$elm$html$Html$ul,
+		_List_fromArray(
+			[
+				$author$project$Main$class('list-reset -mx-2 bg-white-medium-dark')
+			]),
+		$author$project$Main$subItens(item.subItens));
+};
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $author$project$Main$liMenu = function (item) {
+	return (item.selecionado > 0) ? A2(
+		$elm$html$Html$li,
+		_List_fromArray(
+			[
+				$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$a,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$href('#'),
+						$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline'),
+						$elm$html$Html$Events$onClick(
+						$author$project$Main$Selecionar(item))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(item.label),
+						A2(
+						$elm$html$Html$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$i,
+								_List_fromArray(
+									[
+										$author$project$Main$class('fa fa-angle-down float-right')
+									]),
+								_List_Nil)
+							]))
+					])),
+				$author$project$Main$gerarSubMenu(item)
+			])) : A2(
+		$elm$html$Html$li,
+		_List_fromArray(
+			[
+				$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$a,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$href('#'),
+						$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline'),
+						$elm$html$Html$Events$onClick(
+						$author$project$Main$Selecionar(item))
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(item.label),
+						A2(
+						$elm$html$Html$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$i,
+								_List_fromArray(
+									[
+										$author$project$Main$class('fas fa-angle-right float-right')
+									]),
+								_List_Nil)
+							]))
+					]))
+			]));
+};
+var $author$project$Main$viewMenu = function (menu) {
+	return A2(
+		$elm$html$Html$ul,
+		_List_fromArray(
+			[
+				$author$project$Main$class('list-reset flex flex-col')
+			]),
+		A2(
+			$elm$core$List$map,
+			function (n) {
+				return $author$project$Main$liMenu(n);
+			},
+			menu));
+};
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -7509,10 +7237,13 @@ var $author$project$Main$view = function (model) {
 								$elm$html$Html$aside,
 								_List_fromArray(
 									[
-										$author$project$Main$class('bg-side-nav w-1/2 md:w-1/6 lg:w-1/6 border-r border-side-nav hidden md:block lg:block')
+										$author$project$Main$class('bg-side-nav w-1/2 md:w-1/6 lg:w-1/6 border-r border-side-nav hidden md:block lg:block'),
+										$author$project$Main$expandirMenu(model.showMenu)
 									]),
 								_List_fromArray(
-									[$author$project$Main$menuLateral])),
+									[
+										$author$project$Main$viewMenu(model.menu)
+									])),
 								A2(
 								$elm$html$Html$main_,
 								_List_fromArray(

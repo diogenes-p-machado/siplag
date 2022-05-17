@@ -1,578 +1,161 @@
 [
     {
-        "tipo": "menu-label",
-        "label": "PPA"
-    },
-    {
-        "tipo": "menu-list",
-        "lista": [
+        "label": "Cadastros",
+        "selecionado": -1,
+        "sub-itens": [
             {
-                "label": "Cadastros",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Programas da Unidade",
-                        "link": "http://localhost:8000/recursos/ppa-cadastros-programas_da_unidade.json",
-                        "selecionado": 0
-                    }
-                ]
-            },
-            {
-                "label": "Consultas",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Programa/Ação",
-                        "link": "ppa-consultas-programa_acao.json",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Teto Orçamentario/PPA",
-                        "link": "ppa-consultas-teto_orcamentario_ppa.json",
-                        "selecionado": 0
-                    }
-                ]
-            },
-            {
-                "label": "Tabelas",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Ação",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Base Geográfica",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Categoria da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Coordenador",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Elemento da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Fonte indicador",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Fonte de recurso",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Função",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Gerentes de programa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Grupo da natureza da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Diretrizes estratégicas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Modalidade da aplicação",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Natureza da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Produto",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Programas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Proposta",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Público alvo",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Sub-função",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Teto Orçamentario",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Unidade de medida",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
-            },
-            {
-                "label": "Relatórios",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "PPA",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Receitas de despesas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
-            },
-            {
-                "label": "Importação",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Lista de programas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
+                "label": "Programas da Unidade",
+                "link": "http://localhost:8000/recursos/ppa-cadastros-programas_da_unidade.json",
+                "selecionado": 0
             }
         ]
     },
     {
-        "tipo": "menu-label",
-        "label": "LOA"
-    },
-    {
-        "tipo": "menu-list",
-        "lista": [
+        "label": "Consultas",
+        "selecionado": -1,
+        "sub-itens": [
             {
-                "label": "Cadastros",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Programas da unidade",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
+                "label": "Programa/Ação",
+                "link": "ppa-consultas-programa_acao.json",
+                "selecionado": 0
             },
             {
-                "label": "Tabelas",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Ação",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Base Geografica",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Categoria da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Coordenador",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Elemento da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Fonte de recurso",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Fonte indicador",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Função",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Gerentes de programas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Grupo da natureza da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Índice desembolso mensal",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Macro Objetivo",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Modalidade da aplicação",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Natureza da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Produto",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Programa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Proposta",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Público alvo",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Subfunção",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Teto Orçamentário",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Unidade de medida",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Orgão",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Unidade",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
+                "label": "Teto Orçamentario/PPA",
+                "link": "ppa-consultas-teto_orcamentario_ppa.json",
+                "selecionado": 0
+            }
+        ]
+    },
+    {
+        "label": "Tabelas",
+        "selecionado": -1,
+        "sub-itens": [
+            {
+                "label": "Ação",
+                "link": "/pessoas",
+                "selecionado": 0
             },
             {
-                "label": "Relatórios",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Monitoria",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "LDO",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "LOA",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Receitas de despesas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
+                "label": "Base Geográfica",
+                "link": "/pessoas",
+                "selecionado": 0
             },
             {
-                "label": "Admim",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Indicadores",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Selecionar propostas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
+                "label": "Categoria da despesa",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Coordenador",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Elemento da despesa",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Fonte indicador",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Fonte de recurso",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Função",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Gerentes de programa",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Grupo da natureza da despesa",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Diretrizes estratégicas",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Modalidade da aplicação",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Natureza da despesa",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Produto",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Programas",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Proposta",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Público alvo",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Sub-função",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Teto Orçamentario",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Unidade de medida",
+                "link": "/pessoas",
+                "selecionado": 0
             }
         ]
     },
     {
-        "tipo": "menu-label",
-        "label": "AVA"
-    },
-    {
-        "tipo": "menu-list",
-        "lista": [
+        "label": "Relatórios",
+        "selecionado": -1,
+        "sub-itens": [
             {
-                "label": "Cadastros",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Programas da unidade",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Detalhamento do programa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Ações do programa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
+                "label": "PPA",
+                "link": "/pessoas",
+                "selecionado": 0
+            },
+            {
+                "label": "Receitas de despesas",
+                "link": "/pessoas",
+                "selecionado": 0
             }
         ]
     },
     {
-        "tipo": "menu-list",
-        "lista": [
+        "label": "Importação",
+        "selecionado": -1,
+        "sub-itens": [
             {
-                "label": "Consultas",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Consulta programa/acão",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Consulta teto orçamentário/PPA",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "tipo": "menu-list",
-        "lista": [
-            {
-                "label": "Tabelas",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Indicadores do programa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Ação",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Base geográfica",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Categoria da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Coordenador",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Elemento da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Fonte Indicador",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Fonte do recurso",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Função",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Gerentes de programa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Grupo da natureza da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Diretrizes estratégicas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Modalidade da aplicação",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Natureza da despesa",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Produto",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Programas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Propostas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Publico Alvo",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Subfunção",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Teto orçamentario",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Unidade de medida",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "tipo": "menu-list",
-        "lista": [
-            {
-                "label": "Relatórios",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "PPA",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "LDO",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "LOA",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Receitas e despesas",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "tipo": "menu-list",
-        "lista": [
-            {
-                "label": "Admin",
-                "selecionado": -1,
-                "sub-itens": [
-                    {
-                        "label": "Memória de calculo",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Seleciona proposta PPA",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    },
-                    {
-                        "label": "Valores",
-                        "link": "/pessoas",
-                        "selecionado": 0
-                    }
-                   
-                ]
+                "label": "Lista de programas",
+                "link": "/pessoas",
+                "selecionado": 0
             }
         ]
     }

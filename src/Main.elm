@@ -3,7 +3,8 @@ module Main exposing (..)
 import Browser
 import Html
     exposing
-        ( Html
+        ( Attribute
+        , Html
         , a
         , aside
         , button
@@ -41,6 +42,7 @@ import Html.Attributes
         , id
         , placeholder
         , src
+        , style
         , type_
         )
 import Html.Events
@@ -83,9 +85,10 @@ main =
 
 
 type alias Model =
-    { menu : List Objeto
-    , conteudo : Conteudo
+    { menu : List Item
+    , modoCrud : Crud
     , schema : Schema
+    , showMenu : Bool
     }
 
 
@@ -96,9 +99,8 @@ type alias Schema =
     }
 
 
-type Conteudo
-    = Listagem
-    | Formulario
+type Crud
+    = Todos
 
 
 type Campo
@@ -211,9 +213,10 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( Model
         []
-        Listagem
+        Todos
         (Schema "" "" [])
-    , getObjetos
+        True
+    , getItens
     )
 
 
@@ -222,10 +225,11 @@ init _ =
 
 
 type Msg
-    = GotMenu (Result Http.Error (List Objeto))
+    = GotMenu (Result Http.Error (List Item))
     | GotSchema (Result Http.Error Schema)
     | Selecionar Item
     | SubSelecionado SubItem
+    | MostrarMenu
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -233,14 +237,14 @@ update msg model =
     case msg of
         GotMenu result ->
             case result of
-                Ok listMenu ->
-                    ( { model | menu = listMenu }, Cmd.none )
+                Ok listItens ->
+                    ( { model | menu = listItens }, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )
 
         Selecionar item ->
-            ( { model | menu = atualizarMenu model.menu item }, Cmd.none )
+            ( { model | menu = atualizarMenu model.menu item}, Cmd.none )
 
         GotSchema result ->
             case result of
@@ -253,31 +257,20 @@ update msg model =
         SubSelecionado subitem ->
             ( model, getSchema subitem.link )
 
+        MostrarMenu ->
+            ( { model | showMenu = not model.showMenu }, Cmd.none )
 
 
 -- SUBSCRIPTIONS
 
 
-atualizarMenu : List Objeto -> Item -> List Objeto
+atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
-    List.map
-        (\n -> substituirObjeto n item)
-        menu
-
-
-substituirObjeto : Objeto -> Item -> Objeto
-substituirObjeto objItem item =
-    case objItem of
-        Label _ ->
-            objItem
-
-        Lista lista ->
-            Lista (substituirItem lista item)
-
+   substituirItem menu item
 
 substituirItem : List Item -> Item -> List Item
-substituirItem lista item =
-    List.map (compararItem item) lista
+substituirItem menu item =
+    List.map (compararItem item) menu
 
 
 compararItem : Item -> Item -> Item
@@ -295,7 +288,16 @@ subscriptions _ =
 
 
 
--- VIEW
+-- expandir e recolher menu
+
+
+expandirMenu : Bool -> Attribute msg
+expandirMenu cond =
+    if cond then
+        Html.Attributes.style "display" "block"
+
+    else
+        Html.Attributes.style "display" "none"
 
 
 view : Model -> Html Msg
@@ -305,8 +307,11 @@ view model =
             [ -- todo conteúdo é aqui
               topo -- topo é a tag reader
             , div [ class "flex flex-1" ]
-                [ aside [ class "bg-side-nav w-1/2 md:w-1/6 lg:w-1/6 border-r border-side-nav hidden md:block lg:block" ]
-                    [ menuLateral ]
+                [ aside
+                    [ class "bg-side-nav w-1/2 md:w-1/6 lg:w-1/6 border-r border-side-nav hidden md:block lg:block"
+                    , expandirMenu model.showMenu
+                    ]
+                    [ viewMenu model.menu ]
                 , main_ [ class "bg-white-500 flex-1 p-3 overflow-hidden" ]
                     [ div [ class "flex flex-col" ] [ tabela ] ]
                 ]
@@ -319,49 +324,70 @@ view model =
 --viewMenu model
 
 
-viewMenu : List Objeto -> Html Msg
+viewMenu : List Item -> Html Msg
 viewMenu menu =
-    Html.nav [ class "menu section" ] (List.map (\n -> gerarMenu n) menu)
-
-
-gerarMenu : Objeto -> Html Msg
-gerarMenu menu =
-    case menu of
-        Label label ->
-            p [ class "menu-label" ] [ text label ]
-
-        Lista lista ->
-            ul [ class "menu-list" ] (List.map (\n -> liMenu n) lista)
+    ul [ class "list-reset flex flex-col" ] (List.map (\n -> liMenu n) menu)
 
 
 gerarSubMenu : Item -> Html Msg
 gerarSubMenu item =
-    ul [] (subItens item.subItens)
+    ul [ class "list-reset -mx-2 bg-white-medium-dark" ] (subItens item.subItens)
 
 
 subItens : List SubItem -> List (Html Msg)
 subItens subitens =
-    List.map (\n -> li [] [ a [ onClick (SubSelecionado n) ] [ text n.label ] ]) subitens
+    List.map
+        (\n ->
+            li [ class "border-t mt-2 border-light-border w-full h-full px-2 py-3" ]
+                [ a
+                    [ class "mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
+                    , onClick (SubSelecionado n)
+                    ]
+                    [ text n.label
+                    , span [] [ i [ class "fa fa-angle-right float-right" ] [] ]
+                    ]
+                ]
+        )
+        subitens
 
 
 liMenu : Item -> Html Msg
-liMenu i =
-    if i.selecionado > 0 then
-        li [] [ a [ onClick (Selecionar i) ] [ text i.label ], gerarSubMenu i ]
+liMenu item =
+    if item.selecionado > 0 then
+        li [ class "w-full h-full py-3 px-2 border-b border-light-border" ]
+            [ a
+                [ href "#"
+                , class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
+                , onClick (Selecionar item)
+                ]
+                [ text item.label
+                , span [] [ i [ class "fa fa-angle-down float-right" ] [] ]
+                ]
+            , gerarSubMenu item
+            ]
 
     else
-        li [] [ a [ onClick (Selecionar i) ] [ text i.label ] ]
+        li [ class "w-full h-full py-3 px-2 border-b border-light-border" ]
+            [ a
+                [ href "#"
+                , class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
+                , onClick (Selecionar item)
+                ]
+                [ text item.label
+                , span [] [ i [ class "fas fa-angle-right float-right" ] [] ]
+                ]
+            ]
 
 
 
 -- HTTP
 
 
-getObjetos : Cmd Msg
-getObjetos =
+getItens : Cmd Msg
+getItens =
     Http.get
         { url = "http://localhost:8000/menu.json"
-        , expect = Http.expectJson GotMenu listObjDecoder
+        , expect = Http.expectJson GotMenu (list itemDecoder)
         }
 
 
@@ -378,9 +404,9 @@ class name =
     attribute "class" name
 
 
-topo : Html msg
+topo : Html Msg
 topo =
-    header [ class "bg-nav" ]
+    header [ class "bg-nav", onClick MostrarMenu ]
         [ div [ class "flex justify-between" ]
             [ div [ class "p-1 mx-3 inline-flex items-center" ]
                 [ i [ class "fas fa-bars pr-2 text-white" ] []
@@ -393,12 +419,11 @@ topo =
 menuLateral : Html msg
 menuLateral =
     ul [ class "list-reset flex flex-col" ]
-        [ li [ class " w-full h-full py-3 px-2 border-b border-light-border bg-white" ]
+        [ li [ class "w-full h-full py-3 px-2 border-b border-light-border bg-white" ]
             [ a [ href "index.html", class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
                 [ i [ class "fas fa-tachometer-alt float-left mx-2" ] []
                 , text "Dashboard"
-                , span []
-                    [ i [ class "fas fa-angle-right float-right" ] [] ]
+                , span [] [ i [ class "fas fa-angle-right float-right" ] [] ]
                 ]
             ]
         , li [ class "w-full h-full py-3 px-2 border-b border-light-border" ]
@@ -453,8 +478,7 @@ menuLateral =
                 [ li [ class "border-t mt-2 border-light-border w-full h-full px-2 py-3" ]
                     [ a [ href "login.html", class "mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
                         [ text "Login Page"
-                        , span []
-                            [ i [ class "fa fa-angle-right float-right" ] [] ]
+                        , span [] [ i [ class "fa fa-angle-right float-right" ] [] ]
                         ]
                     ]
                 , li [ class "border-t border-light-border w-full h-full px-2 py-3" ]
