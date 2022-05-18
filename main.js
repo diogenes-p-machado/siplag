@@ -6225,8 +6225,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 194, column: 13},
-				end: {line: 194, column: 23}
+				start: {line: 147, column: 13},
+				end: {line: 147, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -6769,11 +6769,30 @@ var $author$project$Main$tabela = A2(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$author$project$Main$class('bg-gray-200 px-2 py-3 border-solid border-gray-200 border-b')
+							$author$project$Main$class('bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b')
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Full Table')
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$author$project$Main$class('bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 border border-orange-400 rounded')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Voltar')
+								])),
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$author$project$Main$class('bg-green-400 hover:bg-green-600 text-white font-bold py-2 px-4 border border-green-500 rounded float-right')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Novo')
+								]))
 						])),
 					A2(
 					$elm$html$Html$div,
@@ -6989,6 +7008,16 @@ var $author$project$Main$tabela = A2(
 												]))
 										]))
 								]))
+						])),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$author$project$Main$class('bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-4 mb-4 border border-gray-200 rounded shadow')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Opções')
 						]))
 				]))
 		]));
@@ -7063,6 +7092,12 @@ var $author$project$Main$Selecionar = function (a) {
 var $author$project$Main$SubSelecionado = function (a) {
 	return {$: 'SubSelecionado', a: a};
 };
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $author$project$Main$subItens = function (subitens) {
 	return A2(
@@ -7080,6 +7115,7 @@ var $author$project$Main$subItens = function (subitens) {
 						$elm$html$Html$a,
 						_List_fromArray(
 							[
+								$elm$html$Html$Attributes$href('#'),
 								$author$project$Main$class('mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline'),
 								$elm$html$Html$Events$onClick(
 								$author$project$Main$SubSelecionado(n))
@@ -7115,18 +7151,15 @@ var $author$project$Main$gerarSubMenu = function (item) {
 			]),
 		$author$project$Main$subItens(item.subItens));
 };
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
+var $author$project$Main$liClassSelecionado = function (selecionado) {
+	return (selecionado > 0) ? $author$project$Main$class('w-full h-full py-3 px-2') : $author$project$Main$class('w-full h-full py-3 px-2 border-b border-300-border');
 };
 var $author$project$Main$liMenu = function (item) {
 	return (item.selecionado > 0) ? A2(
 		$elm$html$Html$li,
 		_List_fromArray(
 			[
-				$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
+				$author$project$Main$liClassSelecionado(item.selecionado)
 			]),
 		_List_fromArray(
 			[
@@ -7161,7 +7194,7 @@ var $author$project$Main$liMenu = function (item) {
 		$elm$html$Html$li,
 		_List_fromArray(
 			[
-				$author$project$Main$class('w-full h-full py-3 px-2 border-b border-light-border')
+				$author$project$Main$liClassSelecionado(item.selecionado)
 			]),
 		_List_fromArray(
 			[
@@ -7233,6 +7266,13 @@ var $author$project$Main$view = function (model) {
 							]),
 						_List_fromArray(
 							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$author$project$Main$class('flex')
+									]),
+								_List_Nil),
 								A2(
 								$elm$html$Html$aside,
 								_List_fromArray(

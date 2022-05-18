@@ -12,16 +12,13 @@ import Html
         , form
         , h1
         , header
-        , hr
         , i
-        , img
         , input
         , label
         , li
         , main_
         , option
         , p
-        , section
         , select
         , span
         , table
@@ -35,14 +32,11 @@ import Html
         )
 import Html.Attributes
     exposing
-        ( alt
-        , attribute
+        ( attribute
         , for
         , href
         , id
         , placeholder
-        , src
-        , style
         , type_
         )
 import Html.Events
@@ -107,11 +101,6 @@ type Campo
     = Texto String String
 
 
-type Objeto
-    = Label String
-    | Lista (List Item)
-
-
 type alias Item =
     { label : String
     , selecionado : Int
@@ -124,42 +113,6 @@ type alias SubItem =
     , link : String
     , selecionado : Int
     }
-
-
-listObjDecoder : Decoder (List Objeto)
-listObjDecoder =
-    list objetoDecoder
-
-
-objetoDecoder : Decoder Objeto
-objetoDecoder =
-    field "tipo" string
-        |> andThen objetoPorTipo
-
-
-objetoPorTipo : String -> Decoder Objeto
-objetoPorTipo tipo =
-    case tipo of
-        "menu-label" ->
-            labelMenuObj
-
-        "menu-list" ->
-            listMenuObj
-
-        _ ->
-            Debug.todo "nenhum decoder"
-
-
-labelMenuObj : Decoder Objeto
-labelMenuObj =
-    map Label
-        (field "label" string)
-
-
-listMenuObj : Decoder Objeto
-listMenuObj =
-    map Lista
-        (field "lista" (list itemDecoder))
 
 
 itemDecoder : Decoder Item
@@ -220,10 +173,6 @@ init _ =
     )
 
 
-
--- UPDATE
-
-
 type Msg
     = GotMenu (Result Http.Error (List Item))
     | GotSchema (Result Http.Error Schema)
@@ -244,7 +193,7 @@ update msg model =
                     ( model, Cmd.none )
 
         Selecionar item ->
-            ( { model | menu = atualizarMenu model.menu item}, Cmd.none )
+            ( { model | menu = atualizarMenu model.menu item }, Cmd.none )
 
         GotSchema result ->
             case result of
@@ -261,12 +210,10 @@ update msg model =
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
 
--- SUBSCRIPTIONS
-
-
 atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
-   substituirItem menu item
+    substituirItem menu item
+
 
 substituirItem : List Item -> Item -> List Item
 substituirItem menu item =
@@ -304,10 +251,10 @@ view : Model -> Html Msg
 view model =
     div [ class "mx-auto bg-grey-400" ]
         [ div [ class "min-h-screen flex flex-col" ]
-            [ -- todo conteúdo é aqui
-              topo -- topo é a tag reader
+            [ topo
             , div [ class "flex flex-1" ]
-                [ aside
+                [ div [ class "flex" ] []
+                , aside
                     [ class "bg-side-nav w-1/2 md:w-1/6 lg:w-1/6 border-r border-side-nav hidden md:block lg:block"
                     , expandirMenu model.showMenu
                     ]
@@ -334,13 +281,23 @@ gerarSubMenu item =
     ul [ class "list-reset -mx-2 bg-white-medium-dark" ] (subItens item.subItens)
 
 
+liClassSelecionado : number -> Attribute msg
+liClassSelecionado selecionado =
+    if selecionado > 0 then
+        class "w-full h-full py-3 px-2"
+
+    else
+        class "w-full h-full py-3 px-2 border-b border-300-border"
+
+
 subItens : List SubItem -> List (Html Msg)
 subItens subitens =
     List.map
         (\n ->
             li [ class "border-t mt-2 border-light-border w-full h-full px-2 py-3" ]
                 [ a
-                    [ class "mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
+                    [ href "#"
+                    , class "mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
                     , onClick (SubSelecionado n)
                     ]
                     [ text n.label
@@ -354,7 +311,7 @@ subItens subitens =
 liMenu : Item -> Html Msg
 liMenu item =
     if item.selecionado > 0 then
-        li [ class "w-full h-full py-3 px-2 border-b border-light-border" ]
+        li [ liClassSelecionado item.selecionado ]
             [ a
                 [ href "#"
                 , class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
@@ -367,7 +324,7 @@ liMenu item =
             ]
 
     else
-        li [ class "w-full h-full py-3 px-2 border-b border-light-border" ]
+        li [ liClassSelecionado item.selecionado ]
             [ a
                 [ href "#"
                 , class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
@@ -504,8 +461,10 @@ tabela : Html Msg
 tabela =
     div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
         [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
-            [ div [ class "bg-gray-200 px-2 py-3 border-solid border-gray-200 border-b" ]
-                [ text "Full Table" ]
+            [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b" ]
+                [ button [ class "bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 border border-orange-400 rounded" ] [ text "Voltar" ]
+                , button [ class "bg-green-400 hover:bg-green-600 text-white font-bold py-2 px-4 border border-green-500 rounded float-right" ] [ text "Novo" ]
+                ]
             , div [ class "p-3" ]
                 [ table [ class "table-responsive w-full rounded" ]
                     [ thead []
@@ -538,6 +497,7 @@ tabela =
                         ]
                     ]
                 ]
+            , button [ class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-4 mb-4 border border-gray-200 rounded shadow" ] [ text "Opções" ]
             ]
         ]
 
