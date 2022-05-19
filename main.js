@@ -5334,15 +5334,15 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
+var $author$project$Main$List = {$: 'List'};
 var $author$project$Main$Model = F4(
-	function (menu, modoCrud, schema, showMenu) {
-		return {menu: menu, modoCrud: modoCrud, schema: schema, showMenu: showMenu};
+	function (menu, modo, schema, showMenu) {
+		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu};
 	});
 var $author$project$Main$Schema = F3(
 	function (tabela, schema, campos) {
 		return {campos: campos, schema: schema, tabela: tabela};
 	});
-var $author$project$Main$Todos = {$: 'Todos'};
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
 };
@@ -6174,7 +6174,7 @@ var $author$project$Main$init = function (_v0) {
 		A4(
 			$author$project$Main$Model,
 			_List_Nil,
-			$author$project$Main$Todos,
+			$author$project$Main$List,
 			A3($author$project$Main$Schema, '', '', _List_Nil),
 			true),
 		$author$project$Main$getItens);
@@ -6184,6 +6184,7 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
+var $author$project$Main$Create = {$: 'Create'};
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -6225,8 +6226,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 147, column: 13},
-				end: {line: 147, column: 23}
+				start: {line: 148, column: 13},
+				end: {line: 148, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -6294,11 +6295,23 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$Main$getSchema(subitem.link));
-			default:
+			case 'MostrarMenu':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{showMenu: !model.showMenu}),
+					$elm$core$Platform$Cmd$none);
+			case 'AbrirModal':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modo: $author$project$Main$Create}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{modo: $author$project$Main$List}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -6321,7 +6334,7 @@ var $author$project$Main$expandirMenu = function (cond) {
 	return cond ? A2($elm$html$Html$Attributes$style, 'display', 'block') : A2($elm$html$Html$Attributes$style, 'display', 'none');
 };
 var $elm$html$Html$main_ = _VirtualDom_node('main');
-var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Main$FecharModal = {$: 'FecharModal'};
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -6334,10 +6347,34 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$form = _VirtualDom_node('form');
-var $elm$html$Html$i = _VirtualDom_node('i');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
+var $author$project$Main$modalAberto = function (model) {
+	var _v0 = model.modo;
+	if (_v0.$ === 'Create') {
+		return $author$project$Main$class('modal-wrapper modal-is-open');
+	} else {
+		return $author$project$Main$class('modal-wrapper');
+	}
+};
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm$html$Html$option = _VirtualDom_node('option');
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
@@ -6350,399 +6387,388 @@ var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var $author$project$Main$modal = A2(
-	$elm$html$Html$div,
-	_List_fromArray(
-		[
-			$elm$html$Html$Attributes$id('centeredFormModal'),
-			$author$project$Main$class('modal-wrapper')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$author$project$Main$class('overlay close-modal')
-				]),
-			_List_Nil),
-			A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$author$project$Main$class('modal modal-centered')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$author$project$Main$class('modal-content shadow-lg p-5')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$div,
-							_List_fromArray(
-								[
-									$author$project$Main$class('border-b p-2 pb-3 pt-0 mb-4')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$author$project$Main$class('flex justify-between items-center')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Modal header'),
-											A2(
-											$elm$html$Html$span,
-											_List_fromArray(
-												[
-													$author$project$Main$class('close-modal cursor-pointer px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$i,
-													_List_fromArray(
-														[
-															$author$project$Main$class('fas fa-times text-gray-700')
-														]),
-													_List_Nil)
-												]))
-										]))
-								])),
-							A2(
-							$elm$html$Html$form,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$id('form_id'),
-									$author$project$Main$class('w-full')
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$author$project$Main$class('flex flex-wrap -mx-3 mb-6')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$author$project$Main$class('w-full md:w-1/2 px-3 mb-6 md:mb-0')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$label,
-													_List_fromArray(
-														[
-															$author$project$Main$class('block uppercase tracking-wide text-gray-700 text-xs font-light mb-1'),
-															$elm$html$Html$Attributes$for('grid-first-name')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('First Name')
-														])),
-													A2(
-													$elm$html$Html$input,
-													_List_fromArray(
-														[
-															$author$project$Main$class('appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white-500'),
-															$elm$html$Html$Attributes$id('grid-first-name'),
-															$elm$html$Html$Attributes$type_('text'),
-															$elm$html$Html$Attributes$placeholder('Jane')
-														]),
-													_List_Nil),
-													A2(
-													$elm$html$Html$p,
-													_List_fromArray(
-														[
-															$author$project$Main$class('text-red-500 text-xs italic')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Please fill out this field.')
-														]))
-												])),
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$author$project$Main$class('w-full md:w-1/2 px-3')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$label,
-													_List_fromArray(
-														[
-															$author$project$Main$class('block uppercase tracking-wide text-gray-700 text-xs font-light mb-1'),
-															$elm$html$Html$Attributes$for('grid-last-name')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Last Name')
-														])),
-													A2(
-													$elm$html$Html$input,
-													_List_fromArray(
-														[
-															$author$project$Main$class('appearance-none block w-full bg-gray-200 text-grey-darker border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white-500 focus:border-gray-600'),
-															$elm$html$Html$Attributes$id('grid-last-name'),
-															$elm$html$Html$Attributes$type_('text'),
-															$elm$html$Html$Attributes$placeholder('Doe')
-														]),
-													_List_Nil)
-												]))
-										])),
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$author$project$Main$class('flex flex-wrap -mx-3 mb-6')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$author$project$Main$class('w-full px-3')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$label,
-													_List_fromArray(
-														[
-															$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
-															$elm$html$Html$Attributes$for('grid-password')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Password')
-														])),
-													A2(
-													$elm$html$Html$input,
-													_List_fromArray(
-														[
-															$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
-															$elm$html$Html$Attributes$id('grid-password'),
-															$elm$html$Html$Attributes$type_('password'),
-															$elm$html$Html$Attributes$placeholder('******************')
-														]),
-													_List_Nil),
-													A2(
-													$elm$html$Html$p,
-													_List_fromArray(
-														[
-															$author$project$Main$class('text-grey-dark text-xs italic')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Make it as long and as crazy as you\'d like')
-														]))
-												]))
-										])),
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$author$project$Main$class('flex flex-wrap -mx-3 mb-2')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$author$project$Main$class('w-full md:w-1/3 px-3 mb-6 md:mb-0')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$label,
-													_List_fromArray(
-														[
-															$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
-															$elm$html$Html$Attributes$for('grid-city')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('City')
-														])),
-													A2(
-													$elm$html$Html$input,
-													_List_fromArray(
-														[
-															$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
-															$elm$html$Html$Attributes$id('grid-city'),
-															$elm$html$Html$Attributes$type_('text'),
-															$elm$html$Html$Attributes$placeholder('Albuquerque')
-														]),
-													_List_Nil)
-												])),
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$author$project$Main$class('w-full md:w-1/3 px-3 mb-6 md:mb-0')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$label,
-													_List_fromArray(
-														[
-															$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
-															$elm$html$Html$Attributes$for('grid-state')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('State')
-														])),
-													A2(
-													$elm$html$Html$div,
-													_List_fromArray(
-														[
-															$author$project$Main$class('relative')
-														]),
-													_List_fromArray(
-														[
-															A2(
-															$elm$html$Html$select,
-															_List_fromArray(
-																[
-																	$author$project$Main$class('block appearance-none w-full bg-grey-200 border border-grey-200 text-grey-darker py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-grey'),
-																	$elm$html$Html$Attributes$id('grid-state')
-																]),
-															_List_fromArray(
-																[
-																	A2(
-																	$elm$html$Html$option,
-																	_List_Nil,
-																	_List_fromArray(
-																		[
-																			$elm$html$Html$text('New Mexico')
-																		])),
-																	A2(
-																	$elm$html$Html$option,
-																	_List_Nil,
-																	_List_fromArray(
-																		[
-																			$elm$html$Html$text('Missouri')
-																		])),
-																	A2(
-																	$elm$html$Html$option,
-																	_List_Nil,
-																	_List_fromArray(
-																		[
-																			$elm$html$Html$text('Texas')
-																		]))
-																])),
-															A2(
-															$elm$html$Html$div,
-															_List_fromArray(
-																[
-																	$author$project$Main$class('pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-grey-darker')
-																]),
-															_List_fromArray(
-																[
-																	A2(
-																	$elm$svg$Svg$svg,
-																	_List_fromArray(
-																		[
-																			$elm$svg$Svg$Attributes$class('fill-current h-4 w-4'),
-																			$elm$svg$Svg$Attributes$viewBox('0 0 20 20')
-																		]),
-																	_List_fromArray(
-																		[
-																			A2(
-																			$elm$svg$Svg$path,
-																			_List_fromArray(
-																				[
-																					$elm$svg$Svg$Attributes$d('M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z')
-																				]),
-																			_List_Nil)
-																		]))
-																]))
-														]))
-												])),
-											A2(
-											$elm$html$Html$div,
-											_List_fromArray(
-												[
-													$author$project$Main$class('w-full md:w-1/3 px-3 mb-6 md:mb-0')
-												]),
-											_List_fromArray(
-												[
-													A2(
-													$elm$html$Html$label,
-													_List_fromArray(
-														[
-															$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
-															$elm$html$Html$Attributes$for('grid-zip')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('Zip')
-														])),
-													A2(
-													$elm$html$Html$input,
-													_List_fromArray(
-														[
-															$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
-															$elm$html$Html$Attributes$id('grid-zip'),
-															$elm$html$Html$Attributes$type_('text'),
-															$elm$html$Html$Attributes$placeholder('90210')
-														]),
-													_List_Nil)
-												]))
-										])),
-									A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$author$project$Main$class('mt-5')
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$button,
-											_List_fromArray(
-												[
-													$author$project$Main$class('bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded')
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Submit')
-												])),
-											A2(
-											$elm$html$Html$span,
-											_List_fromArray(
-												[
-													$author$project$Main$class('close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold py-2 px-4 rounded')
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Close')
-												]))
-										]))
-								]))
-						]))
-				]))
-		]));
+var $author$project$Main$modal = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$author$project$Main$modalAberto(model)
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$author$project$Main$class('overlay close-modal')
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$author$project$Main$class('modal modal-centered')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$author$project$Main$class('modal-content shadow-lg p-5')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$author$project$Main$class('border-b p-2 pb-3 pt-0 mb-4')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$author$project$Main$class('flex justify-between items-center')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Modal header')
+											]))
+									])),
+								A2(
+								$elm$html$Html$form,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$id('form_id'),
+										$author$project$Main$class('w-full')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$author$project$Main$class('flex flex-wrap -mx-3 mb-6')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$author$project$Main$class('w-full md:w-1/2 px-3 mb-6 md:mb-0')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$author$project$Main$class('block uppercase tracking-wide text-gray-700 text-xs font-light mb-1'),
+																$elm$html$Html$Attributes$for('grid-first-name')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('First Name')
+															])),
+														A2(
+														$elm$html$Html$input,
+														_List_fromArray(
+															[
+																$author$project$Main$class('appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white-500'),
+																$elm$html$Html$Attributes$id('grid-first-name'),
+																$elm$html$Html$Attributes$type_('text'),
+																$elm$html$Html$Attributes$placeholder('Jane')
+															]),
+														_List_Nil),
+														A2(
+														$elm$html$Html$p,
+														_List_fromArray(
+															[
+																$author$project$Main$class('text-red-500 text-xs italic')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Please fill out this field.')
+															]))
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$author$project$Main$class('w-full md:w-1/2 px-3')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$author$project$Main$class('block uppercase tracking-wide text-gray-700 text-xs font-light mb-1'),
+																$elm$html$Html$Attributes$for('grid-last-name')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Last Name')
+															])),
+														A2(
+														$elm$html$Html$input,
+														_List_fromArray(
+															[
+																$author$project$Main$class('appearance-none block w-full bg-gray-200 text-grey-darker border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white-500 focus:border-gray-600'),
+																$elm$html$Html$Attributes$id('grid-last-name'),
+																$elm$html$Html$Attributes$type_('text'),
+																$elm$html$Html$Attributes$placeholder('Doe')
+															]),
+														_List_Nil)
+													]))
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$author$project$Main$class('flex flex-wrap -mx-3 mb-6')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$author$project$Main$class('w-full px-3')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
+																$elm$html$Html$Attributes$for('grid-password')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Password')
+															])),
+														A2(
+														$elm$html$Html$input,
+														_List_fromArray(
+															[
+																$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
+																$elm$html$Html$Attributes$id('grid-password'),
+																$elm$html$Html$Attributes$type_('password'),
+																$elm$html$Html$Attributes$placeholder('******************')
+															]),
+														_List_Nil),
+														A2(
+														$elm$html$Html$p,
+														_List_fromArray(
+															[
+																$author$project$Main$class('text-grey-dark text-xs italic')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Make it as long and as crazy as you\'d like')
+															]))
+													]))
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$author$project$Main$class('flex flex-wrap -mx-3 mb-2')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$author$project$Main$class('w-full md:w-1/3 px-3 mb-6 md:mb-0')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
+																$elm$html$Html$Attributes$for('grid-city')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('City')
+															])),
+														A2(
+														$elm$html$Html$input,
+														_List_fromArray(
+															[
+																$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
+																$elm$html$Html$Attributes$id('grid-city'),
+																$elm$html$Html$Attributes$type_('text'),
+																$elm$html$Html$Attributes$placeholder('Albuquerque')
+															]),
+														_List_Nil)
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$author$project$Main$class('w-full md:w-1/3 px-3 mb-6 md:mb-0')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
+																$elm$html$Html$Attributes$for('grid-state')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('State')
+															])),
+														A2(
+														$elm$html$Html$div,
+														_List_fromArray(
+															[
+																$author$project$Main$class('relative')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																$elm$html$Html$select,
+																_List_fromArray(
+																	[
+																		$author$project$Main$class('block appearance-none w-full bg-grey-200 border border-grey-200 text-grey-darker py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-grey'),
+																		$elm$html$Html$Attributes$id('grid-state')
+																	]),
+																_List_fromArray(
+																	[
+																		A2(
+																		$elm$html$Html$option,
+																		_List_Nil,
+																		_List_fromArray(
+																			[
+																				$elm$html$Html$text('New Mexico')
+																			])),
+																		A2(
+																		$elm$html$Html$option,
+																		_List_Nil,
+																		_List_fromArray(
+																			[
+																				$elm$html$Html$text('Missouri')
+																			])),
+																		A2(
+																		$elm$html$Html$option,
+																		_List_Nil,
+																		_List_fromArray(
+																			[
+																				$elm$html$Html$text('Texas')
+																			]))
+																	])),
+																A2(
+																$elm$html$Html$div,
+																_List_fromArray(
+																	[
+																		$author$project$Main$class('pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-grey-darker')
+																	]),
+																_List_fromArray(
+																	[
+																		A2(
+																		$elm$svg$Svg$svg,
+																		_List_fromArray(
+																			[
+																				$elm$svg$Svg$Attributes$class('fill-current h-4 w-4'),
+																				$elm$svg$Svg$Attributes$viewBox('0 0 20 20')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				$elm$svg$Svg$path,
+																				_List_fromArray(
+																					[
+																						$elm$svg$Svg$Attributes$d('M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z')
+																					]),
+																				_List_Nil)
+																			]))
+																	]))
+															]))
+													])),
+												A2(
+												$elm$html$Html$div,
+												_List_fromArray(
+													[
+														$author$project$Main$class('w-full md:w-1/3 px-3 mb-6 md:mb-0')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$label,
+														_List_fromArray(
+															[
+																$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
+																$elm$html$Html$Attributes$for('grid-zip')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Zip')
+															])),
+														A2(
+														$elm$html$Html$input,
+														_List_fromArray(
+															[
+																$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
+																$elm$html$Html$Attributes$id('grid-zip'),
+																$elm$html$Html$Attributes$type_('text'),
+																$elm$html$Html$Attributes$placeholder('90210')
+															]),
+														_List_Nil)
+													]))
+											])),
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$author$project$Main$class('mt-5')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$html$Html$span,
+												_List_fromArray(
+													[
+														$author$project$Main$class('close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Salvar')
+													])),
+												A2(
+												$elm$html$Html$span,
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick($author$project$Main$FecharModal),
+														$author$project$Main$class('close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold mx-1 py-2 px-4 rounded')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Cancelar')
+													]))
+											]))
+									]))
+							]))
+					]))
+			]));
+};
+var $author$project$Main$AbrirModal = {$: 'AbrirModal'};
 var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$html$Html$i = _VirtualDom_node('i');
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
 var $elm$html$Html$td = _VirtualDom_node('td');
@@ -6769,7 +6795,7 @@ var $author$project$Main$tabela = A2(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$author$project$Main$class('bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b')
+							$author$project$Main$class('bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right')
 						]),
 					_List_fromArray(
 						[
@@ -6777,21 +6803,12 @@ var $author$project$Main$tabela = A2(
 							$elm$html$Html$button,
 							_List_fromArray(
 								[
-									$author$project$Main$class('bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 border border-orange-400 rounded')
+									$elm$html$Html$Events$onClick($author$project$Main$AbrirModal),
+									$author$project$Main$class('bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded')
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text('Voltar')
-								])),
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$author$project$Main$class('bg-green-400 hover:bg-green-600 text-white font-bold py-2 px-4 border border-green-500 rounded float-right')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Novo')
+									$elm$html$Html$text('Cadastrar')
 								]))
 						])),
 					A2(
@@ -7013,7 +7030,17 @@ var $author$project$Main$tabela = A2(
 					$elm$html$Html$button,
 					_List_fromArray(
 						[
-							$author$project$Main$class('bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-4 mb-4 border border-gray-200 rounded shadow')
+							$author$project$Main$class('bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 ml-4 mx-2 mb-3 border border-orange-400 rounded')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Voltar')
+						])),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$author$project$Main$class('bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow')
 						]),
 					_List_fromArray(
 						[
@@ -7024,23 +7051,6 @@ var $author$project$Main$tabela = A2(
 var $author$project$Main$MostrarMenu = {$: 'MostrarMenu'};
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$header = _VirtualDom_node('header');
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
 var $author$project$Main$topo = A2(
 	$elm$html$Html$header,
 	_List_fromArray(
@@ -7231,7 +7241,7 @@ var $author$project$Main$viewMenu = function (menu) {
 		$elm$html$Html$ul,
 		_List_fromArray(
 			[
-				$author$project$Main$class('list-reset flex flex-col')
+				$author$project$Main$class('list-reset flex flex-col overscroll-contain')
 			]),
 		A2(
 			$elm$core$List$map,
@@ -7303,7 +7313,7 @@ var $author$project$Main$view = function (model) {
 									]))
 							]))
 					])),
-				$author$project$Main$modal
+				$author$project$Main$modal(model)
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(

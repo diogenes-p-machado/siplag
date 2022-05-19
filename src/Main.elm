@@ -59,10 +59,7 @@ import Json.Decode
 import Svg as Svg
 import Svg.Attributes as SvgAttr
 
-
-
 -- MAIN
-
 
 main : Program () Model Msg
 main =
@@ -80,8 +77,8 @@ main =
 
 type alias Model =
     { menu : List Item
-    , modoCrud : Crud
-    , schema : Schema
+    , modo : Crud
+    , schema : Maybe Schema
     , showMenu : Bool
     }
 
@@ -94,7 +91,8 @@ type alias Schema =
 
 
 type Crud
-    = Todos
+    = Create
+    | List
 
 
 type Campo
@@ -166,8 +164,8 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( Model
         []
-        Todos
-        (Schema "" "" [])
+        List
+        Nothing
         True
     , getItens
     )
@@ -179,6 +177,8 @@ type Msg
     | Selecionar Item
     | SubSelecionado SubItem
     | MostrarMenu
+    | AbrirModal
+    | FecharModal
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -198,7 +198,7 @@ update msg model =
         GotSchema result ->
             case result of
                 Ok schemaOk ->
-                    ( { model | schema = schemaOk }, Cmd.none )
+                    ( { model | schema = Just schemaOk }, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )
@@ -209,6 +209,11 @@ update msg model =
         MostrarMenu ->
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
+        AbrirModal ->
+            ( { model | modo = Create }, Cmd.none )
+
+        FecharModal ->
+            ( { model | modo = List }, Cmd.none )
 
 atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
@@ -263,7 +268,7 @@ view model =
                     [ div [ class "flex flex-col" ] [ tabela ] ]
                 ]
             ]
-        , modal
+        , modal model
         ]
 
 
@@ -273,7 +278,7 @@ view model =
 
 viewMenu : List Item -> Html Msg
 viewMenu menu =
-    ul [ class "list-reset flex flex-col" ] (List.map (\n -> liMenu n) menu)
+    ul [ class "list-reset flex flex-col overscroll-contain" ] (List.map (\n -> liMenu n) menu)
 
 
 gerarSubMenu : Item -> Html Msg
@@ -461,9 +466,8 @@ tabela : Html Msg
 tabela =
     div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
         [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
-            [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b" ]
-                [ button [ class "bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 border border-orange-400 rounded" ] [ text "Voltar" ]
-                , button [ class "bg-green-400 hover:bg-green-600 text-white font-bold py-2 px-4 border border-green-500 rounded float-right" ] [ text "Novo" ]
+            [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
+                [ button [ onClick AbrirModal, class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                 ]
             , div [ class "p-3" ]
                 [ table [ class "table-responsive w-full rounded" ]
@@ -497,26 +501,32 @@ tabela =
                         ]
                     ]
                 ]
-            , button [ class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-4 mb-4 border border-gray-200 rounded shadow" ] [ text "Opções" ]
+            , button [ class "bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 ml-4 mx-2 mb-3 border border-orange-400 rounded" ] [ text "Voltar" ]
+            , button [ class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow" ] [ text "Opções" ]
             ]
         ]
 
 
-modal : Html msg
-modal =
-    div [ id "centeredFormModal", class "modal-wrapper" ]
+modalAberto : Model -> Attribute msg
+modalAberto model =
+    case model.modo of
+        Create ->
+            class "modal-wrapper modal-is-open"
+
+        List ->
+            class "modal-wrapper"
+
+
+modal : Model -> Html Msg
+modal model =
+    div [ modalAberto model ]
         [ div [ class "overlay close-modal" ]
             []
         , div [ class "modal modal-centered" ]
             [ div [ class "modal-content shadow-lg p-5" ]
                 [ div [ class "border-b p-2 pb-3 pt-0 mb-4" ]
                     [ div [ class "flex justify-between items-center" ]
-                        [ text "Modal header"
-                        , span [ class "close-modal cursor-pointer px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200" ]
-                            [ i [ class "fas fa-times text-gray-700" ]
-                                []
-                            ]
-                        ]
+                        [ text "Modal header" ]
                     ]
                 , form [ id "form_id", class "w-full" ]
                     [ div [ class "flex flex-wrap -mx-3 mb-6" ]
@@ -628,10 +638,10 @@ modal =
                             ]
                         ]
                     , div [ class "mt-5" ]
-                        [ button [ class "bg-green-500 hover:bg-green-800 text-white font-bold py-2 px-4 rounded" ]
-                            [ text "Submit" ]
-                        , span [ class "close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold py-2 px-4 rounded" ]
-                            [ text "Close" ]
+                        [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
+                            [ text "Salvar" ]
+                        , span [onClick FecharModal, class "close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold mx-1 py-2 px-4 rounded" ]
+                            [ text "Cancelar" ]
                         ]
                     ]
                 ]
