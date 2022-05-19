@@ -5339,10 +5339,6 @@ var $author$project$Main$Model = F4(
 	function (menu, modo, schema, showMenu) {
 		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu};
 	});
-var $author$project$Main$Schema = F3(
-	function (tabela, schema, campos) {
-		return {campos: campos, schema: schema, tabela: tabela};
-	});
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
 };
@@ -6171,12 +6167,7 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A4(
-			$author$project$Main$Model,
-			_List_Nil,
-			$author$project$Main$List,
-			A3($author$project$Main$Schema, '', '', _List_Nil),
-			true),
+		A4($author$project$Main$Model, _List_Nil, $author$project$Main$List, $elm$core$Maybe$Nothing, true),
 		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -6208,6 +6199,10 @@ var $author$project$Main$atualizarMenu = F2(
 var $author$project$Main$GotSchema = function (a) {
 	return {$: 'GotSchema', a: a};
 };
+var $author$project$Main$Schema = F3(
+	function (tabela, schema, campos) {
+		return {campos: campos, schema: schema, tabela: tabela};
+	});
 var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $author$project$Main$Texto = F2(
 	function (a, b) {
@@ -6226,8 +6221,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 148, column: 13},
-				end: {line: 148, column: 23}
+				start: {line: 145, column: 13},
+				end: {line: 145, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -6285,7 +6280,9 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{schema: schemaOk}),
+							{
+								schema: $elm$core$Maybe$Just(schemaOk)
+							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -7126,7 +7123,7 @@ var $author$project$Main$subItens = function (subitens) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$href('#'),
-								$author$project$Main$class('mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline'),
+								$author$project$Main$class('mx-4 font-sans font-hairline font-medium text-base text-nav-item no-underline'),
 								$elm$html$Html$Events$onClick(
 								$author$project$Main$SubSelecionado(n))
 							]),
@@ -7178,7 +7175,7 @@ var $author$project$Main$liMenu = function (item) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$href('#'),
-						$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline'),
+						$author$project$Main$class('mx-2 font-sans font-hairline font-medium text-base text-nav-item no-underline'),
 						$elm$html$Html$Events$onClick(
 						$author$project$Main$Selecionar(item))
 					]),
@@ -7213,7 +7210,7 @@ var $author$project$Main$liMenu = function (item) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$href('#'),
-						$author$project$Main$class('font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline'),
+						$author$project$Main$class('mx-2 font-sans font-hairline font-medium text-base text-nav-item no-underline'),
 						$elm$html$Html$Events$onClick(
 						$author$project$Main$Selecionar(item))
 					]),

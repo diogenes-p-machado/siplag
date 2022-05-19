@@ -302,7 +302,7 @@ subItens subitens =
             li [ class "border-t mt-2 border-light-border w-full h-full px-2 py-3" ]
                 [ a
                     [ href "#"
-                    , class "mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
+                    , class "mx-4 font-sans font-hairline font-medium text-base text-nav-item no-underline"
                     , onClick (SubSelecionado n)
                     ]
                     [ text n.label
@@ -319,7 +319,7 @@ liMenu item =
         li [ liClassSelecionado item.selecionado ]
             [ a
                 [ href "#"
-                , class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
+                , class "mx-2 font-sans font-hairline font-medium text-base text-nav-item no-underline"
                 , onClick (Selecionar item)
                 ]
                 [ text item.label
@@ -332,7 +332,7 @@ liMenu item =
         li [ liClassSelecionado item.selecionado ]
             [ a
                 [ href "#"
-                , class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline"
+                , class "mx-2 font-sans font-hairline font-medium text-base text-nav-item no-underline"
                 , onClick (Selecionar item)
                 ]
                 [ text item.label
