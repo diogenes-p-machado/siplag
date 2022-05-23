@@ -1,16 +1,36 @@
-{    
-    "tabela": "programas",
-    "schema": "ppa",
-    "campos": [
-        {
-            "tipo": "texto",
-            "nome_campo": "id",
-            "codinome_campo": "id"
-        },
-        {
-            "tipo": "texto",
-            "nome_campo": "nome",
-            "codinome_campo": "Nome"
+{
+    "pessoa": {
+        "tipo": "principal",       
+        "campos": {
+            "_id": {
+                "tipo": "id",
+                "value": null
+            },
+            "nome": {
+                "tipo": "texto",
+                "codinome": "Nome da pessoa:",
+                "value": null
+            },
+            "cpf": {
+                "tipo": "texto",
+                "codinome": "Número do cpf:",
+                "value": null
+            }
         }
-    ]
+    },
+    "endereco": {
+        "tipo": "dependente",        
+        "campos": {
+            "logradouro": {
+                "tipo": "texto",
+                "codinome": "Logradouro:",
+                "value": null
+            },
+            "cep": {
+                "tipo": "texto",
+                "codinome": "Cep:",
+                "value": null
+            }
+        }
+    }
 }

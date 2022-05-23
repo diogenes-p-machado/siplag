@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Browser
+import Dict exposing (Dict)
 import Html
     exposing
         ( Attribute
@@ -48,10 +49,13 @@ import Json.Decode
     exposing
         ( Decoder
         , andThen
+        , dict
+        , maybe
+        , nullable
         , field
+        , decodeString
         , int
         , list
-        , map
         , map2
         , map3
         , string
@@ -59,7 +63,11 @@ import Json.Decode
 import Svg as Svg
 import Svg.Attributes as SvgAttr
 
+
+
+
 -- MAIN
+
 
 main : Program () Model Msg
 main =
@@ -70,23 +78,24 @@ main =
         , view = view
         }
 
-
-
 -- MODEL
-
 
 type alias Model =
     { menu : List Item
     , modo : Crud
-    , schema : Maybe Schema
+    , tabelas : Maybe (Dict String Tabela)
     , showMenu : Bool
     }
 
 
 type alias Schema =
-    { tabela : String
-    , schema : String
-    , campos : List Campo
+    { tabelas : Dict String Tabela
+    }
+
+
+type alias Tabela =
+    { tipo : String
+    , campos : Dict String Campo
     }
 
 
@@ -95,8 +104,10 @@ type Crud
     | List
 
 
+--tipo Texto - codinome, value
 type Campo
-    = Texto String String
+    = Texto String (Maybe String)
+    | Id Int 
 
 
 type alias Item =
@@ -121,19 +132,28 @@ itemDecoder =
         (field "sub-itens" (list subItemDecoder))
 
 
-schemaDecoder : Decoder Schema
-schemaDecoder =
-    map3 Schema
-        (field "tabela" string)
-        (field "schema" string)
-        (field "campos" (list campoDecoder))
-
-
 campoDecoder : Decoder Campo
 campoDecoder =
     field "tipo" string
         |> andThen tipoDoCampo
 
+tabelaDecoder : Decoder Tabela
+tabelaDecoder =
+    field "tipo" string
+        |> andThen tipoDaTabela
+
+tipoDaTabela : String -> Decoder Tabela
+tipoDaTabela tipo =
+    case tipo of
+        "principal" ->
+            decoderTabelaPrincipal
+
+        _ ->
+            Debug.todo "nenhum decoder"
+
+decoderTabelaPrincipal : Decoder Tabela
+decoderTabelaPrincipal =  
+         dict (dict campoDecoder)
 
 tipoDoCampo : String -> Decoder Campo
 tipoDoCampo tipo =
@@ -148,8 +168,8 @@ tipoDoCampo tipo =
 decoderCampoTexto : Decoder Campo
 decoderCampoTexto =
     map2 Texto
-        (field "nome_campo" string)
-        (field "codinome_campo" string)
+        (field "codinome" string)
+        (field "value" (nullable string))
 
 
 subItemDecoder : Decoder SubItem
@@ -173,7 +193,7 @@ init _ =
 
 type Msg
     = GotMenu (Result Http.Error (List Item))
-    | GotSchema (Result Http.Error Schema)
+    | GotSchema (Result Http.Error (Dict String Tabela))
     | Selecionar Item
     | SubSelecionado SubItem
     | MostrarMenu
@@ -197,8 +217,8 @@ update msg model =
 
         GotSchema result ->
             case result of
-                Ok schemaOk ->
-                    ( { model | schema = Just schemaOk }, Cmd.none )
+                Ok tabelasOk ->
+                    ( { model | tabelas = Just tabelasOk }, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )
@@ -214,6 +234,7 @@ update msg model =
 
         FecharModal ->
             ( { model | modo = List }, Cmd.none )
+
 
 atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
@@ -357,7 +378,7 @@ getSchema : String -> Cmd Msg
 getSchema url =
     Http.get
         { url = url
-        , expect = Http.expectJson GotSchema schemaDecoder
+        , expect = Http.expectJson GotSchema (dict tabelaDecoder)
         }
 
 
@@ -640,7 +661,7 @@ modal model =
                     , div [ class "mt-5" ]
                         [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
                             [ text "Salvar" ]
-                        , span [onClick FecharModal, class "close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold mx-1 py-2 px-4 rounded" ]
+                        , span [ onClick FecharModal, class "close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold mx-1 py-2 px-4 rounded" ]
                             [ text "Cancelar" ]
                         ]
                     ]
