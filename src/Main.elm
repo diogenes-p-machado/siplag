@@ -89,7 +89,6 @@ type alias Model =
     }
 
 
-
 type Crud
     = Create
     | List
@@ -121,10 +120,12 @@ itemDecoder =
         (field "selecionado" int)
         (field "sub-itens" (list subItemDecoder))
 
+campoDecoder : Decoder Campo
 campoDecoder =
     field "tipo" string
         |> andThen tipoDoCampo 
  
+decoderCampoTexto : Decoder Campo
 decoderCampoTexto =
     map2 Texto        
         (field "codinome" string)
