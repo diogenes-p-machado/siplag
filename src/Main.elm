@@ -31,6 +31,7 @@ import Html
         , tr
         , ul
         )
+
 import Html.Attributes
     exposing
         ( attribute
@@ -40,20 +41,20 @@ import Html.Attributes
         , placeholder
         , type_
         )
+
 import Html.Events
     exposing
         ( onClick
         )
+
 import Http
 import Json.Decode
     exposing
         ( Decoder
         , andThen
-        , dict
-        , maybe
+        , dict        
         , nullable
-        , field
-        , decodeString
+        , field       
         , int
         , list
         , map2
@@ -83,20 +84,10 @@ main =
 type alias Model =
     { menu : List Item
     , modo : Crud
-    , tabelas : Maybe (Dict String Tabela)
+    , tabelas : Maybe (Dict String (Dict String Campo))
     , showMenu : Bool
     }
 
-
-type alias Schema =
-    { tabelas : Dict String Tabela
-    }
-
-
-type alias Tabela =
-    { tipo : String
-    , campos : Dict String Campo
-    }
 
 
 type Crud
@@ -104,10 +95,9 @@ type Crud
     | List
 
 
---tipo Texto - codinome, value
 type Campo
     = Texto String (Maybe String)
-    | Id Int 
+    | Id Int
 
 
 type alias Item =
@@ -131,30 +121,15 @@ itemDecoder =
         (field "selecionado" int)
         (field "sub-itens" (list subItemDecoder))
 
-
-campoDecoder : Decoder Campo
 campoDecoder =
     field "tipo" string
-        |> andThen tipoDoCampo
-
-tabelaDecoder : Decoder Tabela
-tabelaDecoder =
-    field "tipo" string
-        |> andThen tipoDaTabela
-
-tipoDaTabela : String -> Decoder Tabela
-tipoDaTabela tipo =
-    case tipo of
-        "principal" ->
-            decoderTabelaPrincipal
-
-        _ ->
-            Debug.todo "nenhum decoder"
-
-decoderTabelaPrincipal : Decoder Tabela
-decoderTabelaPrincipal =  
-         dict (dict campoDecoder)
-
+        |> andThen tipoDoCampo 
+ 
+decoderCampoTexto =
+    map2 Texto        
+        (field "codinome" string)
+        (field "value" (nullable string))   
+ 
 tipoDoCampo : String -> Decoder Campo
 tipoDoCampo tipo =
     case tipo of
@@ -163,14 +138,6 @@ tipoDoCampo tipo =
 
         _ ->
             Debug.todo "nenhum decoder"
-
-
-decoderCampoTexto : Decoder Campo
-decoderCampoTexto =
-    map2 Texto
-        (field "codinome" string)
-        (field "value" (nullable string))
-
 
 subItemDecoder : Decoder SubItem
 subItemDecoder =
@@ -193,7 +160,7 @@ init _ =
 
 type Msg
     = GotMenu (Result Http.Error (List Item))
-    | GotSchema (Result Http.Error (Dict String Tabela))
+    | GotSchema (Result Http.Error (Dict String (Dict String Campo)))
     | Selecionar Item
     | SubSelecionado SubItem
     | MostrarMenu
@@ -378,7 +345,7 @@ getSchema : String -> Cmd Msg
 getSchema url =
     Http.get
         { url = url
-        , expect = Http.expectJson GotSchema (dict tabelaDecoder)
+        , expect = Http.expectJson GotSchema (dict (dict campoDecoder))
         }
 
 

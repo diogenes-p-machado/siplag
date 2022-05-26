@@ -21,7 +21,7 @@
             },
             {
                 "label": "Teto Orçamentario/PPA",
-                "link": "ppa-consultas-teto_orcamentario_ppa.json",
+                "link": "gerenciar_pessoas.json",
                 "selecionado": 0
             }
         ]
