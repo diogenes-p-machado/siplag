@@ -31,7 +31,6 @@ import Html
         , tr
         , ul
         )
-
 import Html.Attributes
     exposing
         ( attribute
@@ -41,29 +40,26 @@ import Html.Attributes
         , placeholder
         , type_
         )
-
 import Html.Events
     exposing
         ( onClick
         )
-
 import Http
 import Json.Decode
     exposing
         ( Decoder
         , andThen
-        , dict        
-        , nullable
-        , field       
+        , dict
+        , field
         , int
         , list
         , map2
         , map3
+        , nullable
         , string
         )
 import Svg as Svg
 import Svg.Attributes as SvgAttr
-
 
 
 
@@ -79,7 +75,10 @@ main =
         , view = view
         }
 
+
+
 -- MODEL
+
 
 type alias Model =
     { menu : List Item
@@ -120,17 +119,20 @@ itemDecoder =
         (field "selecionado" int)
         (field "sub-itens" (list subItemDecoder))
 
+
 campoDecoder : Decoder Campo
 campoDecoder =
     field "tipo" string
-        |> andThen tipoDoCampo 
- 
+        |> andThen tipoDoCampo
+
+
 decoderCampoTexto : Decoder Campo
 decoderCampoTexto =
-    map2 Texto        
+    map2 Texto
         (field "codinome" string)
-        (field "value" (nullable string))   
- 
+        (field "value" (nullable string))
+
+
 tipoDoCampo : String -> Decoder Campo
 tipoDoCampo tipo =
     case tipo of
@@ -139,6 +141,7 @@ tipoDoCampo tipo =
 
         _ ->
             Debug.todo "nenhum decoder"
+
 
 subItemDecoder : Decoder SubItem
 subItemDecoder =
@@ -506,126 +509,39 @@ modalAberto model =
             class "modal-wrapper"
 
 
+campoTexto : Html msg
+campoTexto =
+    div [ class "flex flex-wrap -mx-3 mb-2" ]
+        [ div [ class "w-full px-3" ]
+            [ label [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1", for "nome" ]
+                [ text "Nome" ]
+            , input
+                [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
+                , type_ "text"
+                , id "nome"
+                , placeholder "Digite seu nome:"
+                ]
+                []
+            ]
+        ]
+
+
 modal : Model -> Html Msg
 modal model =
     div [ modalAberto model ]
-        [ div [ class "overlay close-modal" ]
-            []
+        [ div [ class "overlay close-modal" ] []
         , div [ class "modal modal-centered" ]
             [ div [ class "modal-content shadow-lg p-5" ]
                 [ div [ class "border-b p-2 pb-3 pt-0 mb-4" ]
                     [ div [ class "flex justify-between items-center" ]
-                        [ text "Modal header" ]
+                        [ text "Modal header"
+                        , span [ onClick FecharModal, class "close-modal cursor-pointer px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200" ]
+                            [ i [ class "fas fa-times text-gray-700" ] []
+                            ]
+                        ]
                     ]
-                , form [ id "form_id", class "w-full" ]
-                    [ div [ class "flex flex-wrap -mx-3 mb-6" ]
-                        [ div [ class "w-full md:w-1/2 px-3 mb-6 md:mb-0" ]
-                            [ label
-                                [ class "block uppercase tracking-wide text-gray-700 text-xs font-light mb-1"
-                                , for "grid-first-name"
-                                ]
-                                [ text "First Name" ]
-                            , input
-                                [ class "appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white-500"
-                                , id "grid-first-name"
-                                , type_ "text"
-                                , placeholder "Jane"
-                                ]
-                                []
-                            , p [ class "text-red-500 text-xs italic" ]
-                                [ text "Please fill out this field." ]
-                            ]
-                        , div [ class "w-full md:w-1/2 px-3" ]
-                            [ label
-                                [ class "block uppercase tracking-wide text-gray-700 text-xs font-light mb-1"
-                                , for "grid-last-name"
-                                ]
-                                [ text "Last Name" ]
-                            , input
-                                [ class "appearance-none block w-full bg-gray-200 text-grey-darker border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white-500 focus:border-gray-600"
-                                , id "grid-last-name"
-                                , type_ "text"
-                                , placeholder "Doe"
-                                ]
-                                []
-                            ]
-                        ]
-                    , div [ class "flex flex-wrap -mx-3 mb-6" ]
-                        [ div [ class "w-full px-3" ]
-                            [ label
-                                [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1"
-                                , for "grid-password"
-                                ]
-                                [ text "Password" ]
-                            , input
-                                [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
-                                , id "grid-password"
-                                , type_ "password"
-                                , placeholder "******************"
-                                ]
-                                []
-                            , p [ class "text-grey-dark text-xs italic" ]
-                                [ text "Make it as long and as crazy as you'd like" ]
-                            ]
-                        ]
-                    , div [ class "flex flex-wrap -mx-3 mb-2" ]
-                        [ div [ class "w-full md:w-1/3 px-3 mb-6 md:mb-0" ]
-                            [ label
-                                [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1"
-                                , for "grid-city"
-                                ]
-                                [ text "City" ]
-                            , input
-                                [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey"
-                                , id "grid-city"
-                                , type_ "text"
-                                , placeholder "Albuquerque"
-                                ]
-                                []
-                            ]
-                        , div [ class "w-full md:w-1/3 px-3 mb-6 md:mb-0" ]
-                            [ label
-                                [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1"
-                                , for "grid-state"
-                                ]
-                                [ text "State" ]
-                            , div [ class "relative" ]
-                                [ select
-                                    [ class "block appearance-none w-full bg-grey-200 border border-grey-200 text-grey-darker py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-grey"
-                                    , id "grid-state"
-                                    ]
-                                    [ option [] [ text "New Mexico" ]
-                                    , option [] [ text "Missouri" ]
-                                    , option [] [ text "Texas" ]
-                                    ]
-                                , div [ class "pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-grey-darker" ]
-                                    [ Svg.svg
-                                        [ SvgAttr.class "fill-current h-4 w-4"
-                                        , SvgAttr.viewBox "0 0 20 20"
-                                        ]
-                                        [ Svg.path
-                                            [ SvgAttr.d "M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                                            ]
-                                            []
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        , div [ class "w-full md:w-1/3 px-3 mb-6 md:mb-0" ]
-                            [ label
-                                [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1"
-                                , for "grid-zip"
-                                ]
-                                [ text "Zip" ]
-                            , input
-                                [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey"
-                                , id "grid-zip"
-                                , type_ "text"
-                                , placeholder "90210"
-                                ]
-                                []
-                            ]
-                        ]
+                , form [ class "w-full" ]
+                    [ campoTexto, campoTexto, campoTexto, campoTexto, campoTexto
                     , div [ class "mt-5" ]
                         [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
                             [ text "Salvar" ]
