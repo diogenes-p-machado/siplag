@@ -39,10 +39,12 @@ import Html.Attributes
         , id
         , placeholder
         , type_
+        , value
         )
 import Html.Events
     exposing
         ( onClick
+        , onInput
         )
 import Http
 import Json.Decode
@@ -58,8 +60,6 @@ import Json.Decode
         , nullable
         , string
         )
-import Svg as Svg
-import Svg.Attributes as SvgAttr
 
 
 
@@ -84,12 +84,13 @@ type alias Model =
     { menu : List Item
     , modo : Crud
     , tabelas : Maybe (Dict String (Dict String Campo))
+    , schema : Dict String Campo
     , showMenu : Bool
     }
 
 
 type Crud
-    = Create
+    = Create String
     | List
 
 
@@ -168,7 +169,7 @@ type Msg
     | Selecionar Item
     | SubSelecionado SubItem
     | MostrarMenu
-    | AbrirModal
+    | AbrirModal String
     | FecharModal
 
 
@@ -200,8 +201,8 @@ update msg model =
         MostrarMenu ->
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
-        AbrirModal ->
-            ( { model | modo = Create }, Cmd.none )
+        AbrirModal str ->
+            ( { model | modo = Create str }, Cmd.none )
 
         FecharModal ->
             ( { model | modo = List }, Cmd.none )
@@ -454,76 +455,91 @@ menuLateral =
         ]
 
 
-tabela : Html Msg
-tabela =
-    div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
-        [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
-            [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
-                [ button [ onClick AbrirModal, class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
-                ]
-            , div [ class "p-3" ]
-                [ table [ class "table-responsive w-full rounded" ]
-                    [ thead []
-                        [ tr []
-                            [ th [ class "border w-1/4 px-4 py-2" ] [ text "Student Name" ]
-                            , th [ class "border w-1/6 px-4 py-2" ] [ text "City" ]
-                            , th [ class "border w-1/6 px-4 py-2" ] [ text "Course" ]
-                            , th [ class "border w-1/6 px-4 py-2" ] [ text "Fee" ]
-                            , th [ class "border w-1/7 px-4 py-2" ] [ text "Status" ]
-                            , th [ class "border w-1/5 px-4 py-2" ] [ text "Actions" ]
-                            ]
+tabela : Maybe (Dict String (Dict String Campo)) -> Html Msg
+tabela tabelas =
+    case tabelas of
+        Just tabelaOk ->
+            div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
+                [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
+                    [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
+                        [ button [  class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
-                    , tbody []
-                        [ tr []
-                            [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
-                            , td [ class "border px-4 py-2" ] [ text "Sydney" ]
-                            , td [ class "border px-4 py-2" ] [ text "MS" ]
-                            , td [ class "border px-4 py-2" ] [ text "900 $" ]
-                            , td [ class "border px-4 py-2" ]
-                                [ i [ class "fas fa-check text-green-500 mx-2" ] [] ]
-                            , td [ class "border px-4 py-2" ]
-                                [ a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
-                                    [ i [ class "fas fa-eye" ] [] ]
-                                , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
-                                    [ i [ class "fas fa-edit" ] [] ]
-                                , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500" ]
-                                    [ i [ class "fas fa-trash" ] [] ]
+                    , div [ class "p-3" ]
+                        [ table [ class "table-responsive w-full rounded" ]
+                            [ thead []
+                              [ tr []
+                                    [ th [ class "border w-1/4 px-4 py-2" ]
+                                        [ text "Student Name" ]
+                                    ] 
+                               ]
+                            , tbody []
+                                [{- tr []
+                                    [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
+                                    , td [ class "border px-4 py-2" ] [ text "Sydney" ]
+                                    , td [ class "border px-4 py-2" ] [ text "MS" ]
+                                    , td [ class "border px-4 py-2" ] [ text "900 $" ]
+                                    , td [ class "border px-4 py-2" ]
+                                        [ i [ class "fas fa-check text-green-500 mx-2" ] [] ]
+                                    , td [ class "border px-4 py-2" ]
+                                        [ a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
+                                            [ i [ class "fas fa-eye" ] [] ]
+                                        , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
+                                            [ i [ class "fas fa-edit" ] [] ]
+                                        , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500" ]
+                                            [ i [ class "fas fa-trash" ] [] ]
+                                        ]
+                                    ]
+                                 -}
                                 ]
                             ]
                         ]
+                    , button [ class "bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 ml-4 mx-2 mb-3 border border-orange-400 rounded" ] [ text "Voltar" ]
+                    , button [ class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow" ] [ text "Opções" ]
                     ]
                 ]
-            , button [ class "bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 ml-4 mx-2 mb-3 border border-orange-400 rounded" ] [ text "Voltar" ]
-            , button [ class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow" ] [ text "Opções" ]
-            ]
-        ]
+
+        Nothing ->
+            Debug.todo "A implementar"
 
 
 modalAberto : Model -> Attribute msg
 modalAberto model =
     case model.modo of
-        Create ->
+        Create str ->
             class "modal-wrapper modal-is-open"
 
         List ->
             class "modal-wrapper"
 
 
-campoTexto : Html msg
-campoTexto =
-    div [ class "flex flex-wrap -mx-3 mb-2" ]
-        [ div [ class "w-full px-3" ]
-            [ label [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1", for "nome" ]
-                [ text "Nome" ]
-            , input
-                [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
-                , type_ "text"
-                , id "nome"
-                , placeholder "Digite seu nome:"
+construtorCampo : Campo -> Html Msg
+construtorCampo campo =
+    case campo of
+        Texto codinome valor ->
+            div [ class "flex flex-wrap -mx-3 mb-2" ]
+                [ div [ class "w-full px-3" ]
+                    [ label [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1", for "nome" ]
+                        [ text codinome ]
+                    , input
+                        [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
+                        , type_ "text"
+                        , id "nome"
+                        , value valor
+                        , placeholder "Digite seu nome:"
+                        ]
+                        []
+                    ]
                 ]
-                []
-            ]
-        ]
+
+        _ ->
+            Debug.todo "A implementar outros tipos de campo"
+
+
+construtorForm : Model -> List (Html Msg)
+construtorForm model =
+    case model.modo of
+        Create str ->
+            List.map construtorCampo (Dict.get str model.tabelas |> Dict.values)
 
 
 modal : Model -> Html Msg
@@ -541,8 +557,8 @@ modal model =
                         ]
                     ]
                 , form [ class "w-full" ]
-                    [ campoTexto, campoTexto, campoTexto, campoTexto, campoTexto
-                    , div [ class "mt-5" ]
+                    [ --construtorCampo
+                      div [ class "mt-5" ]
                         [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
                             [ text "Salvar" ]
                         , span [ onClick FecharModal, class "close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold mx-1 py-2 px-4 rounded" ]

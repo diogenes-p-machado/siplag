@@ -1,19 +1,19 @@
 {
-    "pessoa": {
-        "id": {
-            "tipo": "texto",
-            "codinome": "id",
-            "value": null
-        },
-        "nome": {
-            "tipo": "texto",
-            "codinome": "Nome da pessoa:",
-            "value": null
-        },
-        "cpf": {
-            "tipo": "texto",
-            "codinome": "Número do cpf:",
-            "value": null
-        }
+  "pessoa": {
+    "id": {
+      "tipo": "texto",
+      "codinome": "id",
+      "value": "null"
+    },
+    "nome": {
+      "tipo": "texto",
+      "codinome": "Nome da pessoa:",
+      "value": "null"
+    },
+    "cpf": {
+      "tipo": "texto",
+      "codinome": "Número do cpf:",
+      "value": "null"
     }
+  }
 }
