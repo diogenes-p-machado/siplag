@@ -158,6 +158,7 @@ init _ =
         []
         List
         Nothing
+        Dict.empty
         True
     , getItens
     )
@@ -190,7 +191,18 @@ update msg model =
         GotSchema result ->
             case result of
                 Ok tabelasOk ->
-                    ( { model | tabelas = Just tabelasOk }, Cmd.none )
+                    ( let
+                        resultado = Dict.keys tabelasOk  
+                         |> List.filter (\n -> String.startsWith "*" n)
+                         |> List.head
+                         |> \strn -> case strn of 
+                                        Just st -> st 
+                                        Nothing -> ""
+                        dicionario = Dict.get resultado tabelasOk 
+                      in
+                      model
+                    , Cmd.none
+                    )
 
                 Err _ ->
                     ( model, Cmd.none )
@@ -232,10 +244,6 @@ subscriptions _ =
     Sub.none
 
 
-
--- expandir e recolher menu
-
-
 expandirMenu : Bool -> Attribute msg
 expandirMenu cond =
     if cond then
@@ -258,7 +266,7 @@ view model =
                     ]
                     [ viewMenu model.menu ]
                 , main_ [ class "bg-white-500 flex-1 p-3 overflow-hidden" ]
-                    [ div [ class "flex flex-col" ] [ tabela ] ]
+                    [ div [ class "flex flex-col" ] [ text "div para tabela" ] ]
                 ]
             ]
         , modal model
@@ -462,16 +470,16 @@ tabela tabelas =
             div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
                     [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
-                        [ button [  class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
+                        [ button [ class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
                     , div [ class "p-3" ]
                         [ table [ class "table-responsive w-full rounded" ]
                             [ thead []
-                              [ tr []
+                                [ tr []
                                     [ th [ class "border w-1/4 px-4 py-2" ]
                                         [ text "Student Name" ]
-                                    ] 
-                               ]
+                                    ]
+                                ]
                             , tbody []
                                 [{- tr []
                                     [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
