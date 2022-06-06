@@ -83,19 +83,18 @@ main =
 type alias Model =
     { menu : List Item
     , modo : Crud
-    , tabelas : Maybe (Dict String (Dict String Campo))
-    , schema : Dict String Campo
+    , tabelas : Dict String (Dict String Campo)
     , showMenu : Bool
     }
 
 
 type Crud
-    = Create String
-    | List
+    = Create (Dict String Campo)
+    | List (Dict String Campo)
 
 
 type Campo
-    = Texto String (Maybe String)
+    = Texto String String
     | Id Int
 
 
@@ -105,13 +104,11 @@ type alias Item =
     , subItens : List SubItem
     }
 
-
 type alias SubItem =
     { label : String
     , link : String
     , selecionado : Int
     }
-
 
 itemDecoder : Decoder Item
 itemDecoder =
@@ -120,18 +117,16 @@ itemDecoder =
         (field "selecionado" int)
         (field "sub-itens" (list subItemDecoder))
 
-
 campoDecoder : Decoder Campo
 campoDecoder =
     field "tipo" string
         |> andThen tipoDoCampo
 
-
 decoderCampoTexto : Decoder Campo
 decoderCampoTexto =
     map2 Texto
         (field "codinome" string)
-        (field "value" (nullable string))
+        (field "value" string)
 
 
 tipoDoCampo : String -> Decoder Campo
@@ -157,8 +152,8 @@ init _ =
     ( Model
         []
         List
-        Nothing
         Dict.empty
+        Nothing
         True
     , getItens
     )
@@ -170,7 +165,7 @@ type Msg
     | Selecionar Item
     | SubSelecionado SubItem
     | MostrarMenu
-    | AbrirModal String
+    | AbrirModal
     | FecharModal
 
 
@@ -192,15 +187,23 @@ update msg model =
             case result of
                 Ok tabelasOk ->
                     ( let
-                        resultado = Dict.keys tabelasOk  
-                         |> List.filter (\n -> String.startsWith "*" n)
-                         |> List.head
-                         |> \strn -> case strn of 
-                                        Just st -> st 
-                                        Nothing -> ""
-                        dicionario = Dict.get resultado tabelasOk 
+                        resultado =
+                            Dict.keys tabelasOk
+                                |> List.filter (\n -> String.startsWith "*" n)
+                                |> List.head
+                                |> (\strn ->
+                                        case strn of
+                                            Just st ->
+                                                st
+
+                                            Nothing ->
+                                                ""
+                                   )
+
+                        dicionario =
+                            Dict.get resultado tabelasOk
                       in
-                      model
+                      { model | schema = dicionario, tabelas = tabelasOk }
                     , Cmd.none
                     )
 
@@ -213,8 +216,8 @@ update msg model =
         MostrarMenu ->
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
-        AbrirModal str ->
-            ( { model | modo = Create str }, Cmd.none )
+        AbrirModal ->
+            ( { model | modo = Create }, Cmd.none )
 
         FecharModal ->
             ( { model | modo = List }, Cmd.none )
@@ -379,93 +382,9 @@ topo =
         ]
 
 
-menuLateral : Html msg
-menuLateral =
-    ul [ class "list-reset flex flex-col" ]
-        [ li [ class "w-full h-full py-3 px-2 border-b border-light-border bg-white" ]
-            [ a [ href "index.html", class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                [ i [ class "fas fa-tachometer-alt float-left mx-2" ] []
-                , text "Dashboard"
-                , span [] [ i [ class "fas fa-angle-right float-right" ] [] ]
-                ]
-            ]
-        , li [ class "w-full h-full py-3 px-2 border-b border-light-border" ]
-            [ a [ href "forms.html", class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                [ i [ class "fab fa-wpforms float-left mx-2" ] []
-                , text "Forms"
-                , span [] [ i [ class "fa fa-angle-right float-right" ] [] ]
-                ]
-            ]
-        , li [ class "w-full h-full py-3 px-2 border-b border-light-border" ]
-            [ a [ href "buttons.html", class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                [ i [ class "fas fa-grip-horizontal float-left mx-2" ] []
-                , text "Buttons"
-                , span []
-                    [ i [ class "fa fa-angle-right float-right" ] [] ]
-                ]
-            ]
-        , li
-            [ class "w-full h-full py-3 px-2 border-b border-light-border" ]
-            [ a [ href "tables.html", class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                [ i [ class "fas fa-table float-left mx-2" ] []
-                , text "Tables"
-                , span []
-                    [ i [ class "fa fa-angle-right float-right" ] [] ]
-                ]
-            ]
-        , li
-            [ class "w-full h-full py-3 px-2 border-b border-light-border" ]
-            [ a [ href "ui.html", class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                [ i [ class "fab fa-uikit float-left mx-2" ] []
-                , text "Ui components"
-                , span []
-                    [ i [ class "fa fa-angle-right float-right" ] [] ]
-                ]
-            ]
-        , li [ class "w-full h-full py-3 px-2 border-b border-300-border" ]
-            [ a [ href "modals.html", class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                [ i [ class "fas fa-square-full float-left mx-2" ] []
-                , text "Modals"
-                , span []
-                    [ i [ class "fa fa-angle-right float-right" ] [] ]
-                ]
-            ]
-        , li [ class "w-full h-full py-3 px-2" ]
-            [ a [ href "#", class "font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                [ i [ class "far fa-file float-left mx-2" ] []
-                , text "Pages"
-                , span []
-                    [ i [ class "fa fa-angle-down float-right" ] [] ]
-                ]
-            , ul [ class "list-reset -mx-2 bg-white-medium-dark" ]
-                [ li [ class "border-t mt-2 border-light-border w-full h-full px-2 py-3" ]
-                    [ a [ href "login.html", class "mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                        [ text "Login Page"
-                        , span [] [ i [ class "fa fa-angle-right float-right" ] [] ]
-                        ]
-                    ]
-                , li [ class "border-t border-light-border w-full h-full px-2 py-3" ]
-                    [ a [ href "register.html", class "mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                        [ text "Register Page"
-                        , span []
-                            [ i [ class "fa fa-angle-right float-right" ] [] ]
-                        ]
-                    ]
-                , li [ class "border-t border-light-border w-full h-full px-2 py-3" ]
-                    [ a [ href "404.html", class "mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline" ]
-                        [ text "404 Page"
-                        , span []
-                            [ i [ class "fa fa-angle-right float-right" ] [] ]
-                        ]
-                    ]
-                ]
-            ]
-        ]
-
-
-tabela : Maybe (Dict String (Dict String Campo)) -> Html Msg
-tabela tabelas =
-    case tabelas of
+tabela : Model -> Html Msg
+tabela model =
+    case model.schema of
         Just tabelaOk ->
             div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
@@ -513,7 +432,7 @@ tabela tabelas =
 modalAberto : Model -> Attribute msg
 modalAberto model =
     case model.modo of
-        Create str ->
+        Create ->
             class "modal-wrapper modal-is-open"
 
         List ->
@@ -532,7 +451,6 @@ construtorCampo campo =
                         [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
                         , type_ "text"
                         , id "nome"
-                        , value valor
                         , placeholder "Digite seu nome:"
                         ]
                         []
@@ -542,12 +460,14 @@ construtorCampo campo =
         _ ->
             Debug.todo "A implementar outros tipos de campo"
 
-
-construtorForm : Model -> List (Html Msg)
+construtorForm : Model -> Html Msg
 construtorForm model =
     case model.modo of
-        Create str ->
-            List.map construtorCampo (Dict.get str model.tabelas |> Dict.values)
+        Create -> 
+            
+
+        _ ->
+            Debug.todo "construir"
 
 
 modal : Model -> Html Msg
@@ -565,7 +485,7 @@ modal model =
                         ]
                     ]
                 , form [ class "w-full" ]
-                    [ --construtorCampo
+                    [ -----d-------------
                       div [ class "mt-5" ]
                         [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
                             [ text "Salvar" ]
