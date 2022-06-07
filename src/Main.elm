@@ -82,15 +82,16 @@ main =
 
 type alias Model =
     { menu : List Item
-    , modo : Crud
-    , tabelas : Dict String (Dict String Campo)
+    , modo : Maybe Crud
+    , tabelas : Maybe (Dict String (Dict String Campo))
+    , schema : Maybe (Dict String Campo)
     , showMenu : Bool
     }
 
 
 type Crud
-    = Create (Dict String Campo)
-    | List (Dict String Campo)
+    = Create
+    | List
 
 
 type Campo
@@ -104,11 +105,13 @@ type alias Item =
     , subItens : List SubItem
     }
 
+
 type alias SubItem =
     { label : String
     , link : String
     , selecionado : Int
     }
+
 
 itemDecoder : Decoder Item
 itemDecoder =
@@ -117,10 +120,12 @@ itemDecoder =
         (field "selecionado" int)
         (field "sub-itens" (list subItemDecoder))
 
+
 campoDecoder : Decoder Campo
 campoDecoder =
     field "tipo" string
         |> andThen tipoDoCampo
+
 
 decoderCampoTexto : Decoder Campo
 decoderCampoTexto =
@@ -151,8 +156,8 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( Model
         []
-        List
-        Dict.empty
+        Nothing
+        Nothing
         Nothing
         True
     , getItens
@@ -165,7 +170,7 @@ type Msg
     | Selecionar Item
     | SubSelecionado SubItem
     | MostrarMenu
-    | AbrirModal
+    | AbrirModal String
     | FecharModal
 
 
@@ -188,22 +193,16 @@ update msg model =
                 Ok tabelasOk ->
                     ( let
                         resultado =
-                            Dict.keys tabelasOk
-                                |> List.filter (\n -> String.startsWith "*" n)
-                                |> List.head
-                                |> (\strn ->
-                                        case strn of
-                                            Just st ->
-                                                st
-
-                                            Nothing ->
-                                                ""
-                                   )
+                            nomeTabelaPrincipal tabelasOk
 
                         dicionario =
                             Dict.get resultado tabelasOk
                       in
-                      { model | schema = dicionario, tabelas = tabelasOk }
+                      { model
+                        | schema = dicionario
+                        , tabelas = Just tabelasOk
+                        , modo = Just List
+                      }
                     , Cmd.none
                     )
 
@@ -216,16 +215,31 @@ update msg model =
         MostrarMenu ->
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
-        AbrirModal ->
-            ( { model | modo = Create }, Cmd.none )
+        AbrirModal chave ->
+            ( model, Cmd.none )
 
         FecharModal ->
-            ( { model | modo = List }, Cmd.none )
+            ( model, Cmd.none )
 
 
 atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
     substituirItem menu item
+
+
+nomeTabelaPrincipal : Dict String v -> String
+nomeTabelaPrincipal tabelas =
+    Dict.keys tabelas
+        |> List.filter (\n -> String.startsWith "*" n)
+        |> List.head
+        |> (\strn ->
+                case strn of
+                    Just st ->
+                        st
+
+                    Nothing ->
+                        ""
+           )
 
 
 substituirItem : List Item -> Item -> List Item
@@ -380,7 +394,9 @@ topo =
                 ]
             ]
         ]
-
+headTabela : Dict String v -> List (Html msg)
+headTabela schema =
+    []
 
 tabela : Model -> Html Msg
 tabela model =
@@ -389,7 +405,8 @@ tabela model =
             div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
                     [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
-                        [ button [ class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
+                        [ 
+                            button [onClick (AbrirModal (nomeTabelaPrincipal tabelaOk)), class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
                     , div [ class "p-3" ]
                         [ table [ class "table-responsive w-full rounded" ]
@@ -400,7 +417,8 @@ tabela model =
                                     ]
                                 ]
                             , tbody []
-                                [{- tr []
+                                [
+                                    {- tr []
                                     [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
                                     , td [ class "border px-4 py-2" ] [ text "Sydney" ]
                                     , td [ class "border px-4 py-2" ] [ text "MS" ]
@@ -432,12 +450,14 @@ tabela model =
 modalAberto : Model -> Attribute msg
 modalAberto model =
     case model.modo of
-        Create ->
+        Just Create ->
             class "modal-wrapper modal-is-open"
 
-        List ->
+        Just List ->
             class "modal-wrapper"
 
+        Nothing ->
+            class "modal-wrapper"
 
 construtorCampo : Campo -> Html Msg
 construtorCampo campo =
@@ -460,11 +480,12 @@ construtorCampo campo =
         _ ->
             Debug.todo "A implementar outros tipos de campo"
 
+
 construtorForm : Model -> Html Msg
 construtorForm model =
     case model.modo of
-        Create -> 
-            
+        Just Create ->
+            Debug.todo "fazer"
 
         _ ->
             Debug.todo "construir"
