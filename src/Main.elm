@@ -192,15 +192,15 @@ update msg model =
             case result of
                 Ok tabelasOk ->
                     ( let
+                        gotTabelas = tabelasOk
                         resultado =
-                            nomeTabelaPrincipal tabelasOk
+                            nomeTabelaPrincipal gotTabelas
 
                         dicionario =
-                            Dict.get resultado tabelasOk
+                            Dict.get resultado gotTabelas
                       in
-                      { model
-                        | schema = dicionario
-                        , tabelas = Just tabelasOk
+                      { model | schema = dicionario
+                        , tabelas = Just gotTabelas
                         , modo = Just List
                       }
                     , Cmd.none
@@ -283,10 +283,11 @@ view model =
                     ]
                     [ viewMenu model.menu ]
                 , main_ [ class "bg-white-500 flex-1 p-3 overflow-hidden" ]
-                    [ div [ class "flex flex-col" ] [ text "div para tabela" ] ]
+                    [ div [ class "flex flex-col" ] [ tabela model ]
+                    ]
                 ]
+            , modal model
             ]
-        , modal model
         ]
 
 
@@ -394,9 +395,34 @@ topo =
                 ]
             ]
         ]
-headTabela : Dict String v -> List (Html msg)
-headTabela schema =
-    []
+
+
+headTabela : Dict k Campo -> List (Html msg)
+headTabela dicionario =
+    List.map (\n -> Tuple.second n)
+        (Dict.toList dicionario)
+        |> thHeadTabela
+
+
+campoToString : Campo -> String
+campoToString campo =
+    case campo of
+        Texto codinome value ->
+            codinome
+
+        _ ->
+            ""
+
+
+thHeadTabela : List Campo -> List (Html msg)
+thHeadTabela listCampo =
+    List.map
+        (\n ->
+            th [ class "border w-1/4 px-4 py-2" ]
+                [ text (campoToString n) ]
+        )
+        listCampo
+
 
 tabela : Model -> Html Msg
 tabela model =
@@ -405,20 +431,16 @@ tabela model =
             div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
                     [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
-                        [ 
-                            button [onClick (AbrirModal (nomeTabelaPrincipal tabelaOk)), class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
+                        [ button [ onClick (AbrirModal (nomeTabelaPrincipal tabelaOk)), class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
                     , div [ class "p-3" ]
                         [ table [ class "table-responsive w-full rounded" ]
                             [ thead []
                                 [ tr []
-                                    [ th [ class "border w-1/4 px-4 py-2" ]
-                                        [ text "Student Name" ]
-                                    ]
+                                    (headTabela tabelaOk)
                                 ]
                             , tbody []
-                                [
-                                    {- tr []
+                                [{- tr []
                                     [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
                                     , td [ class "border px-4 py-2" ] [ text "Sydney" ]
                                     , td [ class "border px-4 py-2" ] [ text "MS" ]
@@ -444,7 +466,7 @@ tabela model =
                 ]
 
         Nothing ->
-            Debug.todo "A implementar"
+            text "A implementar"
 
 
 modalAberto : Model -> Attribute msg
@@ -458,6 +480,7 @@ modalAberto model =
 
         Nothing ->
             class "modal-wrapper"
+
 
 construtorCampo : Campo -> Html Msg
 construtorCampo campo =
