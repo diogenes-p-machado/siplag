@@ -11104,22 +11104,24 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $author$project$Main$nomeTabelaPrincipal = function (tabelas) {
-	return function (strn) {
-		if (strn.$ === 'Just') {
-			var st = strn.a;
-			return st;
-		} else {
-			return '';
-		}
-	}(
+var $author$project$Main$tuplaSegundo = function (maybeDict) {
+	if (maybeDict.$ === 'Just') {
+		var _v1 = maybeDict.a;
+		var v = _v1.b;
+		return $elm$core$Maybe$Just(v);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Main$tabelaPrincipal = function (tabelas) {
+	return $author$project$Main$tuplaSegundo(
 		$elm$core$List$head(
 			A2(
 				$elm$core$List$filter,
 				function (n) {
-					return A2($elm$core$String$startsWith, '*', n);
+					return A2($elm$core$String$startsWith, '*', n.a);
 				},
-				$elm$core$Dict$keys(tabelas))));
+				$elm$core$Dict$toList(tabelas))));
 };
 var $author$project$Main$update = F2(
 	function (msg, model) {
@@ -11152,13 +11154,11 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						function () {
 							var gotTabelas = tabelasOk;
-							var resultado = $author$project$Main$nomeTabelaPrincipal(gotTabelas);
-							var dicionario = A2($elm$core$Dict$get, resultado, gotTabelas);
 							return _Utils_update(
 								model,
 								{
 									modo: $elm$core$Maybe$Just($author$project$Main$List),
-									schema: dicionario,
+									schema: $author$project$Main$tabelaPrincipal(gotTabelas),
 									tabelas: $elm$core$Maybe$Just(gotTabelas)
 								});
 						}(),
@@ -11321,13 +11321,11 @@ var $author$project$Main$modal = function (model) {
 					]))
 			]));
 };
-var $author$project$Main$AbrirModal = function (a) {
-	return {$: 'AbrirModal', a: a};
-};
+var $elm$html$Html$table = _VirtualDom_node('table');
+var $elm$html$Html$tbody = _VirtualDom_node('tbody');
 var $author$project$Main$campoToString = function (campo) {
 	if (campo.$ === 'Texto') {
 		var codinome = campo.a;
-		var value = campo.b;
 		return codinome;
 	} else {
 		return '';
@@ -11350,19 +11348,13 @@ var $author$project$Main$thHeadTabela = function (listCampo) {
 						$author$project$Main$campoToString(n))
 					]));
 		},
-		listCampo);
-};
-var $author$project$Main$headTabela = function (dicionario) {
-	return $author$project$Main$thHeadTabela(
 		A2(
 			$elm$core$List$map,
 			function (n) {
 				return n.b;
 			},
-			$elm$core$Dict$toList(dicionario)));
+			$elm$core$Dict$toList(listCampo)));
 };
-var $elm$html$Html$table = _VirtualDom_node('table');
-var $elm$html$Html$tbody = _VirtualDom_node('tbody');
 var $elm$html$Html$thead = _VirtualDom_node('thead');
 var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $author$project$Main$tabela = function (model) {
@@ -11397,9 +11389,6 @@ var $author$project$Main$tabela = function (model) {
 									$elm$html$Html$button,
 									_List_fromArray(
 										[
-											$elm$html$Html$Events$onClick(
-											$author$project$Main$AbrirModal(
-												$author$project$Main$nomeTabelaPrincipal(tabelaOk))),
 											$author$project$Main$class('bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded')
 										]),
 									_List_fromArray(
@@ -11431,7 +11420,7 @@ var $author$project$Main$tabela = function (model) {
 													A2(
 													$elm$html$Html$tr,
 													_List_Nil,
-													$author$project$Main$headTabela(tabelaOk))
+													$author$project$Main$thHeadTabela(tabelaOk))
 												])),
 											A2($elm$html$Html$tbody, _List_Nil, _List_Nil)
 										]))

@@ -1,5 +1,5 @@
 {
-  "pessoa": {
+  "*pessoa": {
     "id": {
       "tipo": "texto",
       "codinome": "id",
@@ -13,6 +13,18 @@
     "cpf": {
       "tipo": "texto",
       "codinome": "Número do cpf:",
+      "value": "null"
+    }
+  },
+  "endereço": {
+    "logradouro": {
+      "tipo": "texto",
+      "codinome": "Logradouro",
+      "value": "null"
+    },
+    "bairro": {
+      "tipo": "texto",
+      "codinome": "Bairro",
       "value": "null"
     }
   }

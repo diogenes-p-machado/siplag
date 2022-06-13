@@ -193,13 +193,9 @@ update msg model =
                 Ok tabelasOk ->
                     ( let
                         gotTabelas = tabelasOk
-                        resultado =
-                            nomeTabelaPrincipal gotTabelas
-
-                        dicionario =
-                            Dict.get resultado gotTabelas
+                                
                       in
-                      { model | schema = dicionario
+                      { model | schema = tabelaPrincipal gotTabelas
                         , tabelas = Just gotTabelas
                         , modo = Just List
                       }
@@ -226,22 +222,22 @@ atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
     substituirItem menu item
 
-
-nomeTabelaPrincipal : Dict String v -> String
-nomeTabelaPrincipal tabelas =
-    Dict.keys tabelas
-        |> List.filter (\n -> String.startsWith "*" n)
-        |> List.head
-        |> (\strn ->
-                case strn of
-                    Just st ->
-                        st
-
-                    Nothing ->
-                        ""
-           )
+tuplaSegundo : Maybe (String, Dict String Campo) -> Maybe (Dict String Campo)
+tuplaSegundo maybeDict = 
+    case maybeDict of
+        Just (_,v) -> Just v
+        _ -> Nothing
 
 
+tabelaPrincipal : Dict String (Dict String Campo) -> Maybe (Dict String Campo)
+tabelaPrincipal tabelas =    
+    Dict.toList tabelas 
+    |> List.filter (\n -> String.startsWith "*" (Tuple.first n))
+    |> List.head
+    |> tuplaSegundo
+--    |> Dict.toList
+--    |> List.map (\n -> Tuple.second n)
+ 
 substituirItem : List Item -> Item -> List Item
 substituirItem menu item =
     List.map (compararItem item) menu
@@ -397,31 +393,25 @@ topo =
         ]
 
 
-headTabela : Dict k Campo -> List (Html msg)
-headTabela dicionario =
-    List.map (\n -> Tuple.second n)
-        (Dict.toList dicionario)
-        |> thHeadTabela
-
-
 campoToString : Campo -> String
 campoToString campo =
     case campo of
-        Texto codinome value ->
+        Texto codinome _ ->
             codinome
 
         _ ->
             ""
 
 
-thHeadTabela : List Campo -> List (Html msg)
+thHeadTabela : Dict String Campo -> List (Html msg)
 thHeadTabela listCampo =
-    List.map
-        (\n ->
+    Dict.toList listCampo 
+    |> List.map (\n -> Tuple.second n)
+    |> List.map (\n ->
             th [ class "border w-1/4 px-4 py-2" ]
-                [ text (campoToString n) ]
+                [ text (campoToString n)]
         )
-        listCampo
+        
 
 
 tabela : Model -> Html Msg
@@ -431,16 +421,17 @@ tabela model =
             div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
                     [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
-                        [ button [ onClick (AbrirModal (nomeTabelaPrincipal tabelaOk)), class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
+                        [ button [ class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
                     , div [ class "p-3" ]
                         [ table [ class "table-responsive w-full rounded" ]
                             [ thead []
                                 [ tr []
-                                    (headTabela tabelaOk)
+                                    (thHeadTabela tabelaOk)
                                 ]
                             , tbody []
-                                [{- tr []
+                                [
+                                    {- tr []
                                     [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
                                     , td [ class "border px-4 py-2" ] [ text "Sydney" ]
                                     , td [ class "border px-4 py-2" ] [ text "MS" ]
@@ -485,7 +476,7 @@ modalAberto model =
 construtorCampo : Campo -> Html Msg
 construtorCampo campo =
     case campo of
-        Texto codinome valor ->
+        Texto codinome _ ->
             div [ class "flex flex-wrap -mx-3 mb-2" ]
                 [ div [ class "w-full px-3" ]
                     [ label [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1", for "nome" ]
@@ -529,7 +520,7 @@ modal model =
                         ]
                     ]
                 , form [ class "w-full" ]
-                    [ -----d-------------
+                    [ -----d---------
                       div [ class "mt-5" ]
                         [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
                             [ text "Salvar" ]
