@@ -27,5 +27,17 @@
       "codinome": "Bairro",
       "value": "null"
     }
+  },
+  "filhos":{
+    "nome":{
+      "tipo": "texto",
+      "codinome": "Nome",
+      "value":"null"
+    },
+    "sobrenome":{
+      "tipo": "texto",
+      "codinome": "Sobrenome",
+      "value":"null"
+    }
   }
 }

@@ -196,7 +196,7 @@ update msg model =
                                 
                       in
                       { model | schema = tabelaPrincipal gotTabelas
-                        , tabelas = Just gotTabelas
+                        , tabelas = tabelasSecundarias gotTabelas
                         , modo = Just List
                       }
                     , Cmd.none
@@ -217,10 +217,22 @@ update msg model =
         FecharModal ->
             ( model, Cmd.none )
 
+nomeTabelaPrincipal :Dict String (Dict String Campo) -> String
+nomeTabelaPrincipal tabSecundarias = 
+    Dict.keys  tabSecundarias
+    |>  List.filter (\n -> String.startsWith "*" n)
+    |>  List.head |> Maybe.withDefault ""
 
+tabelasSecundarias : Dict String (Dict String Campo) -> Maybe (Dict String (Dict String Campo))
+tabelasSecundarias tabelas =
+    Dict.toList tabelas
+    |> List.filter (\n -> (Tuple.first n) /= nomeTabelaPrincipal tabelas)
+    |> Dict.fromList
+    |> Just
 atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
     substituirItem menu item
+
 
 tuplaSegundo : Maybe (String, Dict String Campo) -> Maybe (Dict String Campo)
 tuplaSegundo maybeDict = 

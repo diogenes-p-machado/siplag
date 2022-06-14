@@ -11123,6 +11123,30 @@ var $author$project$Main$tabelaPrincipal = function (tabelas) {
 				},
 				$elm$core$Dict$toList(tabelas))));
 };
+var $author$project$Main$nomeTabelaPrincipal = function (tabSecundarias) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		'',
+		$elm$core$List$head(
+			A2(
+				$elm$core$List$filter,
+				function (n) {
+					return A2($elm$core$String$startsWith, '*', n);
+				},
+				$elm$core$Dict$keys(tabSecundarias))));
+};
+var $author$project$Main$tabelasSecundarias = function (tabelas) {
+	return $elm$core$Maybe$Just(
+		$elm$core$Dict$fromList(
+			A2(
+				$elm$core$List$filter,
+				function (n) {
+					return !_Utils_eq(
+						n.a,
+						$author$project$Main$nomeTabelaPrincipal(tabelas));
+				},
+				$elm$core$Dict$toList(tabelas))));
+};
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -11159,7 +11183,7 @@ var $author$project$Main$update = F2(
 								{
 									modo: $elm$core$Maybe$Just($author$project$Main$List),
 									schema: $author$project$Main$tabelaPrincipal(gotTabelas),
-									tabelas: $elm$core$Maybe$Just(gotTabelas)
+									tabelas: $author$project$Main$tabelasSecundarias(gotTabelas)
 								});
 						}(),
 						$elm$core$Platform$Cmd$none);
