@@ -76,7 +76,6 @@ main =
         }
 
 
-
 -- MODEL
 
 
@@ -85,6 +84,7 @@ type alias Model =
     , modo : Maybe Crud
     , tabelas : Maybe (Dict String (Dict String Campo))
     , schema : Maybe (Dict String Campo)
+    , tabelasSecundarias : Maybe (Dict String (Dict String Campo))
     , showMenu : Bool
     }
 
@@ -159,6 +159,7 @@ init _ =
         Nothing
         Nothing
         Nothing
+        Nothing
         True
     , getItens
     )
@@ -196,7 +197,8 @@ update msg model =
                                 
                       in
                       { model | schema = tabelaPrincipal gotTabelas
-                        , tabelas = tabelasSecundarias gotTabelas
+                        , tabelas = Just gotTabelas
+                        , tabelasSecundarias = tabelasSecundarias gotTabelas
                         , modo = Just List
                       }
                     , Cmd.none
@@ -229,6 +231,7 @@ tabelasSecundarias tabelas =
     |> List.filter (\n -> (Tuple.first n) /= nomeTabelaPrincipal tabelas)
     |> Dict.fromList
     |> Just
+
 atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
     substituirItem menu item

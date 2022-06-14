@@ -10729,9 +10729,9 @@ var $elm$core$Basics$never = function (_v0) {
 	}
 };
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Model = F5(
-	function (menu, modo, tabelas, schema, showMenu) {
-		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabelas: tabelas};
+var $author$project$Main$Model = F6(
+	function (menu, modo, tabelas, schema, tabelasSecundarias, showMenu) {
+		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabelas: tabelas, tabelasSecundarias: tabelasSecundarias};
 	});
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
@@ -11017,7 +11017,7 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A5($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true),
+		A6($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true),
 		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -11064,8 +11064,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 144, column: 13},
-				end: {line: 144, column: 23}
+				start: {line: 145, column: 13},
+				end: {line: 145, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11183,7 +11183,8 @@ var $author$project$Main$update = F2(
 								{
 									modo: $elm$core$Maybe$Just($author$project$Main$List),
 									schema: $author$project$Main$tabelaPrincipal(gotTabelas),
-									tabelas: $author$project$Main$tabelasSecundarias(gotTabelas)
+									tabelas: $elm$core$Maybe$Just(gotTabelas),
+									tabelasSecundarias: $author$project$Main$tabelasSecundarias(gotTabelas)
 								});
 						}(),
 						$elm$core$Platform$Cmd$none);
