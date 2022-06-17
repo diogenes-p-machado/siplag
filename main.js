@@ -11025,6 +11025,7 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
+var $author$project$Main$Create = {$: 'Create'};
 var $author$project$Main$List = {$: 'List'};
 var $author$project$Main$compararItem = F2(
 	function (item, itemMsg) {
@@ -11203,10 +11204,21 @@ var $author$project$Main$update = F2(
 						{showMenu: !model.showMenu}),
 					$elm$core$Platform$Cmd$none);
 			case 'AbrirModal':
-				var chave = msg.a;
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							modo: $elm$core$Maybe$Just($author$project$Main$Create)
+						}),
+					$elm$core$Platform$Cmd$none);
 			default:
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							modo: $elm$core$Maybe$Just($author$project$Main$List)
+						}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $elm$html$Html$aside = _VirtualDom_node('aside');
@@ -11219,6 +11231,80 @@ var $author$project$Main$expandirMenu = function (cond) {
 };
 var $elm$html$Html$main_ = _VirtualDom_node('main');
 var $author$project$Main$FecharModal = {$: 'FecharModal'};
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $author$project$Main$construtorCampo = function (campo) {
+	if (campo.$ === 'Texto') {
+		var codinome = campo.a;
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$author$project$Main$class('flex flex-wrap -mx-3 mb-2')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$author$project$Main$class('w-full px-3')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$label,
+							_List_fromArray(
+								[
+									$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
+									$elm$html$Html$Attributes$for('nome')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(codinome)
+								])),
+							A2(
+							$elm$html$Html$input,
+							_List_fromArray(
+								[
+									$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
+									$elm$html$Html$Attributes$type_('text'),
+									$elm$html$Html$Attributes$id('nome'),
+									$elm$html$Html$Attributes$placeholder('Digite seu nome:')
+								]),
+							_List_Nil)
+						]))
+				]));
+	} else {
+		return _Debug_todo(
+			'Main',
+			{
+				start: {line: 522, column: 13},
+				end: {line: 522, column: 23}
+			})('A implementar outros tipos de campo');
+	}
+};
+var $author$project$Main$construtorForm = function (model) {
+	var _v0 = model.modo;
+	if ((_v0.$ === 'Just') && (_v0.a.$ === 'Create')) {
+		var _v1 = _v0.a;
+		return A2(
+			$elm$core$List$map,
+			function (n) {
+				return $author$project$Main$construtorCampo(n);
+			},
+			A2(
+				$elm$core$List$map,
+				function (n) {
+					return n.b;
+				},
+				$elm$core$Dict$toList(
+					A2($elm$core$Maybe$withDefault, $elm$core$Dict$empty, model.schema))));
+	} else {
+		return _List_Nil;
+	}
+};
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$i = _VirtualDom_node('i');
 var $author$project$Main$modalAberto = function (model) {
@@ -11309,43 +11395,42 @@ var $author$project$Main$modal = function (model) {
 									[
 										$author$project$Main$class('w-full')
 									]),
+								$author$project$Main$construtorForm(model)),
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$author$project$Main$class('mt-5')
+									]),
 								_List_fromArray(
 									[
 										A2(
-										$elm$html$Html$div,
+										$elm$html$Html$span,
 										_List_fromArray(
 											[
-												$author$project$Main$class('mt-5')
+												$author$project$Main$class('close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded')
 											]),
 										_List_fromArray(
 											[
-												A2(
-												$elm$html$Html$span,
-												_List_fromArray(
-													[
-														$author$project$Main$class('close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Salvar')
-													])),
-												A2(
-												$elm$html$Html$span,
-												_List_fromArray(
-													[
-														$elm$html$Html$Events$onClick($author$project$Main$FecharModal),
-														$author$project$Main$class('close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold mx-1 py-2 px-4 rounded')
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Cancelar')
-													]))
+												$elm$html$Html$text('Salvar')
+											])),
+										A2(
+										$elm$html$Html$span,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$Main$FecharModal),
+												$author$project$Main$class('close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold mx-1 py-2 px-4 rounded')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Cancelar')
 											]))
 									]))
 							]))
 					]))
 			]));
 };
+var $author$project$Main$AbrirModal = {$: 'AbrirModal'};
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
 var $author$project$Main$campoToString = function (campo) {
@@ -11414,6 +11499,7 @@ var $author$project$Main$tabela = function (model) {
 									$elm$html$Html$button,
 									_List_fromArray(
 										[
+											$elm$html$Html$Events$onClick($author$project$Main$AbrirModal),
 											$author$project$Main$class('bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded')
 										]),
 									_List_fromArray(
@@ -11741,4 +11827,4 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error (Dict.Dict String.String (Dict.Dict String.String Main.Campo))"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem"],"MostrarMenu":[],"AbrirModal":["String.String"],"FecharModal":[]}},"Main.Campo":{"args":[],"tags":{"Texto":["String.String","String.String"],"Id":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error (Dict.Dict String.String (Dict.Dict String.String Main.Campo))"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem"],"MostrarMenu":[],"AbrirModal":[],"FecharModal":[]}},"Main.Campo":{"args":[],"tags":{"Texto":["String.String","String.String"],"Id":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));

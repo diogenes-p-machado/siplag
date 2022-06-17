@@ -76,6 +76,7 @@ main =
         }
 
 
+
 -- MODEL
 
 
@@ -171,7 +172,7 @@ type Msg
     | Selecionar Item
     | SubSelecionado SubItem
     | MostrarMenu
-    | AbrirModal String
+    | AbrirModal
     | FecharModal
 
 
@@ -193,10 +194,11 @@ update msg model =
             case result of
                 Ok tabelasOk ->
                     ( let
-                        gotTabelas = tabelasOk
-                                
+                        gotTabelas =
+                            tabelasOk
                       in
-                      { model | schema = tabelaPrincipal gotTabelas
+                      { model
+                        | schema = tabelaPrincipal gotTabelas
                         , tabelas = Just gotTabelas
                         , tabelasSecundarias = tabelasSecundarias gotTabelas
                         , modo = Just List
@@ -213,46 +215,57 @@ update msg model =
         MostrarMenu ->
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
-        AbrirModal chave ->
-            ( model, Cmd.none )
+        AbrirModal ->
+            ({model | modo = Just Create}, Cmd.none )
 
         FecharModal ->
-            ( model, Cmd.none )
+            ( {model | modo = Just List}, Cmd.none )
 
-nomeTabelaPrincipal :Dict String (Dict String Campo) -> String
-nomeTabelaPrincipal tabSecundarias = 
-    Dict.keys  tabSecundarias
-    |>  List.filter (\n -> String.startsWith "*" n)
-    |>  List.head |> Maybe.withDefault ""
+
+nomeTabelaPrincipal : Dict String (Dict String Campo) -> String
+nomeTabelaPrincipal tabSecundarias =
+    Dict.keys tabSecundarias
+        |> List.filter (\n -> String.startsWith "*" n)
+        |> List.head
+        |> Maybe.withDefault ""
+
 
 tabelasSecundarias : Dict String (Dict String Campo) -> Maybe (Dict String (Dict String Campo))
 tabelasSecundarias tabelas =
     Dict.toList tabelas
-    |> List.filter (\n -> (Tuple.first n) /= nomeTabelaPrincipal tabelas)
-    |> Dict.fromList
-    |> Just
+        |> List.filter (\n -> Tuple.first n /= nomeTabelaPrincipal tabelas)
+        |> Dict.fromList
+        |> Just
+
 
 atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
     substituirItem menu item
 
 
-tuplaSegundo : Maybe (String, Dict String Campo) -> Maybe (Dict String Campo)
-tuplaSegundo maybeDict = 
+tuplaSegundo : Maybe ( String, Dict String Campo ) -> Maybe (Dict String Campo)
+tuplaSegundo maybeDict =
     case maybeDict of
-        Just (_,v) -> Just v
-        _ -> Nothing
+        Just ( _, v ) ->
+            Just v
+
+        _ ->
+            Nothing
 
 
 tabelaPrincipal : Dict String (Dict String Campo) -> Maybe (Dict String Campo)
-tabelaPrincipal tabelas =    
-    Dict.toList tabelas 
-    |> List.filter (\n -> String.startsWith "*" (Tuple.first n))
-    |> List.head
-    |> tuplaSegundo
+tabelaPrincipal tabelas =
+    Dict.toList tabelas
+        |> List.filter (\n -> String.startsWith "*" (Tuple.first n))
+        |> List.head
+        |> tuplaSegundo
+
+
+
 --    |> Dict.toList
 --    |> List.map (\n -> Tuple.second n)
- 
+
+
 substituirItem : List Item -> Item -> List Item
 substituirItem menu item =
     List.map (compararItem item) menu
@@ -420,13 +433,13 @@ campoToString campo =
 
 thHeadTabela : Dict String Campo -> List (Html msg)
 thHeadTabela listCampo =
-    Dict.toList listCampo 
-    |> List.map (\n -> Tuple.second n)
-    |> List.map (\n ->
-            th [ class "border w-1/4 px-4 py-2" ]
-                [ text (campoToString n)]
-        )
-        
+    Dict.toList listCampo
+        |> List.map (\n -> Tuple.second n)
+        |> List.map
+            (\n ->
+                th [ class "border w-1/4 px-4 py-2" ]
+                    [ text (campoToString n) ]
+            )
 
 
 tabela : Model -> Html Msg
@@ -436,7 +449,7 @@ tabela model =
             div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
                     [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
-                        [ button [ class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
+                        [ button [ onClick AbrirModal , class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
                     , div [ class "p-3" ]
                         [ table [ class "table-responsive w-full rounded" ]
@@ -445,8 +458,7 @@ tabela model =
                                     (thHeadTabela tabelaOk)
                                 ]
                             , tbody []
-                                [
-                                    {- tr []
+                                [{- tr []
                                     [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
                                     , td [ class "border px-4 py-2" ] [ text "Sydney" ]
                                     , td [ class "border px-4 py-2" ] [ text "MS" ]
@@ -488,7 +500,7 @@ modalAberto model =
             class "modal-wrapper"
 
 
-construtorCampo : Campo -> Html Msg
+construtorCampo : Campo -> Html msg
 construtorCampo campo =
     case campo of
         Texto codinome _ ->
@@ -510,14 +522,16 @@ construtorCampo campo =
             Debug.todo "A implementar outros tipos de campo"
 
 
-construtorForm : Model -> Html Msg
+construtorForm : Model -> List (Html Msg)
 construtorForm model =
     case model.modo of
         Just Create ->
-            Debug.todo "fazer"
+            Dict.toList (Maybe.withDefault Dict.empty model.schema)
+                |> List.map (\n -> Tuple.second n)
+                |> List.map (\n -> construtorCampo n)
 
         _ ->
-            Debug.todo "construir"
+            []
 
 
 modal : Model -> Html Msg
@@ -535,13 +549,12 @@ modal model =
                         ]
                     ]
                 , form [ class "w-full" ]
-                    [ -----d---------
-                      div [ class "mt-5" ]
-                        [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
-                            [ text "Salvar" ]
-                        , span [ onClick FecharModal, class "close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold mx-1 py-2 px-4 rounded" ]
-                            [ text "Cancelar" ]
-                        ]
+                    (construtorForm model)
+                , div [ class "mt-5" ]
+                    [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
+                        [ text "Salvar" ]
+                    , span [ onClick FecharModal, class "close-modal cursor-pointer bg-red-200 hover:bg-red-500 text-red-900 font-bold mx-1 py-2 px-4 rounded" ]
+                        [ text "Cancelar" ]
                     ]
                 ]
             ]
