@@ -54,9 +54,12 @@ import Json.Decode
         , dict
         , field
         , int
+        , lazy
         , list
+        , map
         , map2
         , map3
+        , map4
         , nullable
         , string
         )
@@ -83,9 +86,7 @@ main =
 type alias Model =
     { menu : List Item
     , modo : Maybe Crud
-    , tabelas : Maybe (Dict String (Dict String Campo))
-    , schema : Maybe (Dict String Campo)
-    , tabelasSecundarias : Maybe (Dict String (Dict String Campo))
+    , schema : Maybe Tabela
     , showMenu : Bool
     }
 
@@ -95,9 +96,28 @@ type Crud
     | List
 
 
+type alias Tabela =
+    { codinome : String
+    , nome : String
+    , campos : List Campo
+    , links : Maybe Links
+    }
+
+
+type Links
+    = Links (List Tabela)
+
+
 type Campo
-    = Texto String String
+    = Texto InputText
     | Id Int
+
+
+type alias InputText =
+    { codinome : String
+    , nome : String
+    , prioridade : Int
+    }
 
 
 type alias Item =
@@ -122,6 +142,15 @@ itemDecoder =
         (field "sub-itens" (list subItemDecoder))
 
 
+tabelaDecoder : Decoder Tabela
+tabelaDecoder =
+    map4 Tabela
+        (field "codinome" string)
+        (field "nome" string)
+        (field "campos" (list campoDecoder))
+        (field "links" (nullable (map Links (list (lazy (\_ -> tabelaDecoder))))))
+
+
 campoDecoder : Decoder Campo
 campoDecoder =
     field "tipo" string
@@ -130,15 +159,22 @@ campoDecoder =
 
 decoderCampoTexto : Decoder Campo
 decoderCampoTexto =
-    map2 Texto
+    map Texto decoderInputText
+       
+
+
+decoderInputText : Decoder InputText
+decoderInputText =
+    map3 InputText
         (field "codinome" string)
-        (field "value" string)
+        (field "nome" string)
+        (field "prioridade" int)
 
 
 tipoDoCampo : String -> Decoder Campo
 tipoDoCampo tipo =
     case tipo of
-        "texto" ->
+        "input-text" ->
             decoderCampoTexto
 
         _ ->
@@ -159,8 +195,6 @@ init _ =
         []
         Nothing
         Nothing
-        Nothing
-        Nothing
         True
     , getItens
     )
@@ -168,7 +202,7 @@ init _ =
 
 type Msg
     = GotMenu (Result Http.Error (List Item))
-    | GotSchema (Result Http.Error (Dict String (Dict String Campo)))
+    | GotSchema (Result Http.Error Tabela)
     | Selecionar Item
     | SubSelecionado SubItem
     | MostrarMenu
@@ -192,19 +226,8 @@ update msg model =
 
         GotSchema result ->
             case result of
-                Ok tabelasOk ->
-                    ( let
-                        gotTabelas =
-                            tabelasOk
-                      in
-                      { model
-                        | schema = tabelaPrincipal gotTabelas
-                        , tabelas = Just gotTabelas
-                        , tabelasSecundarias = tabelasSecundarias gotTabelas
-                        , modo = Just List
-                      }
-                    , Cmd.none
-                    )
+                Ok res ->
+                    ( { model | schema = Just res }, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )
@@ -216,54 +239,15 @@ update msg model =
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
         AbrirModal ->
-            ({model | modo = Just Create}, Cmd.none )
+            ( { model | modo = Just Create }, Cmd.none )
 
         FecharModal ->
-            ( {model | modo = Just List}, Cmd.none )
-
-
-nomeTabelaPrincipal : Dict String (Dict String Campo) -> String
-nomeTabelaPrincipal tabSecundarias =
-    Dict.keys tabSecundarias
-        |> List.filter (\n -> String.startsWith "*" n)
-        |> List.head
-        |> Maybe.withDefault ""
-
-
-tabelasSecundarias : Dict String (Dict String Campo) -> Maybe (Dict String (Dict String Campo))
-tabelasSecundarias tabelas =
-    Dict.toList tabelas
-        |> List.filter (\n -> Tuple.first n /= nomeTabelaPrincipal tabelas)
-        |> Dict.fromList
-        |> Just
+            ( { model | modo = Just List }, Cmd.none )
 
 
 atualizarMenu : List Item -> Item -> List Item
 atualizarMenu menu item =
     substituirItem menu item
-
-
-tuplaSegundo : Maybe ( String, Dict String Campo ) -> Maybe (Dict String Campo)
-tuplaSegundo maybeDict =
-    case maybeDict of
-        Just ( _, v ) ->
-            Just v
-
-        _ ->
-            Nothing
-
-
-tabelaPrincipal : Dict String (Dict String Campo) -> Maybe (Dict String Campo)
-tabelaPrincipal tabelas =
-    Dict.toList tabelas
-        |> List.filter (\n -> String.startsWith "*" (Tuple.first n))
-        |> List.head
-        |> tuplaSegundo
-
-
-
---    |> Dict.toList
---    |> List.map (\n -> Tuple.second n)
 
 
 substituirItem : List Item -> Item -> List Item
@@ -400,7 +384,7 @@ getSchema : String -> Cmd Msg
 getSchema url =
     Http.get
         { url = url
-        , expect = Http.expectJson GotSchema (dict (dict campoDecoder))
+        , expect = Http.expectJson GotSchema tabelaDecoder
         }
 
 
@@ -424,8 +408,8 @@ topo =
 campoToString : Campo -> String
 campoToString campo =
     case campo of
-        Texto codinome _ ->
-            codinome
+        Texto a ->
+            .codinome a
 
         _ ->
             ""
@@ -449,13 +433,14 @@ tabela model =
             div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
                     [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
-                        [ button [ onClick AbrirModal , class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
+                        [ button [ onClick AbrirModal, class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
                     , div [ class "p-3" ]
                         [ table [ class "table-responsive w-full rounded" ]
                             [ thead []
-                                [ tr []
-                                    (thHeadTabela tabelaOk)
+                                [ tr [][]
+
+                                --  (thHeadTabela tabelaOk)
                                 ]
                             , tbody []
                                 [{- tr []
@@ -471,7 +456,7 @@ tabela model =
                                         , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
                                             [ i [ class "fas fa-edit" ] [] ]
                                         , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500" ]
-                                            [ i [ class "fas fa-trash" ] [] ]
+                                             [ i [ class "fas fa-trash" ] [] ]
                                         ]
                                     ]
                                  -}
@@ -503,11 +488,11 @@ modalAberto model =
 construtorCampo : Campo -> Html msg
 construtorCampo campo =
     case campo of
-        Texto codinome _ ->
+        Texto i ->
             div [ class "flex flex-wrap -mx-3 mb-2" ]
                 [ div [ class "w-full px-3" ]
                     [ label [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1", for "nome" ]
-                        [ text codinome ]
+                        [ ]
                     , input
                         [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
                         , type_ "text"
@@ -520,18 +505,6 @@ construtorCampo campo =
 
         _ ->
             Debug.todo "A implementar outros tipos de campo"
-
-
-construtorForm : Model -> List (Html Msg)
-construtorForm model =
-    case model.modo of
-        Just Create ->
-            Dict.toList (Maybe.withDefault Dict.empty model.schema)
-                |> List.map (\n -> Tuple.second n)
-                |> List.map (\n -> construtorCampo n)
-
-        _ ->
-            []
 
 
 modal : Model -> Html Msg
@@ -549,7 +522,7 @@ modal model =
                         ]
                     ]
                 , form [ class "w-full" ]
-                    (construtorForm model)
+                   []
                 , div [ class "mt-5" ]
                     [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
                         [ text "Salvar" ]

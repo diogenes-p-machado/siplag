@@ -1,43 +1,76 @@
 {
-  "*pessoa": {
-    "id": {
-      "tipo": "texto",
-      "codinome": "id",
-      "value": "null"
+  "codinome": "Pessoa",
+  "nome": "pessoa",
+  "campos": [
+    {
+      "tipo": "input-text",
+      "codinome": "Identificação",
+      "nome": "id",
+      "prioridade": 1
     },
-    "nome": {
-      "tipo": "texto",
-      "codinome": "Nome da pessoa:",
-      "value": "null"
+    {
+      "tipo": "input-text",
+      "codinome": "Identificação",
+      "nome": "id",
+      "prioridade": 2
     },
-    "cpf": {
-      "tipo": "texto",
-      "codinome": "Número do cpf:",
-      "value": "null"
+    {
+      "tipo": "input-text",
+      "codinome": "Identificação",
+      "nome": "id",
+      "prioridade": 3
     }
-  },
-  "endereço": {
-    "logradouro": {
-      "tipo": "texto",
-      "codinome": "Logradouro",
-      "value": "null"
+  ],
+  "links": [
+    {
+      "codinome": "Endereço",
+      "nome": "endereco",
+      "campos": [
+        {
+          "tipo": "input-text",
+          "codinome": "Logradouro",
+          "nome": "logradouro",
+          "prioridade": 2
+        },
+        {
+          "tipo": "input-text",
+          "codinome": "Identificação",
+          "nome": "id",
+          "prioridade": 1
+        },
+        {
+          "tipo": "input-text",
+          "codinome": "Cep",
+          "nome": "cep",
+          "prioridade": 3
+        }
+      ],
+      "links": null
     },
-    "bairro": {
-      "tipo": "texto",
-      "codinome": "Bairro",
-      "value": "null"
+    {
+      "codinome": "Produtos",
+      "nome": "produto",
+      "campos": [
+        {
+          "tipo": "input-text",
+          "codinome": "Identificação",
+          "nome": "id",
+          "prioridade": 1
+        },
+        {
+          "tipo": "input-text",
+          "codinome": "Nome do produto",
+          "nome": "nome",
+          "prioridade": 2
+        },
+        {
+          "tipo": "input-text",
+          "codinome": "Quantidade",
+          "nome": "quantidade",
+          "prioridade": 3
+        }
+      ],
+      "links": null
     }
-  },
-  "filhos":{
-    "nome":{
-      "tipo": "texto",
-      "codinome": "Nome",
-      "value":"null"
-    },
-    "sobrenome":{
-      "tipo": "texto",
-      "codinome": "Sobrenome",
-      "value":"null"
-    }
-  }
+  ]
 }

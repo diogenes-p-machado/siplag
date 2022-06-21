@@ -1,0 +1,11 @@
+GET http://localhost:3000/pessoa HTTP/1.1
+Content-Type: application/json
+
+
+###
+POST http://localhost:3000/pessoa HTTP/1.1
+Content-Type: application/json
+
+###
+DELETE http://localhost:3000/pessoa/1 HTTP/1.1
+Content-Type: application/json

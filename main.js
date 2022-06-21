@@ -10729,9 +10729,9 @@ var $elm$core$Basics$never = function (_v0) {
 	}
 };
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Model = F6(
-	function (menu, modo, tabelas, schema, tabelasSecundarias, showMenu) {
-		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabelas: tabelas, tabelasSecundarias: tabelasSecundarias};
+var $author$project$Main$Model = F4(
+	function (menu, modo, schema, showMenu) {
+		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu};
 	});
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
@@ -11017,7 +11017,7 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A6($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true),
+		A4($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true),
 		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -11047,26 +11047,38 @@ var $author$project$Main$atualizarMenu = F2(
 var $author$project$Main$GotSchema = function (a) {
 	return {$: 'GotSchema', a: a};
 };
-var $elm$json$Json$Decode$andThen = _Json_andThen;
-var $author$project$Main$Texto = F2(
-	function (a, b) {
-		return {$: 'Texto', a: a, b: b};
+var $author$project$Main$Links = function (a) {
+	return {$: 'Links', a: a};
+};
+var $author$project$Main$Tabela = F4(
+	function (codinome, nome, campos, links) {
+		return {campos: campos, codinome: codinome, links: links, nome: nome};
 	});
-var $author$project$Main$decoderCampoTexto = A3(
-	$elm$json$Json$Decode$map2,
-	$author$project$Main$Texto,
+var $elm$json$Json$Decode$andThen = _Json_andThen;
+var $author$project$Main$Texto = function (a) {
+	return {$: 'Texto', a: a};
+};
+var $author$project$Main$InputText = F3(
+	function (codinome, nome, prioridade) {
+		return {codinome: codinome, nome: nome, prioridade: prioridade};
+	});
+var $author$project$Main$decoderInputText = A4(
+	$elm$json$Json$Decode$map3,
+	$author$project$Main$InputText,
 	A2($elm$json$Json$Decode$field, 'codinome', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'value', $elm$json$Json$Decode$string));
+	A2($elm$json$Json$Decode$field, 'nome', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'prioridade', $elm$json$Json$Decode$int));
+var $author$project$Main$decoderCampoTexto = A2($elm$json$Json$Decode$map, $author$project$Main$Texto, $author$project$Main$decoderInputText);
 var $elm$core$Debug$todo = _Debug_todo;
 var $author$project$Main$tipoDoCampo = function (tipo) {
-	if (tipo === 'texto') {
+	if (tipo === 'input-text') {
 		return $author$project$Main$decoderCampoTexto;
 	} else {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 145, column: 13},
-				end: {line: 145, column: 23}
+				start: {line: 181, column: 13},
+				end: {line: 181, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11074,79 +11086,59 @@ var $author$project$Main$campoDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	$author$project$Main$tipoDoCampo,
 	A2($elm$json$Json$Decode$field, 'tipo', $elm$json$Json$Decode$string));
+var $elm$json$Json$Decode$lazy = function (thunk) {
+	return A2(
+		$elm$json$Json$Decode$andThen,
+		thunk,
+		$elm$json$Json$Decode$succeed(_Utils_Tuple0));
+};
+var $elm$json$Json$Decode$map4 = _Json_map4;
+var $elm$json$Json$Decode$null = _Json_decodeNull;
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $elm$json$Json$Decode$nullable = function (decoder) {
+	return $elm$json$Json$Decode$oneOf(
+		_List_fromArray(
+			[
+				$elm$json$Json$Decode$null($elm$core$Maybe$Nothing),
+				A2($elm$json$Json$Decode$map, $elm$core$Maybe$Just, decoder)
+			]));
+};
+function $author$project$Main$cyclic$tabelaDecoder() {
+	return A5(
+		$elm$json$Json$Decode$map4,
+		$author$project$Main$Tabela,
+		A2($elm$json$Json$Decode$field, 'codinome', $elm$json$Json$Decode$string),
+		A2($elm$json$Json$Decode$field, 'nome', $elm$json$Json$Decode$string),
+		A2(
+			$elm$json$Json$Decode$field,
+			'campos',
+			$elm$json$Json$Decode$list($author$project$Main$campoDecoder)),
+		A2(
+			$elm$json$Json$Decode$field,
+			'links',
+			$elm$json$Json$Decode$nullable(
+				A2(
+					$elm$json$Json$Decode$map,
+					$author$project$Main$Links,
+					$elm$json$Json$Decode$list(
+						$elm$json$Json$Decode$lazy(
+							function (_v0) {
+								return $author$project$Main$cyclic$tabelaDecoder();
+							}))))));
+}
+try {
+	var $author$project$Main$tabelaDecoder = $author$project$Main$cyclic$tabelaDecoder();
+	$author$project$Main$cyclic$tabelaDecoder = function () {
+		return $author$project$Main$tabelaDecoder;
+	};
+} catch ($) {
+	throw 'Some top-level definitions from `Main` are causing infinite recursion:\n\n  ┌─────┐\n  │    tabelaDecoder\n  └─────┘\n\nThese errors are very tricky, so read https://elm-lang.org/0.19.1/bad-recursion to learn how to fix it!';}
 var $author$project$Main$getSchema = function (url) {
 	return $elm$http$Http$get(
 		{
-			expect: A2(
-				$elm$http$Http$expectJson,
-				$author$project$Main$GotSchema,
-				$elm$json$Json$Decode$dict(
-					$elm$json$Json$Decode$dict($author$project$Main$campoDecoder))),
+			expect: A2($elm$http$Http$expectJson, $author$project$Main$GotSchema, $author$project$Main$tabelaDecoder),
 			url: url
 		});
-};
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$Main$tuplaSegundo = function (maybeDict) {
-	if (maybeDict.$ === 'Just') {
-		var _v1 = maybeDict.a;
-		var v = _v1.b;
-		return $elm$core$Maybe$Just(v);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$Main$tabelaPrincipal = function (tabelas) {
-	return $author$project$Main$tuplaSegundo(
-		$elm$core$List$head(
-			A2(
-				$elm$core$List$filter,
-				function (n) {
-					return A2($elm$core$String$startsWith, '*', n.a);
-				},
-				$elm$core$Dict$toList(tabelas))));
-};
-var $author$project$Main$nomeTabelaPrincipal = function (tabSecundarias) {
-	return A2(
-		$elm$core$Maybe$withDefault,
-		'',
-		$elm$core$List$head(
-			A2(
-				$elm$core$List$filter,
-				function (n) {
-					return A2($elm$core$String$startsWith, '*', n);
-				},
-				$elm$core$Dict$keys(tabSecundarias))));
-};
-var $author$project$Main$tabelasSecundarias = function (tabelas) {
-	return $elm$core$Maybe$Just(
-		$elm$core$Dict$fromList(
-			A2(
-				$elm$core$List$filter,
-				function (n) {
-					return !_Utils_eq(
-						n.a,
-						$author$project$Main$nomeTabelaPrincipal(tabelas));
-				},
-				$elm$core$Dict$toList(tabelas))));
 };
 var $author$project$Main$update = F2(
 	function (msg, model) {
@@ -11175,19 +11167,13 @@ var $author$project$Main$update = F2(
 			case 'GotSchema':
 				var result = msg.a;
 				if (result.$ === 'Ok') {
-					var tabelasOk = result.a;
+					var res = result.a;
 					return _Utils_Tuple2(
-						function () {
-							var gotTabelas = tabelasOk;
-							return _Utils_update(
-								model,
-								{
-									modo: $elm$core$Maybe$Just($author$project$Main$List),
-									schema: $author$project$Main$tabelaPrincipal(gotTabelas),
-									tabelas: $elm$core$Maybe$Just(gotTabelas),
-									tabelasSecundarias: $author$project$Main$tabelasSecundarias(gotTabelas)
-								});
-						}(),
+						_Utils_update(
+							model,
+							{
+								schema: $elm$core$Maybe$Just(res)
+							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -11231,80 +11217,6 @@ var $author$project$Main$expandirMenu = function (cond) {
 };
 var $elm$html$Html$main_ = _VirtualDom_node('main');
 var $author$project$Main$FecharModal = {$: 'FecharModal'};
-var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
-var $elm$html$Html$label = _VirtualDom_node('label');
-var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $author$project$Main$construtorCampo = function (campo) {
-	if (campo.$ === 'Texto') {
-		var codinome = campo.a;
-		return A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$author$project$Main$class('flex flex-wrap -mx-3 mb-2')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$author$project$Main$class('w-full px-3')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
-									$elm$html$Html$Attributes$for('nome')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text(codinome)
-								])),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Attributes$id('nome'),
-									$elm$html$Html$Attributes$placeholder('Digite seu nome:')
-								]),
-							_List_Nil)
-						]))
-				]));
-	} else {
-		return _Debug_todo(
-			'Main',
-			{
-				start: {line: 522, column: 13},
-				end: {line: 522, column: 23}
-			})('A implementar outros tipos de campo');
-	}
-};
-var $author$project$Main$construtorForm = function (model) {
-	var _v0 = model.modo;
-	if ((_v0.$ === 'Just') && (_v0.a.$ === 'Create')) {
-		var _v1 = _v0.a;
-		return A2(
-			$elm$core$List$map,
-			function (n) {
-				return $author$project$Main$construtorCampo(n);
-			},
-			A2(
-				$elm$core$List$map,
-				function (n) {
-					return n.b;
-				},
-				$elm$core$Dict$toList(
-					A2($elm$core$Maybe$withDefault, $elm$core$Dict$empty, model.schema))));
-	} else {
-		return _List_Nil;
-	}
-};
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$i = _VirtualDom_node('i');
 var $author$project$Main$modalAberto = function (model) {
@@ -11395,7 +11307,7 @@ var $author$project$Main$modal = function (model) {
 									[
 										$author$project$Main$class('w-full')
 									]),
-								$author$project$Main$construtorForm(model)),
+								_List_Nil),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(
@@ -11433,38 +11345,6 @@ var $author$project$Main$modal = function (model) {
 var $author$project$Main$AbrirModal = {$: 'AbrirModal'};
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
-var $author$project$Main$campoToString = function (campo) {
-	if (campo.$ === 'Texto') {
-		var codinome = campo.a;
-		return codinome;
-	} else {
-		return '';
-	}
-};
-var $elm$html$Html$th = _VirtualDom_node('th');
-var $author$project$Main$thHeadTabela = function (listCampo) {
-	return A2(
-		$elm$core$List$map,
-		function (n) {
-			return A2(
-				$elm$html$Html$th,
-				_List_fromArray(
-					[
-						$author$project$Main$class('border w-1/4 px-4 py-2')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						$author$project$Main$campoToString(n))
-					]));
-		},
-		A2(
-			$elm$core$List$map,
-			function (n) {
-				return n.b;
-			},
-			$elm$core$Dict$toList(listCampo)));
-};
 var $elm$html$Html$thead = _VirtualDom_node('thead');
 var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $author$project$Main$tabela = function (model) {
@@ -11528,10 +11408,7 @@ var $author$project$Main$tabela = function (model) {
 											_List_Nil,
 											_List_fromArray(
 												[
-													A2(
-													$elm$html$Html$tr,
-													_List_Nil,
-													$author$project$Main$thHeadTabela(tabelaOk))
+													A2($elm$html$Html$tr, _List_Nil, _List_Nil)
 												])),
 											A2($elm$html$Html$tbody, _List_Nil, _List_Nil)
 										]))
@@ -11827,4 +11704,4 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error (Dict.Dict String.String (Dict.Dict String.String Main.Campo))"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem"],"MostrarMenu":[],"AbrirModal":[],"FecharModal":[]}},"Main.Campo":{"args":[],"tags":{"Texto":["String.String","String.String"],"Id":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem"],"MostrarMenu":[],"AbrirModal":[],"FecharModal":[]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
