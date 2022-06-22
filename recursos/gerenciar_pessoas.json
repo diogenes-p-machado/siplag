@@ -10,8 +10,8 @@
     },
     {
       "tipo": "input-text",
-      "codinome": "Identificação",
-      "nome": "id",
+      "codinome": "Cpf",
+      "nome": "cpf",
       "prioridade": 2
     },
     {

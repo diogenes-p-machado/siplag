@@ -11077,8 +11077,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 181, column: 13},
-				end: {line: 181, column: 23}
+				start: {line: 180, column: 13},
+				end: {line: 180, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11345,6 +11345,35 @@ var $author$project$Main$modal = function (model) {
 var $author$project$Main$AbrirModal = {$: 'AbrirModal'};
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
+var $author$project$Main$campoToString = function (campo) {
+	if (campo.$ === 'Texto') {
+		var a = campo.a;
+		return function ($) {
+			return $.codinome;
+		}(a);
+	} else {
+		return '';
+	}
+};
+var $elm$html$Html$th = _VirtualDom_node('th');
+var $author$project$Main$thHeadTabela = function (t) {
+	return A2(
+		$elm$core$List$map,
+		function (n) {
+			return A2(
+				$elm$html$Html$th,
+				_List_fromArray(
+					[
+						$author$project$Main$class('border w-1/4 px-4 py-2')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						$author$project$Main$campoToString(n))
+					]));
+		},
+		t.campos);
+};
 var $elm$html$Html$thead = _VirtualDom_node('thead');
 var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $author$project$Main$tabela = function (model) {
@@ -11408,7 +11437,10 @@ var $author$project$Main$tabela = function (model) {
 											_List_Nil,
 											_List_fromArray(
 												[
-													A2($elm$html$Html$tr, _List_Nil, _List_Nil)
+													A2(
+													$elm$html$Html$tr,
+													_List_Nil,
+													$author$project$Main$thHeadTabela(tabelaOk))
 												])),
 											A2($elm$html$Html$tbody, _List_Nil, _List_Nil)
 										]))

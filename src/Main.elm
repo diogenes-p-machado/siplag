@@ -87,6 +87,8 @@ type alias Model =
     { menu : List Item
     , modo : Maybe Crud
     , schema : Maybe Tabela
+    , tabela : Maybe Tabela
+    , url : Maybe String
     , showMenu : Bool
     }
 
@@ -160,7 +162,6 @@ campoDecoder =
 decoderCampoTexto : Decoder Campo
 decoderCampoTexto =
     map Texto decoderInputText
-       
 
 
 decoderInputText : Decoder InputText
@@ -195,6 +196,8 @@ init _ =
         []
         Nothing
         Nothing
+        Nothing
+        Nothing
         True
     , getItens
     )
@@ -227,7 +230,7 @@ update msg model =
         GotSchema result ->
             case result of
                 Ok res ->
-                    ( { model | schema = Just res }, Cmd.none )
+                    ( { model | schema = Just res, tabela = Just res }, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )
@@ -415,20 +418,19 @@ campoToString campo =
             ""
 
 
-thHeadTabela : Dict String Campo -> List (Html msg)
-thHeadTabela listCampo =
-    Dict.toList listCampo
-        |> List.map (\n -> Tuple.second n)
-        |> List.map
-            (\n ->
-                th [ class "border w-1/4 px-4 py-2" ]
-                    [ text (campoToString n) ]
-            )
+thHeadTabela : Tabela -> List (Html msg)
+thHeadTabela t =
+    List.map
+        (\n ->
+            th [ class "border w-1/4 px-4 py-2" ]
+                [ text (campoToString n) ]
+        )
+        t.campos
 
 
 tabela : Model -> Html Msg
 tabela model =
-    case model.schema of
+    case model.tabela of
         Just tabelaOk ->
             div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
@@ -438,9 +440,7 @@ tabela model =
                     , div [ class "p-3" ]
                         [ table [ class "table-responsive w-full rounded" ]
                             [ thead []
-                                [ tr [][]
-
-                                --  (thHeadTabela tabelaOk)
+                                [ tr [] (thHeadTabela tabelaOk)
                                 ]
                             , tbody []
                                 [{- tr []
@@ -492,7 +492,7 @@ construtorCampo campo =
             div [ class "flex flex-wrap -mx-3 mb-2" ]
                 [ div [ class "w-full px-3" ]
                     [ label [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1", for "nome" ]
-                        [ ]
+                        []
                     , input
                         [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
                         , type_ "text"
@@ -522,7 +522,7 @@ modal model =
                         ]
                     ]
                 , form [ class "w-full" ]
-                   []
+                    []
                 , div [ class "mt-5" ]
                     [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
                         [ text "Salvar" ]
