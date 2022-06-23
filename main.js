@@ -10729,9 +10729,9 @@ var $elm$core$Basics$never = function (_v0) {
 	}
 };
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Model = F4(
-	function (menu, modo, schema, showMenu) {
-		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu};
+var $author$project$Main$Model = F6(
+	function (menu, modo, schema, tabela, url, showMenu) {
+		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabela: tabela, url: url};
 	});
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
@@ -11017,7 +11017,7 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A4($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true),
+		A6($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true),
 		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -11077,8 +11077,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 180, column: 13},
-				end: {line: 180, column: 23}
+				start: {line: 182, column: 13},
+				end: {line: 182, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11172,7 +11172,8 @@ var $author$project$Main$update = F2(
 						_Utils_update(
 							model,
 							{
-								schema: $elm$core$Maybe$Just(res)
+								schema: $elm$core$Maybe$Just(res),
+								tabela: $elm$core$Maybe$Just(res)
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11343,6 +11344,33 @@ var $author$project$Main$modal = function (model) {
 			]));
 };
 var $author$project$Main$AbrirModal = {$: 'AbrirModal'};
+var $author$project$Main$links = function (tab) {
+	var _v0 = tab.links;
+	if (_v0.$ === 'Just') {
+		var l = _v0.a;
+		var list = l.a;
+		return A2(
+			$elm$core$List$map,
+			function (n) {
+				return A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$author$project$Main$class('bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							function ($) {
+								return $.codinome;
+							}(n))
+						]));
+			},
+			list);
+	} else {
+		return _List_Nil;
+	}
+};
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
 var $author$project$Main$campoToString = function (campo) {
@@ -11377,7 +11405,7 @@ var $author$project$Main$thHeadTabela = function (t) {
 var $elm$html$Html$thead = _VirtualDom_node('thead');
 var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $author$project$Main$tabela = function (model) {
-	var _v0 = model.schema;
+	var _v0 = model.tabela;
 	if (_v0.$ === 'Just') {
 		var tabelaOk = _v0.a;
 		return A2(
@@ -11446,25 +11474,9 @@ var $author$project$Main$tabela = function (model) {
 										]))
 								])),
 							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$author$project$Main$class('bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 ml-4 mx-2 mb-3 border border-orange-400 rounded')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Voltar')
-								])),
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$author$project$Main$class('bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Opções')
-								]))
+							$elm$html$Html$div,
+							_List_Nil,
+							$author$project$Main$links(tabelaOk))
 						]))
 				]));
 	} else {

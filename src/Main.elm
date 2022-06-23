@@ -88,7 +88,6 @@ type alias Model =
     , modo : Maybe Crud
     , schema : Maybe Tabela
     , tabela : Maybe Tabela
-    , url : Maybe String
     , showMenu : Bool
     }
 
@@ -101,7 +100,7 @@ type Crud
 type alias Tabela =
     { codinome : String
     , nome : String
-    , campos : List Campo
+    , campos : List Campo    
     , links : Maybe Links
     }
 
@@ -196,8 +195,7 @@ init _ =
         []
         Nothing
         Nothing
-        Nothing
-        Nothing
+        Nothing        
         True
     , getItens
     )
@@ -463,13 +461,26 @@ tabela model =
                                 ]
                             ]
                         ]
-                    , button [ class "bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 ml-4 mx-2 mb-3 border border-orange-400 rounded" ] [ text "Voltar" ]
-                    , button [ class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow" ] [ text "Opções" ]
+                    , div [] (links tabelaOk)
                     ]
                 ]
 
         Nothing ->
             text "A implementar"
+
+
+links : Tabela -> List (Html Msg)
+links tab =
+    case tab.links of
+        Just l ->
+            case l of
+                Links list ->
+                    List.map
+                        (\n -> button [ class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow" ]
+                            [ text (.codinome n) ])
+                        list
+        Nothing ->
+            []
 
 
 modalAberto : Model -> Attribute msg
