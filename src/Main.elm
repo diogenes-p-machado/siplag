@@ -100,7 +100,7 @@ type Crud
 type alias Tabela =
     { codinome : String
     , nome : String
-    , campos : List Campo    
+    , campos : List Campo
     , links : Maybe Links
     }
 
@@ -195,7 +195,7 @@ init _ =
         []
         Nothing
         Nothing
-        Nothing        
+        Nothing
         True
     , getItens
     )
@@ -207,6 +207,8 @@ type Msg
     | Selecionar Item
     | SubSelecionado SubItem
     | MostrarMenu
+    | Trocar Tabela
+    | Voltar (Maybe Tabela)
     | AbrirModal
     | FecharModal
 
@@ -244,6 +246,12 @@ update msg model =
 
         FecharModal ->
             ( { model | modo = Just List }, Cmd.none )
+
+        Trocar a ->
+            ( { model | tabela = Just a }, Cmd.none )
+
+        Voltar a ->
+            ( { model | tabela = a }, Cmd.none )
 
 
 atualizarMenu : List Item -> Item -> List Item
@@ -416,7 +424,7 @@ campoToString campo =
             ""
 
 
-thHeadTabela : Tabela -> List (Html msg)
+thHeadTabela : Tabela -> List (Html Msg)
 thHeadTabela t =
     List.map
         (\n ->
@@ -426,6 +434,15 @@ thHeadTabela t =
         t.campos
 
 
+htmlIf : Html msg -> Bool -> Html msg
+htmlIf el cond =
+    if cond then
+        el
+
+    else
+        text ""
+
+
 tabela : Model -> Html Msg
 tabela model =
     case model.tabela of
@@ -433,7 +450,13 @@ tabela model =
             div [ class "flex flex-1  flex-col md:flex-row lg:flex-row mx-2" ]
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
                     [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
-                        [ button [ onClick AbrirModal, class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
+                        [ htmlIf
+                            (button                                    
+                                [ onClick (Voltar model.schema), class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ]
+                                [ text "Anterior" ]
+                            )
+                            (model.schema /= model.tabela)
+                        , button [ onClick AbrirModal, class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
                     , div [ class "p-3" ]
                         [ table [ class "table-responsive w-full rounded" ]
@@ -476,10 +499,13 @@ links tab =
             case l of
                 Links list ->
                     List.map
-                        (\n -> button [ class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow" ]
-                            [ text (.codinome n) ])
+                        (\n ->
+                            button [ onClick (Trocar n), class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow" ]
+                                [ text (.codinome n) ]
+                        )
                         list
-        Nothing ->
+
+        _ ->
             []
 
 
@@ -489,10 +515,7 @@ modalAberto model =
         Just Create ->
             class "modal-wrapper modal-is-open"
 
-        Just List ->
-            class "modal-wrapper"
-
-        Nothing ->
+        _ ->
             class "modal-wrapper"
 
 

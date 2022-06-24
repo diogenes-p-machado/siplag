@@ -10729,9 +10729,9 @@ var $elm$core$Basics$never = function (_v0) {
 	}
 };
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Model = F6(
-	function (menu, modo, schema, tabela, url, showMenu) {
-		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabela: tabela, url: url};
+var $author$project$Main$Model = F5(
+	function (menu, modo, schema, tabela, showMenu) {
+		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabela: tabela};
 	});
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
@@ -11017,7 +11017,7 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A6($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true),
+		A5($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true),
 		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -11077,8 +11077,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 182, column: 13},
-				end: {line: 182, column: 23}
+				start: {line: 181, column: 13},
+				end: {line: 181, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11198,13 +11198,29 @@ var $author$project$Main$update = F2(
 							modo: $elm$core$Maybe$Just($author$project$Main$Create)
 						}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'FecharModal':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							modo: $elm$core$Maybe$Just($author$project$Main$List)
 						}),
+					$elm$core$Platform$Cmd$none);
+			case 'Trocar':
+				var a = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							tabela: $elm$core$Maybe$Just(a)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var a = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{tabela: a}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -11222,14 +11238,9 @@ var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$i = _VirtualDom_node('i');
 var $author$project$Main$modalAberto = function (model) {
 	var _v0 = model.modo;
-	if (_v0.$ === 'Just') {
-		if (_v0.a.$ === 'Create') {
-			var _v1 = _v0.a;
-			return $author$project$Main$class('modal-wrapper modal-is-open');
-		} else {
-			var _v2 = _v0.a;
-			return $author$project$Main$class('modal-wrapper');
-		}
+	if ((_v0.$ === 'Just') && (_v0.a.$ === 'Create')) {
+		var _v1 = _v0.a;
+		return $author$project$Main$class('modal-wrapper modal-is-open');
 	} else {
 		return $author$project$Main$class('modal-wrapper');
 	}
@@ -11344,6 +11355,16 @@ var $author$project$Main$modal = function (model) {
 			]));
 };
 var $author$project$Main$AbrirModal = {$: 'AbrirModal'};
+var $author$project$Main$Voltar = function (a) {
+	return {$: 'Voltar', a: a};
+};
+var $author$project$Main$htmlIf = F2(
+	function (el, cond) {
+		return cond ? el : $elm$html$Html$text('');
+	});
+var $author$project$Main$Trocar = function (a) {
+	return {$: 'Trocar', a: a};
+};
 var $author$project$Main$links = function (tab) {
 	var _v0 = tab.links;
 	if (_v0.$ === 'Just') {
@@ -11356,6 +11377,8 @@ var $author$project$Main$links = function (tab) {
 					$elm$html$Html$button,
 					_List_fromArray(
 						[
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$Trocar(n)),
 							$author$project$Main$class('bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow')
 						]),
 					_List_fromArray(
@@ -11432,6 +11455,21 @@ var $author$project$Main$tabela = function (model) {
 								]),
 							_List_fromArray(
 								[
+									A2(
+									$author$project$Main$htmlIf,
+									A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick(
+												$author$project$Main$Voltar(model.schema)),
+												$author$project$Main$class('bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Anterior')
+											])),
+									!_Utils_eq(model.schema, model.tabela)),
 									A2(
 									$elm$html$Html$button,
 									_List_fromArray(
@@ -11748,4 +11786,4 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem"],"MostrarMenu":[],"AbrirModal":[],"FecharModal":[]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem"],"MostrarMenu":[],"Trocar":["Main.Tabela"],"Voltar":["Maybe.Maybe Main.Tabela"],"AbrirModal":[],"FecharModal":[]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
