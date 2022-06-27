@@ -225,7 +225,23 @@ update msg model =
                     ( model, Cmd.none )
 
         Selecionar item ->
-            ( { model | menu = atualizarMenu model.menu item }, Cmd.none )
+            if .selecionado item == 1 then
+                ( { model
+                    | schema = Nothing
+                    , tabela = Nothing
+                    , menu = atualizarMenu model.menu item
+                  }
+                , Cmd.none
+                )
+
+            else
+                ( { model
+                    | schema = Nothing
+                    , tabela = Nothing
+                    , menu = atualizarMenu model.menu item
+                  }
+                , Cmd.none
+                )
 
         GotSchema result ->
             case result of
@@ -270,7 +286,7 @@ compararItem item itemMsg =
         { item | selecionado = item.selecionado * -1 }
 
     else
-        itemMsg
+        { itemMsg | selecionado = -1 }
 
 
 subscriptions : Model -> Sub Msg
@@ -335,7 +351,7 @@ subItens : List SubItem -> List (Html Msg)
 subItens subitens =
     List.map
         (\n ->
-            li [ class "border-t mt-2 border-light-border w-full h-full px-2 py-3" ]
+            li [bgColorSub n ]
                 [ a
                     [ href "#"
                     , class "mx-4 font-sans font-hairline font-medium text-base text-nav-item no-underline"
@@ -347,6 +363,15 @@ subItens subitens =
                 ]
         )
         subitens
+
+
+
+bgColorSub : { a | selecionado : number } -> Attribute msg
+bgColorSub subit =
+    if .selecionado subit == 1 then
+       class "border-t mt-2 border-light-border w-full h-full bg-white px-2 py-3"       
+    else
+       class "border-t mt-2 border-light-border w-full h-full px-2 py-3"
 
 
 liMenu : Item -> Html Msg
@@ -451,7 +476,7 @@ tabela model =
                 [ div [ class "mb-2 border-solid border-gray-300 rounded border shadow-sm w-full" ]
                     [ div [ class "bg-gray-200 px-3 py-1 border-solid border-gray-200 border-b text-right" ]
                         [ htmlIf
-                            (button                                    
+                            (button
                                 [ onClick (Voltar model.schema), class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ]
                                 [ text "Anterior" ]
                             )
@@ -526,7 +551,7 @@ construtorCampo campo =
             div [ class "flex flex-wrap -mx-3 mb-2" ]
                 [ div [ class "w-full px-3" ]
                     [ label [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1", for "nome" ]
-                        []
+                        [ text i.codinome ]
                     , input
                         [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
                         , type_ "text"
@@ -539,6 +564,16 @@ construtorCampo campo =
 
         _ ->
             Debug.todo "A implementar outros tipos de campo"
+
+
+construtorForm : Maybe Tabela -> List (Html Msg)
+construtorForm ta =
+    case ta of
+        Just t ->
+            List.map (\n -> construtorCampo n) (.campos t)
+
+        Nothing ->
+            []
 
 
 modal : Model -> Html Msg
@@ -556,7 +591,7 @@ modal model =
                         ]
                     ]
                 , form [ class "w-full" ]
-                    []
+                    (construtorForm model.tabela)
                 , div [ class "mt-5" ]
                     [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
                         [ text "Salvar" ]

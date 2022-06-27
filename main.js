@@ -11031,7 +11031,9 @@ var $author$project$Main$compararItem = F2(
 	function (item, itemMsg) {
 		return _Utils_eq(item, itemMsg) ? _Utils_update(
 			item,
-			{selecionado: item.selecionado * (-1)}) : itemMsg;
+			{selecionado: item.selecionado * (-1)}) : _Utils_update(
+			itemMsg,
+			{selecionado: -1});
 	});
 var $author$project$Main$substituirItem = F2(
 	function (menu, item) {
@@ -11157,11 +11159,23 @@ var $author$project$Main$update = F2(
 				}
 			case 'Selecionar':
 				var item = msg.a;
-				return _Utils_Tuple2(
+				return (function ($) {
+					return $.selecionado;
+				}(item) === 1) ? _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							menu: A2($author$project$Main$atualizarMenu, model.menu, item)
+							menu: A2($author$project$Main$atualizarMenu, model.menu, item),
+							schema: $elm$core$Maybe$Nothing,
+							tabela: $elm$core$Maybe$Nothing
+						}),
+					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							menu: A2($author$project$Main$atualizarMenu, model.menu, item),
+							schema: $elm$core$Maybe$Nothing,
+							tabela: $elm$core$Maybe$Nothing
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'GotSchema':
@@ -11234,6 +11248,75 @@ var $author$project$Main$expandirMenu = function (cond) {
 };
 var $elm$html$Html$main_ = _VirtualDom_node('main');
 var $author$project$Main$FecharModal = {$: 'FecharModal'};
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $author$project$Main$construtorCampo = function (campo) {
+	if (campo.$ === 'Texto') {
+		var i = campo.a;
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					$author$project$Main$class('flex flex-wrap -mx-3 mb-2')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$author$project$Main$class('w-full px-3')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$label,
+							_List_fromArray(
+								[
+									$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
+									$elm$html$Html$Attributes$for('nome')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(i.codinome)
+								])),
+							A2(
+							$elm$html$Html$input,
+							_List_fromArray(
+								[
+									$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
+									$elm$html$Html$Attributes$type_('text'),
+									$elm$html$Html$Attributes$id('nome'),
+									$elm$html$Html$Attributes$placeholder('Digite seu nome:')
+								]),
+							_List_Nil)
+						]))
+				]));
+	} else {
+		return _Debug_todo(
+			'Main',
+			{
+				start: {line: 566, column: 13},
+				end: {line: 566, column: 23}
+			})('A implementar outros tipos de campo');
+	}
+};
+var $author$project$Main$construtorForm = function (ta) {
+	if (ta.$ === 'Just') {
+		var t = ta.a;
+		return A2(
+			$elm$core$List$map,
+			function (n) {
+				return $author$project$Main$construtorCampo(n);
+			},
+			function ($) {
+				return $.campos;
+			}(t));
+	} else {
+		return _List_Nil;
+	}
+};
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $elm$html$Html$i = _VirtualDom_node('i');
 var $author$project$Main$modalAberto = function (model) {
@@ -11319,7 +11402,7 @@ var $author$project$Main$modal = function (model) {
 									[
 										$author$project$Main$class('w-full')
 									]),
-								_List_Nil),
+								$author$project$Main$construtorForm(model.tabela)),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(
@@ -11575,6 +11658,11 @@ var $author$project$Main$Selecionar = function (a) {
 var $author$project$Main$SubSelecionado = function (a) {
 	return {$: 'SubSelecionado', a: a};
 };
+var $author$project$Main$bgColorSub = function (subit) {
+	return (function ($) {
+		return $.selecionado;
+	}(subit) === 1) ? $author$project$Main$class('border-t mt-2 border-light-border w-full h-full bg-white px-2 py-3') : $author$project$Main$class('border-t mt-2 border-light-border w-full h-full px-2 py-3');
+};
 var $author$project$Main$subItens = function (subitens) {
 	return A2(
 		$elm$core$List$map,
@@ -11583,7 +11671,7 @@ var $author$project$Main$subItens = function (subitens) {
 				$elm$html$Html$li,
 				_List_fromArray(
 					[
-						$author$project$Main$class('border-t mt-2 border-light-border w-full h-full px-2 py-3')
+						$author$project$Main$bgColorSub(n)
 					]),
 				_List_fromArray(
 					[
