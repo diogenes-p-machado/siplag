@@ -18,6 +18,7 @@ import Html
         , label
         , li
         , main_
+        , menu
         , option
         , p
         , select
@@ -63,6 +64,7 @@ import Json.Decode
         , nullable
         , string
         )
+import Maybe exposing (withDefault)
 
 
 
@@ -205,7 +207,7 @@ type Msg
     = GotMenu (Result Http.Error (List Item))
     | GotSchema (Result Http.Error Tabela)
     | Selecionar Item
-    | SubSelecionado SubItem
+    | SubSelecionado SubItem Item
     | MostrarMenu
     | Trocar Tabela
     | Voltar (Maybe Tabela)
@@ -251,7 +253,12 @@ update msg model =
                 Err _ ->
                     ( model, Cmd.none )
 
-        SubSelecionado subitem ->
+        SubSelecionado subitem item ->
+            let
+                subItensNew =
+                    List.map (\n -> substituirSubItem subitem n) (.subItens item)
+                itemNew = { item | subItens = subItensNew }    
+            in
             ( model, getSchema subitem.link )
 
         MostrarMenu ->
@@ -268,6 +275,15 @@ update msg model =
 
         Voltar a ->
             ( { model | tabela = a }, Cmd.none )
+
+
+substituirSubItem : SubItem -> SubItem -> SubItem
+substituirSubItem subMsg subList =
+    if subMsg == subList then
+        { subMsg | selecionado = 1 }
+
+    else
+        { subMsg | selecionado = -1 }
 
 
 atualizarMenu : List Item -> Item -> List Item
@@ -335,7 +351,7 @@ viewMenu menu =
 
 gerarSubMenu : Item -> Html Msg
 gerarSubMenu item =
-    ul [ class "list-reset -mx-2 bg-white-medium-dark" ] (subItens item.subItens)
+    ul [ class "list-reset -mx-2 bg-white-medium-dark" ] (subItens item.subItens item)
 
 
 liClassSelecionado : number -> Attribute msg
@@ -347,15 +363,15 @@ liClassSelecionado selecionado =
         class "w-full h-full py-3 px-2 border-b border-300-border"
 
 
-subItens : List SubItem -> List (Html Msg)
-subItens subitens =
+subItens : List SubItem -> Item -> List (Html Msg)
+subItens subitens item =
     List.map
         (\n ->
-            li [bgColorSub n ]
+            li [ bgColorSub n ]
                 [ a
                     [ href "#"
                     , class "mx-4 font-sans font-hairline font-medium text-base text-nav-item no-underline"
-                    , onClick (SubSelecionado n)
+                    , onClick (SubSelecionado n item)
                     ]
                     [ text n.label
                     , span [] [ i [ class "fa fa-angle-right float-right" ] [] ]
@@ -365,13 +381,13 @@ subItens subitens =
         subitens
 
 
-
 bgColorSub : { a | selecionado : number } -> Attribute msg
 bgColorSub subit =
     if .selecionado subit == 1 then
-       class "border-t mt-2 border-light-border w-full h-full bg-white px-2 py-3"       
+        class "border-t mt-2 border-light-border w-full h-full bg-white px-2 py-3"
+
     else
-       class "border-t mt-2 border-light-border w-full h-full px-2 py-3"
+        class "border-t mt-2 border-light-border w-full h-full px-2 py-3"
 
 
 liMenu : Item -> Html Msg

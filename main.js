@@ -11682,7 +11682,10 @@ var $author$project$Main$subItens = function (subitens) {
 								$elm$html$Html$Attributes$href('#'),
 								$author$project$Main$class('mx-4 font-sans font-hairline font-medium text-base text-nav-item no-underline'),
 								$elm$html$Html$Events$onClick(
-								$author$project$Main$SubSelecionado(n))
+								$author$project$Main$SubSelecionado(
+									_Utils_update(
+										n,
+										{selecionado: 1})))
 							]),
 						_List_fromArray(
 							[
