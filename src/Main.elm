@@ -209,23 +209,13 @@ update msg model =
                     ( model, Cmd.none )
 
         Selecionar item ->
-            if .selecionado item == 1 then
-                ( { model
-                    | schema = Nothing
-                    , tabela = Nothing
-                    , menu = atualizarMenu model.menu item
-                  }
-                , Cmd.none
-                )
-
-            else
-                ( { model
-                    | schema = Nothing
-                    , tabela = Nothing
-                    , menu = atualizarMenu model.menu item
-                  }
-                , Cmd.none
-                )
+            ( { model
+                | schema = Nothing
+                , tabela = Nothing
+                , menu = atualizarMenu model.menu item
+              }
+            , Cmd.none
+            )
 
         GotSchema result ->
             case result of
@@ -290,11 +280,15 @@ substituirItem : List Item -> Item -> List Item
 substituirItem menu item =
     List.map (compararItem item) menu
 
+zerarSelecao : SubItem ->  SubItem
+zerarSelecao novo = 
+    {novo | selecionado = -1}
+
 
 compararItem : Item -> Item -> Item
 compararItem item itemMsg =
     if item == itemMsg then
-        { item | selecionado = item.selecionado * -1 }
+        { item | selecionado = item.selecionado * -1, subItens = List.map zerarSelecao item.subItens }
 
     else
         { itemMsg | selecionado = -1 }

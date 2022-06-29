@@ -11027,11 +11027,19 @@ var $author$project$Main$subscriptions = function (_v0) {
 };
 var $author$project$Main$Create = {$: 'Create'};
 var $author$project$Main$List = {$: 'List'};
+var $author$project$Main$zerarSelecao = function (novo) {
+	return _Utils_update(
+		novo,
+		{selecionado: -1});
+};
 var $author$project$Main$compararItem = F2(
 	function (item, itemMsg) {
 		return _Utils_eq(item, itemMsg) ? _Utils_update(
 			item,
-			{selecionado: item.selecionado * (-1)}) : _Utils_update(
+			{
+				selecionado: item.selecionado * (-1),
+				subItens: A2($elm$core$List$map, $author$project$Main$zerarSelecao, item.subItens)
+			}) : _Utils_update(
 			itemMsg,
 			{selecionado: -1});
 	});
@@ -11079,8 +11087,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 183, column: 13},
-				end: {line: 183, column: 23}
+				start: {line: 165, column: 13},
+				end: {line: 165, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11167,17 +11175,7 @@ var $author$project$Main$update = F2(
 				}
 			case 'Selecionar':
 				var item = msg.a;
-				return (function ($) {
-					return $.selecionado;
-				}(item) === 1) ? _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							menu: A2($author$project$Main$atualizarMenu, model.menu, item),
-							schema: $elm$core$Maybe$Nothing,
-							tabela: $elm$core$Maybe$Nothing
-						}),
-					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
@@ -11325,8 +11323,8 @@ var $author$project$Main$construtorCampo = function (campo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 595, column: 13},
-				end: {line: 595, column: 23}
+				start: {line: 563, column: 13},
+				end: {line: 563, column: 23}
 			})('A implementar outros tipos de campo');
 	}
 };
