@@ -11079,8 +11079,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 181, column: 13},
-				end: {line: 181, column: 23}
+				start: {line: 183, column: 13},
+				end: {line: 183, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11142,6 +11142,14 @@ var $author$project$Main$getSchema = function (url) {
 			url: url
 		});
 };
+var $author$project$Main$substituirSubItem = F2(
+	function (subMsg, subList) {
+		return _Utils_eq(subMsg, subList) ? _Utils_update(
+			subList,
+			{selecionado: 1}) : _Utils_update(
+			subList,
+			{selecionado: -1});
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -11195,8 +11203,28 @@ var $author$project$Main$update = F2(
 				}
 			case 'SubSelecionado':
 				var subitem = msg.a;
+				var item = msg.b;
+				var subItensNew = A2(
+					$elm$core$List$map,
+					function (n) {
+						return A2($author$project$Main$substituirSubItem, subitem, n);
+					},
+					function ($) {
+						return $.subItens;
+					}(item));
+				var itemNew = _Utils_update(
+					item,
+					{subItens: subItensNew});
+				var menuNew = A2(
+					$elm$core$List$map,
+					function (n) {
+						return _Utils_eq(n, item) ? itemNew : n;
+					},
+					model.menu);
 				return _Utils_Tuple2(
-					model,
+					_Utils_update(
+						model,
+						{menu: menuNew}),
 					$author$project$Main$getSchema(subitem.link));
 			case 'MostrarMenu':
 				return _Utils_Tuple2(
@@ -11297,8 +11325,8 @@ var $author$project$Main$construtorCampo = function (campo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 566, column: 13},
-				end: {line: 566, column: 23}
+				start: {line: 595, column: 13},
+				end: {line: 595, column: 23}
 			})('A implementar outros tipos de campo');
 	}
 };
@@ -11655,59 +11683,58 @@ var $author$project$Main$topo = A2(
 var $author$project$Main$Selecionar = function (a) {
 	return {$: 'Selecionar', a: a};
 };
-var $author$project$Main$SubSelecionado = function (a) {
-	return {$: 'SubSelecionado', a: a};
-};
+var $author$project$Main$SubSelecionado = F2(
+	function (a, b) {
+		return {$: 'SubSelecionado', a: a, b: b};
+	});
 var $author$project$Main$bgColorSub = function (subit) {
 	return (function ($) {
 		return $.selecionado;
 	}(subit) === 1) ? $author$project$Main$class('border-t mt-2 border-light-border w-full h-full bg-white px-2 py-3') : $author$project$Main$class('border-t mt-2 border-light-border w-full h-full px-2 py-3');
 };
-var $author$project$Main$subItens = function (subitens) {
-	return A2(
-		$elm$core$List$map,
-		function (n) {
-			return A2(
-				$elm$html$Html$li,
-				_List_fromArray(
-					[
-						$author$project$Main$bgColorSub(n)
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$a,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$href('#'),
-								$author$project$Main$class('mx-4 font-sans font-hairline font-medium text-base text-nav-item no-underline'),
-								$elm$html$Html$Events$onClick(
-								$author$project$Main$SubSelecionado(
-									_Utils_update(
-										n,
-										{selecionado: 1})))
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(n.label),
-								A2(
-								$elm$html$Html$span,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$i,
-										_List_fromArray(
-											[
-												$author$project$Main$class('fa fa-angle-right float-right')
-											]),
-										_List_Nil)
-									]))
-							]))
-					]));
-		},
-		subitens);
-};
+var $author$project$Main$subItens = F2(
+	function (subitens, item) {
+		return A2(
+			$elm$core$List$map,
+			function (n) {
+				return A2(
+					$elm$html$Html$li,
+					_List_fromArray(
+						[
+							$author$project$Main$bgColorSub(n)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$a,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$href('#'),
+									$author$project$Main$class('mx-4 font-sans font-hairline font-medium text-base text-nav-item no-underline'),
+									$elm$html$Html$Events$onClick(
+									A2($author$project$Main$SubSelecionado, n, item))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(n.label),
+									A2(
+									$elm$html$Html$span,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$i,
+											_List_fromArray(
+												[
+													$author$project$Main$class('fa fa-angle-right float-right')
+												]),
+											_List_Nil)
+										]))
+								]))
+						]));
+			},
+			subitens);
+	});
 var $author$project$Main$gerarSubMenu = function (item) {
 	return A2(
 		$elm$html$Html$ul,
@@ -11715,7 +11742,7 @@ var $author$project$Main$gerarSubMenu = function (item) {
 			[
 				$author$project$Main$class('list-reset -mx-2 bg-white-medium-dark')
 			]),
-		$author$project$Main$subItens(item.subItens));
+		A2($author$project$Main$subItens, item.subItens, item));
 };
 var $author$project$Main$liClassSelecionado = function (selecionado) {
 	return (selecionado > 0) ? $author$project$Main$class('w-full h-full py-3 px-2') : $author$project$Main$class('w-full h-full py-3 px-2 border-b border-300-border');
@@ -11877,4 +11904,4 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem"],"MostrarMenu":[],"Trocar":["Main.Tabela"],"Voltar":["Maybe.Maybe Main.Tabela"],"AbrirModal":[],"FecharModal":[]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem","Main.Item"],"MostrarMenu":[],"Trocar":["Main.Tabela"],"Voltar":["Maybe.Maybe Main.Tabela"],"AbrirModal":[],"FecharModal":[]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));

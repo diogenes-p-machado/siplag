@@ -1,7 +1,6 @@
 module Main exposing (..)
 
 import Browser
-import Dict exposing (Dict)
 import Html
     exposing
         ( Attribute
@@ -19,13 +18,9 @@ import Html
         , li
         , main_
         , menu
-        , option
-        , p
-        , select
         , span
         , table
         , tbody
-        , td
         , text
         , th
         , thead
@@ -40,35 +35,26 @@ import Html.Attributes
         , id
         , placeholder
         , type_
-        , value
         )
 import Html.Events
     exposing
         ( onClick
-        , onInput
         )
 import Http
 import Json.Decode
     exposing
         ( Decoder
         , andThen
-        , dict
         , field
         , int
         , lazy
         , list
         , map
-        , map2
         , map3
         , map4
         , nullable
         , string
         )
-import Maybe exposing (withDefault)
-
-
-
--- MAIN
 
 
 main : Program () Model Msg
@@ -79,10 +65,6 @@ main =
         , subscriptions = subscriptions
         , view = view
         }
-
-
-
--- MODEL
 
 
 type alias Model =
@@ -257,9 +239,22 @@ update msg model =
             let
                 subItensNew =
                     List.map (\n -> substituirSubItem subitem n) (.subItens item)
-                itemNew = { item | subItens = subItensNew }    
+
+                itemNew =
+                    { item | subItens = subItensNew }
+
+                menuNew =
+                    List.map
+                        (\n ->
+                            if n == item then
+                                itemNew
+
+                            else
+                                n
+                        )
+                        model.menu
             in
-            ( model, getSchema subitem.link )
+            ( { model | menu = menuNew }, getSchema subitem.link )
 
         MostrarMenu ->
             ( { model | showMenu = not model.showMenu }, Cmd.none )
@@ -280,10 +275,10 @@ update msg model =
 substituirSubItem : SubItem -> SubItem -> SubItem
 substituirSubItem subMsg subList =
     if subMsg == subList then
-        { subMsg | selecionado = 1 }
+        { subList | selecionado = 1 }
 
     else
-        { subMsg | selecionado = -1 }
+        { subList | selecionado = -1 }
 
 
 atualizarMenu : List Item -> Item -> List Item
@@ -338,10 +333,6 @@ view model =
             , modal model
             ]
         ]
-
-
-
---viewMenu model
 
 
 viewMenu : List Item -> Html Msg
@@ -416,10 +407,6 @@ liMenu item =
                 , span [] [ i [ class "fas fa-angle-right float-right" ] [] ]
                 ]
             ]
-
-
-
--- HTTP
 
 
 getItens : Cmd Msg
