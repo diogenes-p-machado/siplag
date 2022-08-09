@@ -39,6 +39,7 @@ import Html.Attributes
 import Html.Events
     exposing
         ( onClick
+        , onInput
         )
 import Http
 import Json.Decode
@@ -195,6 +196,7 @@ type Msg
     | Voltar (Maybe Tabela)
     | AbrirModal
     | FecharModal
+    | InputTextMsg String String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -261,6 +263,9 @@ update msg model =
         Voltar a ->
             ( { model | tabela = a }, Cmd.none )
 
+        InputTextMsg name value ->
+            ( model, Cmd.none )
+
 
 substituirSubItem : SubItem -> SubItem -> SubItem
 substituirSubItem subMsg subList =
@@ -280,9 +285,10 @@ substituirItem : List Item -> Item -> List Item
 substituirItem menu item =
     List.map (compararItem item) menu
 
-zerarSelecao : SubItem ->  SubItem
-zerarSelecao novo = 
-    {novo | selecionado = -1}
+
+zerarSelecao : SubItem -> SubItem
+zerarSelecao novo =
+    { novo | selecionado = -1 }
 
 
 compararItem : Item -> Item -> Item
@@ -541,16 +547,17 @@ modalAberto model =
             class "modal-wrapper"
 
 
-construtorCampo : Campo -> Html msg
+construtorCampo : Campo -> Html Msg
 construtorCampo campo =
     case campo of
-        Texto i ->
+        Texto inputText ->
             div [ class "flex flex-wrap -mx-3 mb-2" ]
                 [ div [ class "w-full px-3" ]
                     [ label [ class "block uppercase tracking-wide text-grey-darker text-xs font-light mb-1", for "nome" ]
-                        [ text i.codinome ]
+                        [ text inputText.codinome ]
                     , input
-                        [ class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
+                        [ onInput (InputTextMsg inputText.nome)
+                        , class "appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey"
                         , type_ "text"
                         , id "nome"
                         , placeholder "Digite seu nome:"
@@ -563,9 +570,9 @@ construtorCampo campo =
             Debug.todo "A implementar outros tipos de campo"
 
 
-construtorForm : Maybe Tabela -> List (Html Msg)
-construtorForm ta =
-    case ta of
+construtorForm : Model -> List (Html Msg)
+construtorForm model =
+    case model.tabela of
         Just t ->
             List.map (\n -> construtorCampo n) (.campos t)
 
@@ -587,8 +594,7 @@ modal model =
                             ]
                         ]
                     ]
-                , form [ class "w-full" ]
-                    (construtorForm model.tabela)
+                , form [ class "w-full" ] (construtorForm model)
                 , div [ class "mt-5" ]
                     [ span [ class "close-modal cursor-pointer bg-green-500 hover:bg-green-800 text-white font-bold mx-1 py-2 px-4 rounded" ]
                         [ text "Salvar" ]

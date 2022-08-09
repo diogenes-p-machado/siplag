@@ -11087,8 +11087,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 165, column: 13},
-				end: {line: 165, column: 23}
+				start: {line: 166, column: 13},
+				end: {line: 166, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11255,13 +11255,17 @@ var $author$project$Main$update = F2(
 							tabela: $elm$core$Maybe$Just(a)
 						}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'Voltar':
 				var a = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{tabela: a}),
 					$elm$core$Platform$Cmd$none);
+			default:
+				var name = msg.a;
+				var value = msg.b;
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $elm$html$Html$aside = _VirtualDom_node('aside');
@@ -11274,12 +11278,16 @@ var $author$project$Main$expandirMenu = function (cond) {
 };
 var $elm$html$Html$main_ = _VirtualDom_node('main');
 var $author$project$Main$FecharModal = {$: 'FecharModal'};
+var $author$project$Main$InputTextMsg = F2(
+	function (a, b) {
+		return {$: 'InputTextMsg', a: a, b: b};
+	});
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $author$project$Main$construtorCampo = function (campo) {
 	if (campo.$ === 'Texto') {
-		var i = campo.a;
+		var inputText = campo.a;
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -11305,12 +11313,14 @@ var $author$project$Main$construtorCampo = function (campo) {
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(i.codinome)
+									$elm$html$Html$text(inputText.codinome)
 								])),
 							A2(
 							$elm$html$Html$input,
 							_List_fromArray(
 								[
+									$elm$html$Html$Events$onInput(
+									$author$project$Main$InputTextMsg(inputText.nome)),
 									$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
 									$elm$html$Html$Attributes$type_('text'),
 									$elm$html$Html$Attributes$id('nome'),
@@ -11323,14 +11333,15 @@ var $author$project$Main$construtorCampo = function (campo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 563, column: 13},
-				end: {line: 563, column: 23}
+				start: {line: 570, column: 13},
+				end: {line: 570, column: 23}
 			})('A implementar outros tipos de campo');
 	}
 };
-var $author$project$Main$construtorForm = function (ta) {
-	if (ta.$ === 'Just') {
-		var t = ta.a;
+var $author$project$Main$construtorForm = function (model) {
+	var _v0 = model.tabela;
+	if (_v0.$ === 'Just') {
+		var t = _v0.a;
 		return A2(
 			$elm$core$List$map,
 			function (n) {
@@ -11428,7 +11439,7 @@ var $author$project$Main$modal = function (model) {
 									[
 										$author$project$Main$class('w-full')
 									]),
-								$author$project$Main$construtorForm(model.tabela)),
+								$author$project$Main$construtorForm(model)),
 								A2(
 								$elm$html$Html$div,
 								_List_fromArray(
@@ -11902,4 +11913,4 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem","Main.Item"],"MostrarMenu":[],"Trocar":["Main.Tabela"],"Voltar":["Maybe.Maybe Main.Tabela"],"AbrirModal":[],"FecharModal":[]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem","Main.Item"],"MostrarMenu":[],"Trocar":["Main.Tabela"],"Voltar":["Maybe.Maybe Main.Tabela"],"AbrirModal":[],"FecharModal":[],"InputTextMsg":["String.String","String.String"]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
