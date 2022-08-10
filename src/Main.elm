@@ -57,6 +57,9 @@ import Json.Decode
         , string
         )
 
+import Dict exposing (Dict)
+import Html.Attributes exposing (value)
+
 
 main : Program () Model Msg
 main =
@@ -74,6 +77,7 @@ type alias Model =
     , schema : Maybe Tabela
     , tabela : Maybe Tabela
     , showMenu : Bool
+    , formJson : Dict String String
     }
 
 
@@ -182,6 +186,7 @@ init _ =
         Nothing
         Nothing
         True
+        Dict.empty
     , getItens
     )
 
@@ -252,7 +257,7 @@ update msg model =
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
         AbrirModal ->
-            ( { model | modo = Just Create }, Cmd.none )
+            ( { model | modo = Just Create, formJson = Dict.empty}, Cmd.none )
 
         FecharModal ->
             ( { model | modo = Just List }, Cmd.none )
@@ -264,8 +269,7 @@ update msg model =
             ( { model | tabela = a }, Cmd.none )
 
         InputTextMsg name value ->
-            ( model, Cmd.none )
-
+            ( { model | formJson = Dict.insert name value model.formJson }, Cmd.none )
 
 substituirSubItem : SubItem -> SubItem -> SubItem
 substituirSubItem subMsg subList =
@@ -547,8 +551,8 @@ modalAberto model =
             class "modal-wrapper"
 
 
-construtorCampo : Campo -> Html Msg
-construtorCampo campo =
+construtorCampo : Campo -> Model -> Html Msg
+construtorCampo campo model =
     case campo of
         Texto inputText ->
             div [ class "flex flex-wrap -mx-3 mb-2" ]
@@ -561,6 +565,7 @@ construtorCampo campo =
                         , type_ "text"
                         , id "nome"
                         , placeholder "Digite seu nome:"
+                        , value <| valueString inputText.nome model.formJson
                         ]
                         []
                     ]
@@ -569,12 +574,17 @@ construtorCampo campo =
         _ ->
             Debug.todo "A implementar outros tipos de campo"
 
+valueString : String -> Dict String String -> String
+valueString string dict =
+    Dict.get string dict 
+    |> Maybe.withDefault ""
+
 
 construtorForm : Model -> List (Html Msg)
 construtorForm model =
     case model.tabela of
         Just t ->
-            List.map (\n -> construtorCampo n) (.campos t)
+            List.map (\n -> construtorCampo n model) (.campos t)
 
         Nothing ->
             []

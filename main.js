@@ -10729,9 +10729,9 @@ var $elm$core$Basics$never = function (_v0) {
 	}
 };
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Model = F5(
-	function (menu, modo, schema, tabela, showMenu) {
-		return {menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabela: tabela};
+var $author$project$Main$Model = F6(
+	function (menu, modo, schema, tabela, showMenu, formJson) {
+		return {formJson: formJson, menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabela: tabela};
 	});
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
@@ -11017,7 +11017,7 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A5($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true),
+		A6($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true, $elm$core$Dict$empty),
 		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -11087,8 +11087,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 166, column: 13},
-				end: {line: 166, column: 23}
+				start: {line: 170, column: 13},
+				end: {line: 170, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11235,6 +11235,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
+							formJson: $elm$core$Dict$empty,
 							modo: $elm$core$Maybe$Just($author$project$Main$Create)
 						}),
 					$elm$core$Platform$Cmd$none);
@@ -11265,7 +11266,13 @@ var $author$project$Main$update = F2(
 			default:
 				var name = msg.a;
 				var value = msg.b;
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							formJson: A3($elm$core$Dict$insert, name, value, model.formJson)
+						}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $elm$html$Html$aside = _VirtualDom_node('aside');
@@ -11285,59 +11292,69 @@ var $author$project$Main$InputTextMsg = F2(
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $author$project$Main$construtorCampo = function (campo) {
-	if (campo.$ === 'Texto') {
-		var inputText = campo.a;
+var $author$project$Main$valueString = F2(
+	function (string, dict) {
 		return A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$author$project$Main$class('flex flex-wrap -mx-3 mb-2')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$author$project$Main$class('w-full px-3')
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$label,
-							_List_fromArray(
-								[
-									$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
-									$elm$html$Html$Attributes$for('nome')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text(inputText.codinome)
-								])),
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onInput(
-									$author$project$Main$InputTextMsg(inputText.nome)),
-									$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
-									$elm$html$Html$Attributes$type_('text'),
-									$elm$html$Html$Attributes$id('nome'),
-									$elm$html$Html$Attributes$placeholder('Digite seu nome:')
-								]),
-							_List_Nil)
-						]))
-				]));
-	} else {
-		return _Debug_todo(
-			'Main',
-			{
-				start: {line: 570, column: 13},
-				end: {line: 570, column: 23}
-			})('A implementar outros tipos de campo');
-	}
-};
+			$elm$core$Maybe$withDefault,
+			'',
+			A2($elm$core$Dict$get, string, dict));
+	});
+var $author$project$Main$construtorCampo = F2(
+	function (campo, model) {
+		if (campo.$ === 'Texto') {
+			var inputText = campo.a;
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$author$project$Main$class('flex flex-wrap -mx-3 mb-2')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$author$project$Main$class('w-full px-3')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$label,
+								_List_fromArray(
+									[
+										$author$project$Main$class('block uppercase tracking-wide text-grey-darker text-xs font-light mb-1'),
+										$elm$html$Html$Attributes$for('nome')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(inputText.codinome)
+									])),
+								A2(
+								$elm$html$Html$input,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onInput(
+										$author$project$Main$InputTextMsg(inputText.nome)),
+										$author$project$Main$class('appearance-none block w-full bg-grey-200 text-grey-darker border border-grey-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-grey'),
+										$elm$html$Html$Attributes$type_('text'),
+										$elm$html$Html$Attributes$id('nome'),
+										$elm$html$Html$Attributes$placeholder('Digite seu nome:'),
+										$elm$html$Html$Attributes$value(
+										A2($author$project$Main$valueString, inputText.nome, model.formJson))
+									]),
+								_List_Nil)
+							]))
+					]));
+		} else {
+			return _Debug_todo(
+				'Main',
+				{
+					start: {line: 575, column: 13},
+					end: {line: 575, column: 23}
+				})('A implementar outros tipos de campo');
+		}
+	});
 var $author$project$Main$construtorForm = function (model) {
 	var _v0 = model.tabela;
 	if (_v0.$ === 'Just') {
@@ -11345,7 +11362,7 @@ var $author$project$Main$construtorForm = function (model) {
 		return A2(
 			$elm$core$List$map,
 			function (n) {
-				return $author$project$Main$construtorCampo(n);
+				return A2($author$project$Main$construtorCampo, n, model);
 			},
 			function ($) {
 				return $.campos;
