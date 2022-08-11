@@ -10729,9 +10729,28 @@ var $elm$core$Basics$never = function (_v0) {
 	}
 };
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$Model = F6(
-	function (menu, modo, schema, tabela, showMenu, formJson) {
-		return {formJson: formJson, menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabela: tabela};
+var $author$project$Main$Model = F7(
+	function (url, menu, modo, schema, tabela, showMenu, formJson) {
+		return {formJson: formJson, menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabela: tabela, url: url};
+	});
+var $elm$url$Url$Builder$toQueryPair = function (_v0) {
+	var key = _v0.a;
+	var value = _v0.b;
+	return key + ('=' + value);
+};
+var $elm$url$Url$Builder$toQuery = function (parameters) {
+	if (!parameters.b) {
+		return '';
+	} else {
+		return '?' + A2(
+			$elm$core$String$join,
+			'&',
+			A2($elm$core$List$map, $elm$url$Url$Builder$toQueryPair, parameters));
+	}
+};
+var $elm$url$Url$Builder$absolute = F2(
+	function (pathSegments, parameters) {
+		return '/' + (A2($elm$core$String$join, '/', pathSegments) + $elm$url$Url$Builder$toQuery(parameters));
 	});
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
@@ -11017,7 +11036,20 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A6($author$project$Main$Model, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true, $elm$core$Dict$empty),
+		A7(
+			$author$project$Main$Model,
+			$elm$url$Url$fromString(
+				A2(
+					$elm$url$Url$Builder$absolute,
+					_List_fromArray(
+						['products']),
+					_List_Nil)),
+			_List_Nil,
+			$elm$core$Maybe$Nothing,
+			$elm$core$Maybe$Nothing,
+			$elm$core$Maybe$Nothing,
+			true,
+			$elm$core$Dict$empty),
 		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -11087,8 +11119,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 170, column: 13},
-				end: {line: 170, column: 23}
+				start: {line: 175, column: 13},
+				end: {line: 175, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11350,8 +11382,8 @@ var $author$project$Main$construtorCampo = F2(
 			return _Debug_todo(
 				'Main',
 				{
-					start: {line: 575, column: 13},
-					end: {line: 575, column: 23}
+					start: {line: 581, column: 13},
+					end: {line: 581, column: 23}
 				})('A implementar outros tipos de campo');
 		}
 	});

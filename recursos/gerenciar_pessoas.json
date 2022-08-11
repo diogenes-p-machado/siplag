@@ -16,8 +16,8 @@
     },
     {
       "tipo": "input-text",
-      "codinome": "Identificação",
-      "nome": "id",
+      "codinome": "Orgão expeditor",
+      "nome": "orgao",
       "prioridade": 3
     }
   ],

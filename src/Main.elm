@@ -35,6 +35,7 @@ import Html.Attributes
         , id
         , placeholder
         , type_
+        , value
         )
 import Html.Events
     exposing
@@ -59,7 +60,10 @@ import Json.Decode
 
 import Dict exposing (Dict)
 import Html.Attributes exposing (value)
-
+import Url.Builder exposing (relative, absolute)
+import Url.Builder exposing (crossOrigin)
+import Url exposing (fromString)
+import Url exposing (Url)
 
 main : Program () Model Msg
 main =
@@ -72,7 +76,8 @@ main =
 
 
 type alias Model =
-    { menu : List Item
+    { url : Maybe Url
+    , menu : List Item
     , modo : Maybe Crud
     , schema : Maybe Tabela
     , tabela : Maybe Tabela
@@ -181,6 +186,7 @@ subItemDecoder =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( Model
+        (fromString (absolute [ "products" ] []))
         []
         Nothing
         Nothing

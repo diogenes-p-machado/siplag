@@ -5,7 +5,7 @@
         "sub-itens": [
             {
                 "label": "Programas da Unidade",
-                "link": "http://localhost:8000/recursos/ppa-cadastros-programas_da_unidade.json",
+                "link": "/recursos/ppa-cadastros-programas_da_unidade.json",
                 "selecionado": -1
             }
         ]
@@ -16,7 +16,7 @@
         "sub-itens": [
             {
                 "label": "Programa/Ação",
-                "link": "http://localhost:8000/recursos/gerenciar_pessoas.json",
+                "link": "recursos/gerenciar_pessoas.json",
                 "selecionado": -1
             },
             {
@@ -39,113 +39,8 @@
                 "label": "Base Geográfica",
                 "link": "/pessoas",
                 "selecionado": -1
-            },
-            {
-                "label": "Categoria da despesa",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Coordenador",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Elemento da despesa",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Fonte indicador",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Fonte de recurso",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Função",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Gerentes de programa",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Grupo da natureza da despesa",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Diretrizes estratégicas",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Modalidade da aplicação",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Natureza da despesa",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Produto",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Programas",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Proposta",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Público alvo",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Sub-função",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Teto Orçamentario",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Unidade de medida",
-                "link": "/pessoas",
-                "selecionado": -1
             }
-        ]
-    },
-    {
-        "label": "Relatórios",
-        "selecionado": -1,
-        "sub-itens": [
-            {
-                "label": "PPA",
-                "link": "/pessoas",
-                "selecionado": -1
-            },
-            {
-                "label": "Receitas de despesas",
-                "link": "/pessoas",
-                "selecionado": -1
-            }
+                      
         ]
     },
     {
