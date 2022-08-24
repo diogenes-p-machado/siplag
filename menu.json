@@ -4,24 +4,8 @@
         "selecionado": -1,
         "sub-itens": [
             {
-                "label": "Programas da Unidade",
-                "link": "/recursos/ppa-cadastros-programas_da_unidade.json",
-                "selecionado": -1
-            }
-        ]
-    },
-    {
-        "label": "Consultas",
-        "selecionado": -1,
-        "sub-itens": [
-            {
-                "label": "Programa/Ação",
-                "link": "recursos/gerenciar_pessoas.json",
-                "selecionado": -1
-            },
-            {
-                "label": "Teto Orçamentario/PPA",
-                "link": "gerenciar_pessoas.json",
+                "label": "Cadastro de pessoas",
+                "link": "/recursos/gerenciar_pessoas.json",
                 "selecionado": -1
             }
         ]
@@ -41,17 +25,6 @@
                 "selecionado": -1
             }
                       
-        ]
-    },
-    {
-        "label": "Importação",
-        "selecionado": -1,
-        "sub-itens": [
-            {
-                "label": "Lista de programas",
-                "link": "/pessoas",
-                "selecionado": -1
-            }
         ]
     }
 ]

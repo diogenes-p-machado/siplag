@@ -60,8 +60,7 @@ import Json.Decode
 
 import Dict exposing (Dict)
 import Html.Attributes exposing (value)
-import Url.Builder exposing (relative, absolute)
-import Url.Builder exposing (crossOrigin)
+import Url.Builder exposing (absolute)
 import Url exposing (fromString)
 import Url exposing (Url)
 
