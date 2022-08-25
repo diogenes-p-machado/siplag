@@ -10733,25 +10733,6 @@ var $author$project$Main$Model = F7(
 	function (url, menu, modo, schema, tabela, showMenu, formJson) {
 		return {formJson: formJson, menu: menu, modo: modo, schema: schema, showMenu: showMenu, tabela: tabela, url: url};
 	});
-var $elm$url$Url$Builder$toQueryPair = function (_v0) {
-	var key = _v0.a;
-	var value = _v0.b;
-	return key + ('=' + value);
-};
-var $elm$url$Url$Builder$toQuery = function (parameters) {
-	if (!parameters.b) {
-		return '';
-	} else {
-		return '?' + A2(
-			$elm$core$String$join,
-			'&',
-			A2($elm$core$List$map, $elm$url$Url$Builder$toQueryPair, parameters));
-	}
-};
-var $elm$url$Url$Builder$absolute = F2(
-	function (pathSegments, parameters) {
-		return '/' + (A2($elm$core$String$join, '/', pathSegments) + $elm$url$Url$Builder$toQuery(parameters));
-	});
 var $author$project$Main$GotMenu = function (a) {
 	return {$: 'GotMenu', a: a};
 };
@@ -11036,20 +11017,7 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A7(
-			$author$project$Main$Model,
-			$elm$url$Url$fromString(
-				A2(
-					$elm$url$Url$Builder$absolute,
-					_List_fromArray(
-						['products']),
-					_List_Nil)),
-			_List_Nil,
-			$elm$core$Maybe$Nothing,
-			$elm$core$Maybe$Nothing,
-			$elm$core$Maybe$Nothing,
-			true,
-			$elm$core$Dict$empty),
+		A7($author$project$Main$Model, _List_Nil, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true, $elm$core$Dict$empty),
 		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -11092,9 +11060,9 @@ var $author$project$Main$GotSchema = function (a) {
 var $author$project$Main$Links = function (a) {
 	return {$: 'Links', a: a};
 };
-var $author$project$Main$Tabela = F4(
-	function (codinome, nome, campos, links) {
-		return {campos: campos, codinome: codinome, links: links, nome: nome};
+var $author$project$Main$Tabela = F5(
+	function (schema, codinome, nome, campos, links) {
+		return {campos: campos, codinome: codinome, links: links, nome: nome, schema: schema};
 	});
 var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $author$project$Main$Texto = function (a) {
@@ -11134,7 +11102,6 @@ var $elm$json$Json$Decode$lazy = function (thunk) {
 		thunk,
 		$elm$json$Json$Decode$succeed(_Utils_Tuple0));
 };
-var $elm$json$Json$Decode$map4 = _Json_map4;
 var $elm$json$Json$Decode$null = _Json_decodeNull;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $elm$json$Json$Decode$nullable = function (decoder) {
@@ -11146,9 +11113,13 @@ var $elm$json$Json$Decode$nullable = function (decoder) {
 			]));
 };
 function $author$project$Main$cyclic$tabelaDecoder() {
-	return A5(
-		$elm$json$Json$Decode$map4,
+	return A6(
+		$elm$json$Json$Decode$map5,
 		$author$project$Main$Tabela,
+		A2(
+			$elm$json$Json$Decode$field,
+			'schema',
+			$elm$json$Json$Decode$nullable($elm$json$Json$Decode$string)),
 		A2($elm$json$Json$Decode$field, 'codinome', $elm$json$Json$Decode$string),
 		A2($elm$json$Json$Decode$field, 'nome', $elm$json$Json$Decode$string),
 		A2(
@@ -11225,7 +11196,9 @@ var $author$project$Main$update = F2(
 							model,
 							{
 								schema: $elm$core$Maybe$Just(res),
-								tabela: $elm$core$Maybe$Just(res)
+								tabela: $elm$core$Maybe$Just(res),
+								url: _List_fromArray(
+									[res.nome])
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11962,4 +11935,4 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem","Main.Item"],"MostrarMenu":[],"Trocar":["Main.Tabela"],"Voltar":["Maybe.Maybe Main.Tabela"],"AbrirModal":[],"FecharModal":[],"InputTextMsg":["String.String","String.String"]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ schema : Maybe.Maybe String.String, codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem","Main.Item"],"MostrarMenu":[],"Trocar":["Main.Tabela"],"Voltar":["Maybe.Maybe Main.Tabela"],"AbrirModal":[],"FecharModal":[],"InputTextMsg":["String.String","String.String"]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}}}}})}});}(this));

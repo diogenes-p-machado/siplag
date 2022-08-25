@@ -53,7 +53,7 @@ import Json.Decode
         , list
         , map
         , map3
-        , map4
+        , map5
         , nullable
         , string
         )
@@ -61,8 +61,7 @@ import Json.Decode
 import Dict exposing (Dict)
 import Html.Attributes exposing (value)
 import Url.Builder exposing (absolute)
-import Url exposing (fromString)
-import Url exposing (Url)
+
 
 main : Program () Model Msg
 main =
@@ -75,7 +74,7 @@ main =
 
 
 type alias Model =
-    { url : Maybe Url
+    { url : List String
     , menu : List Item
     , modo : Maybe Crud
     , schema : Maybe Tabela
@@ -91,7 +90,8 @@ type Crud
 
 
 type alias Tabela =
-    { codinome : String
+    { schema : Maybe String
+    , codinome : String
     , nome : String
     , campos : List Campo
     , links : Maybe Links
@@ -138,7 +138,8 @@ itemDecoder =
 
 tabelaDecoder : Decoder Tabela
 tabelaDecoder =
-    map4 Tabela
+    map5 Tabela
+        (field "schema" (nullable string))
         (field "codinome" string)
         (field "nome" string)
         (field "campos" (list campoDecoder))
@@ -185,7 +186,7 @@ subItemDecoder =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( Model
-        (fromString (absolute [ "products" ] []))
+        []
         []
         Nothing
         Nothing
@@ -232,7 +233,7 @@ update msg model =
         GotSchema result ->
             case result of
                 Ok res ->
-                    ( { model | schema = Just res, tabela = Just res }, Cmd.none )
+                    ( { model | schema = Just res, tabela = Just res, url = [res.nome]}, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )

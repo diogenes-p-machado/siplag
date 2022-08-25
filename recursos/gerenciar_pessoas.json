@@ -1,14 +1,15 @@
 {
+  "schema" : "rh",
   "codinome": "Pessoa",
   "nome": "pessoa",
   "campos": [
-    {
+    {     
       "tipo": "input-text",
       "codinome": "Identificação",
       "nome": "id",
       "prioridade": 1
     },
-    {
+    {      
       "tipo": "input-text",
       "codinome": "Cpf",
       "nome": "cpf",
@@ -23,6 +24,7 @@
   ],
   "links": [
     {
+      "schema" : null,
       "codinome": "Filhos",
       "nome": "filho",
       "campos": [
@@ -48,6 +50,7 @@
       "links": null
     },
     {
+      "schema" : null,
       "codinome": "Contatos",
       "nome": "contato",
       "campos": [
