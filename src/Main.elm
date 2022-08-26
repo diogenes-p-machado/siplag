@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Browser
+import Dict exposing (Dict)
 import Html
     exposing
         ( Attribute
@@ -57,9 +58,6 @@ import Json.Decode
         , nullable
         , string
         )
-
-import Dict exposing (Dict)
-import Html.Attributes exposing (value)
 import Url.Builder exposing (absolute)
 
 
@@ -233,7 +231,12 @@ update msg model =
         GotSchema result ->
             case result of
                 Ok res ->
-                    ( { model | schema = Just res, tabela = Just res, url = [res.nome]}, Cmd.none )
+                    ( { model
+                        | schema = Just res
+                        , tabela = Just res
+                      }
+                    , Cmd.none
+                    )
 
                 Err _ ->
                     ( model, Cmd.none )
@@ -263,7 +266,7 @@ update msg model =
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
         AbrirModal ->
-            ( { model | modo = Just Create, formJson = Dict.empty}, Cmd.none )
+            ( { model | modo = Just Create, formJson = Dict.empty }, Cmd.none )
 
         FecharModal ->
             ( { model | modo = Just List }, Cmd.none )
@@ -276,6 +279,7 @@ update msg model =
 
         InputTextMsg name value ->
             ( { model | formJson = Dict.insert name value model.formJson }, Cmd.none )
+
 
 substituirSubItem : SubItem -> SubItem -> SubItem
 substituirSubItem subMsg subList =
@@ -422,7 +426,7 @@ liMenu item =
 getItens : Cmd Msg
 getItens =
     Http.get
-        { url = "http://localhost:8000/menu.json"
+        { url = "/menu.json"
         , expect = Http.expectJson GotMenu (list itemDecoder)
         }
 
@@ -580,10 +584,11 @@ construtorCampo campo model =
         _ ->
             Debug.todo "A implementar outros tipos de campo"
 
+
 valueString : String -> Dict String String -> String
 valueString string dict =
-    Dict.get string dict 
-    |> Maybe.withDefault ""
+    Dict.get string dict
+        |> Maybe.withDefault ""
 
 
 construtorForm : Model -> List (Html Msg)

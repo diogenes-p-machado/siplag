@@ -11013,7 +11013,7 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 			$elm$http$Http$expectJson,
 			$author$project$Main$GotMenu,
 			$elm$json$Json$Decode$list($author$project$Main$itemDecoder)),
-		url: 'http://localhost:8000/menu.json'
+		url: '/menu.json'
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
@@ -11087,8 +11087,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 175, column: 13},
-				end: {line: 175, column: 23}
+				start: {line: 173, column: 13},
+				end: {line: 173, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11196,9 +11196,7 @@ var $author$project$Main$update = F2(
 							model,
 							{
 								schema: $elm$core$Maybe$Just(res),
-								tabela: $elm$core$Maybe$Just(res),
-								url: _List_fromArray(
-									[res.nome])
+								tabela: $elm$core$Maybe$Just(res)
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -11355,8 +11353,8 @@ var $author$project$Main$construtorCampo = F2(
 			return _Debug_todo(
 				'Main',
 				{
-					start: {line: 581, column: 13},
-					end: {line: 581, column: 23}
+					start: {line: 585, column: 13},
+					end: {line: 585, column: 23}
 				})('A implementar outros tipos de campo');
 		}
 	});
