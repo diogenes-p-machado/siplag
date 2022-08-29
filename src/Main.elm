@@ -52,6 +52,7 @@ import Json.Decode
         , int
         , lazy
         , list
+        , dict
         , map
         , map3
         , map5
@@ -79,8 +80,16 @@ type alias Model =
     , tabela : Maybe Tabela
     , showMenu : Bool
     , formJson : Dict String String
+    , listJson : List (Dict String String)
     }
-
+json : String
+json =
+    """
+ [
+ {"id":"1", "nome":"Diogenes", "cpf":"90771486200"},
+ {"id":"2", "nome":"Nicolas", "cpf":"88854788521"}    
+ ]
+"""
 
 type Crud
     = Create
@@ -191,12 +200,14 @@ init _ =
         Nothing
         True
         Dict.empty
+        []
     , getItens
     )
 
 
 type Msg
     = GotMenu (Result Http.Error (List Item))
+    | GotList (Result Http.Error (List (Dict String String)))
     | GotSchema (Result Http.Error Tabela)
     | Selecionar Item
     | SubSelecionado SubItem Item
@@ -228,6 +239,14 @@ update msg model =
             , Cmd.none
             )
 
+        GotList result ->
+            case result of
+                Ok res ->
+                    ({ model | listJson = res}, Cmd.none)
+
+                Err _ ->
+                    (model, Cmd.none)    
+        
         GotSchema result ->
             case result of
                 Ok res ->
@@ -235,11 +254,12 @@ update msg model =
                         | schema = Just res
                         , tabela = Just res
                       }
-                    , Cmd.none
+                    , getList
                     )
 
                 Err _ ->
                     ( model, Cmd.none )
+
 
         SubSelecionado subitem item ->
             let
@@ -429,6 +449,14 @@ getItens =
         { url = "/menu.json"
         , expect = Http.expectJson GotMenu (list itemDecoder)
         }
+
+getList : Cmd Msg
+getList =
+    Http.get
+        { url = "/get.json"
+        , expect = Http.expectJson GotList (list (dict string))
+        }
+
 
 
 getSchema : String -> Cmd Msg
