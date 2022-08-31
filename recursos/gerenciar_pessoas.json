@@ -8,18 +8,12 @@
       "codinome": "Identificação",
       "nome": "id",
       "prioridade": 1
-    },
-    {      
-      "tipo": "input-text",
-      "codinome": "Cpf",
-      "nome": "cpf",
-      "prioridade": 2
-    },
+    },    
     {
       "tipo": "input-text",
       "codinome": "Nome completo",
       "nome": "nome",
-      "prioridade": 3
+      "prioridade": 2
     }
   ],
   "links": [

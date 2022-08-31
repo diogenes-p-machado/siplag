@@ -254,7 +254,7 @@ update msg model =
                         | schema = Just res
                         , tabela = Just res
                       }
-                    , getList
+                    , getList ("http://0.0.0.0:3000/" ++(Maybe.withDefault "" res.schema) ++ "/" ++ res.nome)
                     )
 
                 Err _ ->
@@ -450,10 +450,10 @@ getItens =
         , expect = Http.expectJson GotMenu (list itemDecoder)
         }
 
-getList : Cmd Msg
-getList =
+getList: String -> Cmd Msg
+getList url =
     Http.get
-        { url = "/get.json"
+        { url = url
         , expect = Http.expectJson GotList (list (dict string))
         }
 

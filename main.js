@@ -11057,15 +11057,17 @@ var $author$project$Main$atualizarMenu = F2(
 var $author$project$Main$GotList = function (a) {
 	return {$: 'GotList', a: a};
 };
-var $author$project$Main$getList = $elm$http$Http$get(
-	{
-		expect: A2(
-			$elm$http$Http$expectJson,
-			$author$project$Main$GotList,
-			$elm$json$Json$Decode$list(
-				$elm$json$Json$Decode$dict($elm$json$Json$Decode$string))),
-		url: '/get.json'
-	});
+var $author$project$Main$getList = function (url) {
+	return $elm$http$Http$get(
+		{
+			expect: A2(
+				$elm$http$Http$expectJson,
+				$author$project$Main$GotList,
+				$elm$json$Json$Decode$list(
+					$elm$json$Json$Decode$dict($elm$json$Json$Decode$string))),
+			url: url
+		});
+};
 var $author$project$Main$GotSchema = function (a) {
 	return {$: 'GotSchema', a: a};
 };
@@ -11222,7 +11224,8 @@ var $author$project$Main$update = F2(
 								schema: $elm$core$Maybe$Just(res),
 								tabela: $elm$core$Maybe$Just(res)
 							}),
-						$author$project$Main$getList);
+						$author$project$Main$getList(
+							'http://0.0.0.0:3000/' + (A2($elm$core$Maybe$withDefault, '', res.schema) + ('/' + res.nome))));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
