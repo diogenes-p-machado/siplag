@@ -22,6 +22,7 @@ import Html
         , span
         , table
         , tbody
+        , td
         , text
         , th
         , thead
@@ -48,11 +49,11 @@ import Json.Decode
     exposing
         ( Decoder
         , andThen
+        , dict
         , field
         , int
         , lazy
         , list
-        , dict
         , map
         , map3
         , map5
@@ -82,6 +83,8 @@ type alias Model =
     , formJson : Dict String String
     , listJson : List (Dict String String)
     }
+
+
 json : String
 json =
     """
@@ -90,6 +93,7 @@ json =
  {"id":"2", "nome":"Nicolas", "cpf":"88854788521"}    
  ]
 """
+
 
 type Crud
     = Create
@@ -242,11 +246,11 @@ update msg model =
         GotList result ->
             case result of
                 Ok res ->
-                    ({ model | listJson = res}, Cmd.none)
+                    ( { model | listJson = res }, Cmd.none )
 
                 Err _ ->
-                    (model, Cmd.none)    
-        
+                    ( model, Cmd.none )
+
         GotSchema result ->
             case result of
                 Ok res ->
@@ -254,12 +258,11 @@ update msg model =
                         | schema = Just res
                         , tabela = Just res
                       }
-                    , getList ("http://0.0.0.0:3000/" ++(Maybe.withDefault "" res.schema) ++ "/" ++ res.nome)
+                    , getList ("http://0.0.0.0:3000/" ++ Maybe.withDefault "" res.schema ++ "/" ++ res.nome)
                     )
 
                 Err _ ->
                     ( model, Cmd.none )
-
 
         SubSelecionado subitem item ->
             let
@@ -450,13 +453,13 @@ getItens =
         , expect = Http.expectJson GotMenu (list itemDecoder)
         }
 
-getList: String -> Cmd Msg
+
+getList : String -> Cmd Msg
 getList url =
     Http.get
         { url = url
         , expect = Http.expectJson GotList (list (dict string))
         }
-
 
 
 getSchema : String -> Cmd Msg
@@ -531,27 +534,34 @@ tabela model =
                     , div [ class "p-3" ]
                         [ table [ class "table-responsive w-full rounded" ]
                             [ thead []
-                                [ tr [] (thHeadTabela tabelaOk)
-                                ]
-                            , tbody []
-                                [{- tr []
-                                    [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
-                                    , td [ class "border px-4 py-2" ] [ text "Sydney" ]
-                                    , td [ class "border px-4 py-2" ] [ text "MS" ]
-                                    , td [ class "border px-4 py-2" ] [ text "900 $" ]
-                                    , td [ class "border px-4 py-2" ]
-                                        [ i [ class "fas fa-check text-green-500 mx-2" ] [] ]
-                                    , td [ class "border px-4 py-2" ]
-                                        [ a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
-                                            [ i [ class "fas fa-eye" ] [] ]
-                                        , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
-                                            [ i [ class "fas fa-edit" ] [] ]
-                                        , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500" ]
-                                             [ i [ class "fas fa-trash" ] [] ]
-                                        ]
-                                    ]
-                                 -}
-                                ]
+                                [ tr [] <| thHeadTabela tabelaOk ]
+                            , tbody [] <|
+                                List.map
+                                    (\n ->
+                                        tr [] <|
+                                            List.map (\i -> td [ class "border px-4 py-2" ] [ text i ]) <|
+                                                Dict.values n
+                                    )
+                                    model.listJson
+
+                            -- List.map(\n ->   model.listJson)
+                            {- tr []
+                               [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
+                               , td [ class "border px-4 py-2" ] [ text "Sydney" ]
+                               , td [ class "border px-4 py-2" ] [ text "MS" ]
+                               , td [ class "border px-4 py-2" ] [ text "900 $" ]
+                               , td [ class "border px-4 py-2" ]
+                                   [ i [ class "fas fa-check text-green-500 mx-2" ] [] ]
+                               , td [ class "border px-4 py-2" ]
+                                   [ a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
+                                       [ i [ class "fas fa-eye" ] [] ]
+                                   , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
+                                       [ i [ class "fas fa-edit" ] [] ]
+                                   , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500" ]
+                                        [ i [ class "fas fa-trash" ] [] ]
+                                   ]
+                               ]
+                            -}
                             ]
                         ]
                     , div [] (links tabelaOk)

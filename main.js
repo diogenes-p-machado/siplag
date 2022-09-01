@@ -11101,8 +11101,8 @@ var $author$project$Main$tipoDoCampo = function (tipo) {
 		return _Debug_todo(
 			'Main',
 			{
-				start: {line: 182, column: 13},
-				end: {line: 182, column: 23}
+				start: {line: 186, column: 13},
+				end: {line: 186, column: 23}
 			})('nenhum decoder');
 	}
 };
@@ -11380,8 +11380,8 @@ var $author$project$Main$construtorCampo = F2(
 			return _Debug_todo(
 				'Main',
 				{
-					start: {line: 613, column: 13},
-					end: {line: 613, column: 23}
+					start: {line: 623, column: 13},
+					end: {line: 623, column: 23}
 				})('A implementar outros tipos de campo');
 		}
 	});
@@ -11563,6 +11563,7 @@ var $author$project$Main$links = function (tab) {
 };
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
+var $elm$html$Html$td = _VirtualDom_node('td');
 var $author$project$Main$campoToString = function (campo) {
 	if (campo.$ === 'Texto') {
 		var a = campo.a;
@@ -11675,7 +11676,32 @@ var $author$project$Main$tabela = function (model) {
 													_List_Nil,
 													$author$project$Main$thHeadTabela(tabelaOk))
 												])),
-											A2($elm$html$Html$tbody, _List_Nil, _List_Nil)
+											A2(
+											$elm$html$Html$tbody,
+											_List_Nil,
+											A2(
+												$elm$core$List$map,
+												function (n) {
+													return A2(
+														$elm$html$Html$tr,
+														_List_Nil,
+														A2(
+															$elm$core$List$map,
+															function (i) {
+																return A2(
+																	$elm$html$Html$td,
+																	_List_fromArray(
+																		[
+																			$author$project$Main$class('border px-4 py-2')
+																		]),
+																	_List_fromArray(
+																		[
+																			$elm$html$Html$text(i)
+																		]));
+															},
+															$elm$core$Dict$values(n)));
+												},
+												model.listJson))
 										]))
 								])),
 							A2(
