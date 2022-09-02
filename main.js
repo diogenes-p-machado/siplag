@@ -11583,7 +11583,7 @@ var $author$project$Main$thHeadTabela = function (t) {
 				$elm$html$Html$th,
 				_List_fromArray(
 					[
-						$author$project$Main$class('border w-1/4 px-4 py-2')
+						$author$project$Main$class('border-b w-1/4 px-4 py-2')
 					]),
 				_List_fromArray(
 					[
@@ -11662,7 +11662,7 @@ var $author$project$Main$tabela = function (model) {
 									$elm$html$Html$table,
 									_List_fromArray(
 										[
-											$author$project$Main$class('table-responsive w-full rounded')
+											$author$project$Main$class('table-auto')
 										]),
 									_List_fromArray(
 										[
@@ -11684,7 +11684,10 @@ var $author$project$Main$tabela = function (model) {
 												function (n) {
 													return A2(
 														$elm$html$Html$tr,
-														_List_Nil,
+														_List_fromArray(
+															[
+																$author$project$Main$class('hover:border-b hover:bg-gray-300 px-4 py-2 even:bg-blue-300')
+															]),
 														A2(
 															$elm$core$List$map,
 															function (i) {
@@ -11692,7 +11695,7 @@ var $author$project$Main$tabela = function (model) {
 																	$elm$html$Html$td,
 																	_List_fromArray(
 																		[
-																			$author$project$Main$class('border px-4 py-2')
+																			$author$project$Main$class('border-b px-4 py-2')
 																		]),
 																	_List_fromArray(
 																		[

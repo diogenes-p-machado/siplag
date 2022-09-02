@@ -501,7 +501,7 @@ thHeadTabela : Tabela -> List (Html Msg)
 thHeadTabela t =
     List.map
         (\n ->
-            th [ class "border w-1/4 px-4 py-2" ]
+            th [ class "border-b w-1/4 px-4 py-2" ]
                 [ text (campoToString n) ]
         )
         t.campos
@@ -532,14 +532,14 @@ tabela model =
                         , button [ onClick AbrirModal, class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
                     , div [ class "p-3" ]
-                        [ table [ class "table-responsive w-full rounded" ]
+                        [ table [ class "table-auto"]
                             [ thead []
                                 [ tr [] <| thHeadTabela tabelaOk ]
                             , tbody [] <|
                                 List.map
                                     (\n ->
-                                        tr [] <|
-                                            List.map (\i -> td [ class "border px-4 py-2" ] [ text i ]) <|
+                                        tr [class "hover:border-b hover:bg-gray-300 px-4 py-2"] <|
+                                            List.map (\i -> td [ class "border-b px-4 py-2"] [ text i ]) <|
                                                 Dict.values n
                                     )
                                     model.listJson
