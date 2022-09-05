@@ -85,16 +85,6 @@ type alias Model =
     }
 
 
-json : String
-json =
-    """
- [
- {"id":"1", "nome":"Diogenes", "cpf":"90771486200"},
- {"id":"2", "nome":"Nicolas", "cpf":"88854788521"}    
- ]
-"""
-
-
 type Crud
     = Create
     | List
@@ -216,6 +206,7 @@ type Msg
     | Selecionar Item
     | SubSelecionado SubItem Item
     | MostrarMenu
+    | SelectItemList (Dict String String)
     | Trocar Tabela
     | Voltar (Maybe Tabela)
     | AbrirModal
@@ -302,6 +293,18 @@ update msg model =
 
         InputTextMsg name value ->
             ( { model | formJson = Dict.insert name value model.formJson }, Cmd.none )
+
+        SelectItemList dicionario ->
+            ( { model
+                | formJson =
+                    if dicionario == model.formJson then
+                        Dict.empty
+
+                    else
+                        dicionario
+              }
+            , Cmd.none
+            )
 
 
 substituirSubItem : SubItem -> SubItem -> SubItem
@@ -475,6 +478,24 @@ class name =
     attribute "class" name
 
 
+buttonSelect : Dict String String -> Html.Attribute msg
+buttonSelect dic =
+    if Dict.isEmpty dic then
+        class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow  opacity-50 cursor-not-allowed"
+
+    else
+        class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow"
+
+
+trSelect : Dict String String -> Dict String String -> Html.Attribute msn
+trSelect jsonForm jsonList =
+    if jsonForm == jsonList then
+        class "border-b bg-blue-400 text-white px-4 py-2"
+
+    else
+        class "hover:border-b hover:bg-gray-300 px-4 py-2"
+
+
 topo : Html Msg
 topo =
     header [ class "bg-nav", onClick MostrarMenu ]
@@ -532,39 +553,20 @@ tabela model =
                         , button [ onClick AbrirModal, class "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 mr-3 border border-blue-500 rounded" ] [ text "Cadastrar" ]
                         ]
                     , div [ class "p-3" ]
-                        [ table [ class "table-auto"]
+                        [ table [ class "table-auto" ]
                             [ thead []
                                 [ tr [] <| thHeadTabela tabelaOk ]
                             , tbody [] <|
                                 List.map
                                     (\n ->
-                                        tr [class "hover:border-b hover:bg-gray-300 px-4 py-2"] <|
-                                            List.map (\i -> td [ class "border-b px-4 py-2"] [ text i ]) <|
+                                        tr [ onClick (SelectItemList n), trSelect model.formJson n ] <|
+                                            List.map (\i -> td [ class "border-b px-4 py-2" ] [ text i ]) <|
                                                 Dict.values n
                                     )
                                     model.listJson
-
-                            -- List.map(\n ->   model.listJson)
-                            {- tr []
-                               [ td [ class "border px-4 py-2" ] [ text "Micheal Clarke" ]
-                               , td [ class "border px-4 py-2" ] [ text "Sydney" ]
-                               , td [ class "border px-4 py-2" ] [ text "MS" ]
-                               , td [ class "border px-4 py-2" ] [ text "900 $" ]
-                               , td [ class "border px-4 py-2" ]
-                                   [ i [ class "fas fa-check text-green-500 mx-2" ] [] ]
-                               , td [ class "border px-4 py-2" ]
-                                   [ a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
-                                       [ i [ class "fas fa-eye" ] [] ]
-                                   , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-white" ]
-                                       [ i [ class "fas fa-edit" ] [] ]
-                                   , a [ class "bg-teal-300 cursor-pointer rounded p-1 mx-1 text-red-500" ]
-                                        [ i [ class "fas fa-trash" ] [] ]
-                                   ]
-                               ]
-                            -}
                             ]
                         ]
-                    , div [] (links tabelaOk)
+                    , div [] (links tabelaOk model)
                     ]
                 ]
 
@@ -572,15 +574,15 @@ tabela model =
             text "A implementar"
 
 
-links : Tabela -> List (Html Msg)
-links tab =
+links : Tabela -> Model -> List (Html Msg)
+links tab model =
     case tab.links of
         Just l ->
             case l of
                 Links list ->
                     List.map
                         (\n ->
-                            button [ onClick (Trocar n), class "bg-white hover:bg-gray-500 text-gray-900 font-semibold py-2 px-4 mx-2 mb-3 border border-gray-200 rounded shadow" ]
+                            button [ onClick (Trocar n), buttonSelect model.formJson ]
                                 [ text (.codinome n) ]
                         )
                         list
