@@ -61,6 +61,7 @@ import Json.Decode
         , string
         )
 import Url.Builder exposing (absolute)
+import Json.Encode
 
 
 main : Program () Model Msg
@@ -81,6 +82,7 @@ type alias Model =
     , tabela : Maybe Tabela
     , showMenu : Bool
     , formJson : Dict String String
+    , subFormJson : Dict String String
     , listJson : List (Dict String String)
     }
 
@@ -194,6 +196,7 @@ init _ =
         Nothing
         True
         Dict.empty
+        Dict.empty
         []
     , getItens
     )
@@ -210,6 +213,8 @@ type Msg
     | Trocar Tabela
     | Voltar (Maybe Tabela)
     | AbrirModal
+    | PostForm
+    | Posted (Result Http.Error ())
     | FecharModal
     | InputTextMsg String String
 
@@ -293,6 +298,12 @@ update msg model =
 
         InputTextMsg name value ->
             ( { model | formJson = Dict.insert name value model.formJson }, Cmd.none )
+
+        PostForm ->
+            ( model, Cmd.none )
+
+        Posted result ->
+            (model, Cmd.none)    
 
         SelectItemList dicionario ->
             ( { model
@@ -454,6 +465,15 @@ getItens =
     Http.get
         { url = "/menu.json"
         , expect = Http.expectJson GotMenu (list itemDecoder)
+        }
+
+
+postFormJson : Model -> Cmd Msg
+postFormJson model =
+    Http.post
+        { url = "implementar url do eschema atual"
+        , body = Http.jsonBody (Json.Encode.dict identity Json.Encode.string model.formJson)
+        , expect = Http.expectWhatever Posted
         }
 
 
