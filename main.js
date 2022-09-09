@@ -11017,7 +11017,7 @@ var $author$project$Main$getItens = $elm$http$Http$get(
 	});
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A9($author$project$Main$Model, _List_Nil, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true, $elm$core$Dict$empty, $elm$core$Dict$empty, _List_Nil),
+		A9($author$project$Main$Model, $elm$core$Maybe$Nothing, _List_Nil, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing, true, $elm$core$Dict$empty, $elm$core$Dict$empty, _List_Nil),
 		$author$project$Main$getItens);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -11027,6 +11027,9 @@ var $author$project$Main$subscriptions = function (_v0) {
 };
 var $author$project$Main$Create = {$: 'Create'};
 var $author$project$Main$List = {$: 'List'};
+var $author$project$Urls$Recurso = function (a) {
+	return {$: 'Recurso', a: a};
+};
 var $author$project$Main$zerarSelecao = function (novo) {
 	return _Utils_update(
 		novo,
@@ -11167,6 +11170,64 @@ var $author$project$Main$getSchema = function (url) {
 			url: url
 		});
 };
+var $author$project$Urls$IdRecurso = F2(
+	function (a, b) {
+		return {$: 'IdRecurso', a: a, b: b};
+	});
+var $author$project$Urls$pop = function (url) {
+	_v0$2:
+	while (true) {
+		if (url.$ === 'Just') {
+			switch (url.a.$) {
+				case 'SubRecurso':
+					var _v1 = url.a;
+					var recuso = _v1.a;
+					var id = _v1.b;
+					return $elm$core$Maybe$Just(
+						A2($author$project$Urls$IdRecurso, recuso, id));
+				case 'IdRecurso':
+					var _v2 = url.a;
+					var recurso = _v2.a;
+					return $elm$core$Maybe$Just(
+						$author$project$Urls$Recurso(recurso));
+				default:
+					break _v0$2;
+			}
+		} else {
+			break _v0$2;
+		}
+	}
+	return $elm$core$Maybe$Nothing;
+};
+var $author$project$Urls$SubRecurso = F3(
+	function (a, b, c) {
+		return {$: 'SubRecurso', a: a, b: b, c: c};
+	});
+var $author$project$Urls$push = F2(
+	function (url, str) {
+		_v0$2:
+		while (true) {
+			if (url.$ === 'Just') {
+				switch (url.a.$) {
+					case 'Recurso':
+						var recurso = url.a.a;
+						return $elm$core$Maybe$Just(
+							A2($author$project$Urls$IdRecurso, recurso, str));
+					case 'IdRecurso':
+						var _v1 = url.a;
+						var recurso = _v1.a;
+						var id = _v1.b;
+						return $elm$core$Maybe$Just(
+							A3($author$project$Urls$SubRecurso, recurso, id, str));
+					default:
+						break _v0$2;
+				}
+			} else {
+				break _v0$2;
+			}
+		}
+		return $elm$core$Maybe$Nothing;
+	});
 var $author$project$Main$substituirSubItem = F2(
 	function (subMsg, subList) {
 		return _Utils_eq(subMsg, subList) ? _Utils_update(
@@ -11222,7 +11283,17 @@ var $author$project$Main$update = F2(
 							model,
 							{
 								schema: $elm$core$Maybe$Just(res),
-								tabela: $elm$core$Maybe$Just(res)
+								tabela: $elm$core$Maybe$Just(res),
+								url: $elm$core$Maybe$Just(
+									$author$project$Urls$Recurso(
+										'/' + (A2(
+											$elm$core$Maybe$withDefault,
+											'',
+											function ($) {
+												return $.schema;
+											}(res)) + ('/' + function ($) {
+											return $.nome;
+										}(res)))))
 							}),
 						$author$project$Main$getList(
 							'http://0.0.0.0:3000/' + (A2($elm$core$Maybe$withDefault, '', res.schema) + ('/' + res.nome))));
@@ -11306,7 +11377,6 @@ var $author$project$Main$update = F2(
 			case 'PostForm':
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 'Posted':
-				var result = msg.a;
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			default:
 				var dicionario = msg.a;
@@ -11314,7 +11384,14 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							formJson: _Utils_eq(dicionario, model.formJson) ? $elm$core$Dict$empty : dicionario
+							formJson: _Utils_eq(dicionario, model.formJson) ? $elm$core$Dict$empty : dicionario,
+							url: _Utils_eq(dicionario, model.formJson) ? A2(
+								$author$project$Urls$push,
+								model.url,
+								A2(
+									$elm$core$Maybe$withDefault,
+									'',
+									A2($elm$core$Dict$get, 'id', dicionario))) : $author$project$Urls$pop(model.url)
 						}),
 					$elm$core$Platform$Cmd$none);
 		}
@@ -11394,8 +11471,8 @@ var $author$project$Main$construtorCampo = F2(
 			return _Debug_todo(
 				'Main',
 				{
-					start: {line: 645, column: 13},
-					end: {line: 645, column: 23}
+					start: {line: 659, column: 13},
+					end: {line: 659, column: 23}
 				})('A implementar outros tipos de campo');
 		}
 	});
@@ -12016,4 +12093,4 @@ var $author$project$Main$view = function (model) {
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{init: $author$project$Main$init, subscriptions: $author$project$Main$subscriptions, update: $author$project$Main$update, view: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
-	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ schema : Maybe.Maybe String.String, codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotList":["Result.Result Http.Error (List.List (Dict.Dict String.String String.String))"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem","Main.Item"],"MostrarMenu":[],"SelectItemList":["Dict.Dict String.String String.String"],"Trocar":["Main.Tabela"],"Voltar":["Maybe.Maybe Main.Tabela"],"AbrirModal":[],"PostForm":[],"Posted":["Result.Result Http.Error ()"],"FecharModal":[],"InputTextMsg":["String.String","String.String"]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));
+	$elm$json$Json$Decode$succeed(_Utils_Tuple0))({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Main.Item":{"args":[],"type":"{ label : String.String, selecionado : Basics.Int, subItens : List.List Main.SubItem }"},"Main.SubItem":{"args":[],"type":"{ label : String.String, link : String.String, selecionado : Basics.Int }"},"Main.Tabela":{"args":[],"type":"{ schema : Maybe.Maybe String.String, codinome : String.String, nome : String.String, campos : List.List Main.Campo, links : Maybe.Maybe Main.Links }"},"Main.InputText":{"args":[],"type":"{ codinome : String.String, nome : String.String, prioridade : Basics.Int }"}},"unions":{"Main.Msg":{"args":[],"tags":{"GotMenu":["Result.Result Http.Error (List.List Main.Item)"],"GotList":["Result.Result Http.Error (List.List (Dict.Dict String.String String.String))"],"GotSchema":["Result.Result Http.Error Main.Tabela"],"Selecionar":["Main.Item"],"SubSelecionado":["Main.SubItem","Main.Item"],"MostrarMenu":[],"SelectItemList":["Dict.Dict String.String String.String"],"Trocar":["Main.Tabela"],"Voltar":["Maybe.Maybe Main.Tabela"],"AbrirModal":[],"PostForm":["String.String"],"Posted":["Result.Result Http.Error ()"],"FecharModal":[],"InputTextMsg":["String.String","String.String"]}},"Main.Campo":{"args":[],"tags":{"Texto":["Main.InputText"],"Id":["Basics.Int"]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"Main.Links":{"args":[],"tags":{"Links":["List.List Main.Tabela"]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"String.String":{"args":[],"tags":{"String":[]}},"Dict.NColor":{"args":[],"tags":{"Red":[],"Black":[]}}}}})}});}(this));

@@ -60,8 +60,8 @@ import Json.Decode
         , nullable
         , string
         )
-import Url.Builder exposing (absolute)
 import Json.Encode
+import Urls exposing (..)
 
 
 main : Program () Model Msg
@@ -75,7 +75,7 @@ main =
 
 
 type alias Model =
-    { url : List String
+    { url : Maybe Urls.Url
     , menu : List Item
     , modo : Maybe Crud
     , schema : Maybe Tabela
@@ -189,7 +189,7 @@ subItemDecoder =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( Model
-        []
+        Nothing
         []
         Nothing
         Nothing
@@ -213,7 +213,7 @@ type Msg
     | Trocar Tabela
     | Voltar (Maybe Tabela)
     | AbrirModal
-    | PostForm
+    | PostForm String
     | Posted (Result Http.Error ())
     | FecharModal
     | InputTextMsg String String
@@ -253,6 +253,7 @@ update msg model =
                     ( { model
                         | schema = Just res
                         , tabela = Just res
+                        , url = Just <| Recurso <| "/" ++ Maybe.withDefault "" (.schema res) ++ "/" ++ .nome res
                       }
                     , getList ("http://0.0.0.0:3000/" ++ Maybe.withDefault "" res.schema ++ "/" ++ res.nome)
                     )
@@ -285,7 +286,12 @@ update msg model =
             ( { model | showMenu = not model.showMenu }, Cmd.none )
 
         AbrirModal ->
-            ( { model | modo = Just Create, formJson = Dict.empty }, Cmd.none )
+            ( { model
+                | modo = Just Create
+                , formJson = Dict.empty
+              }
+            , Cmd.none
+            )
 
         FecharModal ->
             ( { model | modo = Just List }, Cmd.none )
@@ -299,11 +305,11 @@ update msg model =
         InputTextMsg name value ->
             ( { model | formJson = Dict.insert name value model.formJson }, Cmd.none )
 
-        PostForm ->
+        PostForm _ ->
             ( model, Cmd.none )
 
-        Posted result ->
-            (model, Cmd.none)    
+        Posted _ ->
+            ( model, Cmd.none )
 
         SelectItemList dicionario ->
             ( { model
@@ -313,6 +319,14 @@ update msg model =
 
                     else
                         dicionario
+                , url =
+                    if dicionario == model.formJson then
+                        Urls.push model.url <|
+                            Maybe.withDefault "" <|
+                                Dict.get "id" dicionario
+
+                    else
+                        Urls.pop model.url
               }
             , Cmd.none
             )
@@ -471,7 +485,7 @@ getItens =
 postFormJson : Model -> Cmd Msg
 postFormJson model =
     Http.post
-        { url = "implementar url do eschema atual"
+        { url = ""
         , body = Http.jsonBody (Json.Encode.dict identity Json.Encode.string model.formJson)
         , expect = Http.expectWhatever Posted
         }
